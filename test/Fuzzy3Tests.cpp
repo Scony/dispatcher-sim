@@ -31,3 +31,10 @@ TEST(Fuzzy3Tests, Comparison5) {
   auto b = Fuzzy3(0, 2, 10);
   EXPECT_EQ(a < b, true);
 }
+
+// TODO: find example
+// TEST(Fuzzy3Tests, ComparisonByUuid) {
+//   auto a = Fuzzy3(3, 3, 7);
+//   auto b = Fuzzy3(3, 3, 7);
+//   EXPECT_EQ(a < b, true);
+// }

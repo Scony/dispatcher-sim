@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+
+#include "Operation.hpp"
+
 struct Job
 {
   long long id;
@@ -8,5 +12,5 @@ struct Job
   long long beginTimestamp;
   long long endTimestamp;
   long long duration;
-  std::map<long long, Operation> operations;
+  std::vector<Operation> operations;
 };
