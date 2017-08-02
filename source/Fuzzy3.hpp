@@ -15,6 +15,6 @@ public:
 private:
   static long long nextUuid;
 
-  long long uuid;
+  long long mUuid;
   long long mNth[3];
 };

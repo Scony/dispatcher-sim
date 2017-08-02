@@ -6,6 +6,7 @@ long long Fuzzy3::nextUuid = 0;
 
 Fuzzy3::Fuzzy3(long long a, long long b, long long c)
 {
+  mUuid = nextUuid++;
   mNth[0] = a;
   mNth[1] = b;
   mNth[2] = c;
@@ -217,7 +218,7 @@ bool Fuzzy3::operator<(Fuzzy3 const& other)
   auto thisDominatesOther = this->dominationOver(other) > 0;
 
   if (otherDominatesThis && thisDominatesOther)
-    return other.uuid > uuid;
+    return other.mUuid > mUuid;
 
   return otherDominatesThis;
 }
