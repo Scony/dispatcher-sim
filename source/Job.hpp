@@ -12,5 +12,5 @@ struct Job
   long long beginTimestamp;
   long long endTimestamp;
   long long duration;
-  std::vector<Operation> operations;
+  std::vector<std::shared_ptr<Operation> > operations;
 };

@@ -1,6 +1,7 @@
 #pragma once
 
-#include <map>
+#include <vector>
+// #include <map>
 #include <memory>
 
 #include "Job.hpp"
@@ -11,7 +12,10 @@ class Input
 public:
   Input();
 
+  void readFromStdin();
+
 private:
-  std::map<long long, std::shared_ptr<Job> > mJobs;
-  std::map<long long, std::shared_ptr<Operation> > mOperations;
+  std::vector<std::shared_ptr<Job> > mQueue;
+  // std::map<long long, std::shared_ptr<Job> > mJobs;
+  // std::map<long long, std::shared_ptr<Operation> > mOperations;
 };
