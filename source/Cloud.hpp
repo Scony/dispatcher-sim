@@ -2,4 +2,8 @@
 
 class Cloud
 {
+public:
+  Cloud() {}
+
+  void resize(int machinesNum) {}
 };
