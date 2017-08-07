@@ -12,6 +12,7 @@ class Input
 public:
   Input();
 
+private:
   void readFromStdin();
 
 private:

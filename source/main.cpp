@@ -17,12 +17,11 @@ int main(int argc, char ** argv)
   srand(time(0));
 
   auto input = std::make_shared<Input>();
-  auto cloud = std::make_shared<Cloud>();
-  auto dispatcherFactory = std::make_shared<DispatcherFactory>(std::vector<std::string>(args.begin()+2, args.end()));
-  auto dispatcher = dispatcherFactory->getDispatcher();
+  auto cloud = std::make_shared<Cloud>(std::stoi(args[1]));
 
-  input->readFromStdin();
-  cloud->resize(std::stoi(args[1]));
+  auto factoryArgs = std::vector<std::string>(args.begin() + 2, args.end());
+  auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, factoryArgs);
+  auto dispatcher = dispatcherFactory->getDispatcher();
 
   Simulator simulator(input, cloud, dispatcher);
   simulator.run();

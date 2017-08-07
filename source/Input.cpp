@@ -5,6 +5,7 @@
 Input::Input() :
   mQueue()
 {
+  readFromStdin();
 }
 
 void Input::readFromStdin()
