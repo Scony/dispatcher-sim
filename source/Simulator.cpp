@@ -26,7 +26,7 @@ void Simulator::run()
     {
       auto newestJob = mQueue.back();
       // TODO: advance cloud to newestJob->arrivalTimestamp;
-      mDispatcher->dispatch(newestJob);
+      // mDispatcher->dispatch(newestJob);
       mQueue.pop_back();
     }
 };

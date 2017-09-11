@@ -6,11 +6,19 @@
 
 struct Job
 {
-  long long id;
-  long long priority;
-  long long arrivalTimestamp;
-  long long beginTimestamp;
-  long long endTimestamp;
-  long long duration;
-  std::vector<std::shared_ptr<Operation> > operations;
+  Job(long long aId,
+      long long aPriority,
+      long long aArrivalTimestamp,
+      std::vector<std::shared_ptr<Operation> > aOperations) :
+    id(aId),
+    priority(aPriority),
+    arrivalTimestamp(aArrivalTimestamp),
+    operations(aOperations)
+  {
+  }
+
+  const long long id;
+  const long long priority;
+  const long long arrivalTimestamp;
+  const std::vector<std::shared_ptr<Operation> > operations;
 };
