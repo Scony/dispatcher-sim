@@ -8,6 +8,11 @@ Input::Input() :
   readFromStdin();
 }
 
+std::vector<std::shared_ptr<Job> > Input::getJobs()
+{
+  return mQueue;
+}
+
 void Input::readFromStdin()
 {
   int jobsNum;

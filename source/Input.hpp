@@ -12,6 +12,8 @@ class Input
 public:
   Input();
 
+  std::vector<std::shared_ptr<Job> > getJobs();
+
 private:
   void readFromStdin();
 
