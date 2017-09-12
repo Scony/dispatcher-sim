@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <climits>
 
 #include "Simulator.hpp"
 
@@ -25,8 +26,10 @@ void Simulator::run()
   while (mQueue.size() > 0)
     {
       auto newestJob = mQueue.back();
-      // TODO: advance cloud to newestJob->arrivalTimestamp;
-      // mDispatcher->dispatch(newestJob);
+      mCloud->advance(newestJob->arrivalTimestamp);
+      mDispatcher->dispatch(newestJob);
       mQueue.pop_back();
     }
+
+  mCloud->advance(LLONG_MAX);
 };

@@ -4,6 +4,7 @@
 #include <string>
 
 #include "IDispatcher.hpp"
+#include "RandomDispatcher.hpp"
 
 class DispatcherFactory
 {
@@ -13,7 +14,9 @@ public:
     mCloud(cloud),
     mArgs(args) {}
 
-  std::shared_ptr<IDispatcher> getDispatcher() { return std::shared_ptr<IDispatcher>(nullptr); }
+  std::shared_ptr<IDispatcher> getDispatcher() {
+    return std::shared_ptr<IDispatcher>(new RandomDispatcher(mInput, mCloud));
+  }
 
 private:
   std::shared_ptr<Input> mInput;

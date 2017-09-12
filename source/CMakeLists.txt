@@ -9,6 +9,7 @@ add_library(simulator-library
   Input.cpp
   RandomDispatcher.cpp
   Simulator.cpp
+  Cloud.cpp
 )
 
 add_executable(simulator
