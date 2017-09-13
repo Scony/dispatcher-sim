@@ -1,9 +1,8 @@
-#include <iostream>
-
 #include "Cloud.hpp"
 
-Cloud::Cloud(unsigned machinesNum) :
+Cloud::Cloud(unsigned machinesNum, std::shared_ptr<Solution::Solution> solution) :
   mMachinesNum(machinesNum),
+  mSolution(solution),
   mTimestamp(0),
   mQueue(std::make_shared<std::deque<std::shared_ptr<Operation> > >()),
   mMachines()
@@ -24,8 +23,9 @@ void Cloud::advance(long long toTimestamp)
   while (mMachines.size() > 0 && mMachines.top().first <= toTimestamp)
     {
       mTimestamp = mMachines.top().first;
+      auto finishedOperation = mMachines.top().second;
+      mSolution->push_back({mTimestamp, finishedOperation});
       mMachines.pop();
-      std::cout << mTimestamp << std::endl;
 
       if (mQueue->size() > 0)
 	{
@@ -36,6 +36,8 @@ void Cloud::advance(long long toTimestamp)
 	  mMachines.push(newMachine);
 	}
     }
+
+  mTimestamp = toTimestamp;
 }
 
 Queue Cloud::getQueue()

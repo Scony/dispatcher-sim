@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 #include <cassert>
 
@@ -5,6 +6,7 @@
 #include "Cloud.hpp"
 #include "Simulator.hpp"
 #include "DispatcherFactory.hpp"
+#include "Solution.hpp"
 
 int main(int argc, char ** argv)
 {
@@ -17,7 +19,8 @@ int main(int argc, char ** argv)
   srand(time(0));
 
   auto input = std::make_shared<Input>();
-  auto cloud = std::make_shared<Cloud>(std::stoi(args[1]));
+  auto solution = std::make_shared<Solution::Solution>();
+  auto cloud = std::make_shared<Cloud>(std::stoi(args[1]), solution);
 
   auto factoryArgs = std::vector<std::string>(args.begin() + 2, args.end());
   auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, factoryArgs);
@@ -25,6 +28,18 @@ int main(int argc, char ** argv)
 
   Simulator simulator(input, cloud, dispatcher);
   simulator.run();
+
+  std::cerr << "simulation done" << std::endl;
+
+  auto jobs = input->getJobs();
+  Solution::validate(jobs, solution);
+
+  auto flowVec = Solution::calculateFlow(jobs, solution);
+  for (const auto& kv : flowVec)
+    {
+      const auto& flow = kv.first;
+      std::cout << flow << std::endl;
+    }
 
   return 0;
 }

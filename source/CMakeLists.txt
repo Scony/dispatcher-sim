@@ -10,6 +10,7 @@ add_library(simulator-library
   RandomDispatcher.cpp
   Simulator.cpp
   Cloud.cpp
+  Solution.cpp
 )
 
 add_executable(simulator

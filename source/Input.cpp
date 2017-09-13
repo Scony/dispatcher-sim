@@ -15,7 +15,7 @@ std::vector<std::shared_ptr<Job> > Input::getJobs()
 
 void Input::readFromStdin()
 {
-  std::cerr << "reading input..." << std::endl;
+  std::cerr << "reading input..." << std::endl; // TODO: move up
 
   long long operationsNum = 0;
   int jobsNum;
@@ -55,7 +55,7 @@ void Input::readFromStdin()
       mQueue.push_back(job);
     }
 
-  std::cerr << "reading input done" << std::endl;
-  std::cerr << "jobs: " << jobsNum << std::endl;
-  std::cerr << "operations: " << operationsNum << std::endl;
+  std::cerr << "reading input done" << std::endl; // 
+  std::cerr << "jobs: " << jobsNum << std::endl;  // 
+  std::cerr << "operations: " << operationsNum << std::endl; // TODO: move up
 }
