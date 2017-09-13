@@ -10,8 +10,8 @@ RandomDispatcher::RandomDispatcher(std::shared_ptr<Input> input, std::shared_ptr
 void RandomDispatcher::dispatch(std::shared_ptr<Job> job)
 {
   auto operations = job->operations;
-  std::random_shuffle(operations.begin(), operations.end());
-
   auto queue = mCloud->getQueue();
+
   queue->insert(queue->end(), operations.begin(), operations.end());
+  std::random_shuffle(queue->begin(), queue->end());
 }
