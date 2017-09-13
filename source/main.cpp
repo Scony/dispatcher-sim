@@ -26,10 +26,16 @@ int main(int argc, char ** argv)
   auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, factoryArgs);
   auto dispatcher = dispatcherFactory->getDispatcher();
 
+  std::cerr << "reading input..." << std::endl;
+  input->readFromStdin();
+  std::cerr << "> jobs: " << input->getJobsNum() << std::endl;
+  std::cerr << "> operations: " << input->getOperationsNum() << std::endl;
+  std::cerr << "reading input done" << std::endl;
+
+  std::cerr << "running simulation..." << std::endl;
   Simulator simulator(input, cloud, dispatcher);
   simulator.run();
-
-  std::cerr << "simulation done" << std::endl;
+  std::cerr << "running simulation done" << std::endl;
 
   auto jobs = input->getJobs();
   Solution::validate(jobs, solution);

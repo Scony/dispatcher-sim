@@ -13,8 +13,8 @@ public:
   Input();
 
   std::vector<std::shared_ptr<Job> > getJobs();
-
-private:
+  long long getJobsNum();
+  long long getOperationsNum();
   void readFromStdin();
 
 private:

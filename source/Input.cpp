@@ -5,7 +5,6 @@
 Input::Input() :
   mQueue()
 {
-  readFromStdin();
 }
 
 std::vector<std::shared_ptr<Job> > Input::getJobs()
@@ -13,10 +12,23 @@ std::vector<std::shared_ptr<Job> > Input::getJobs()
   return mQueue;
 }
 
+long long Input::getJobsNum()
+{
+  return mQueue.size();
+}
+
+long long Input::getOperationsNum()
+{
+  long long operationsNum = 0;
+
+  for (const auto& job : mQueue)
+    operationsNum += job->operations.size();
+
+  return operationsNum;
+}
+
 void Input::readFromStdin()
 {
-  std::cerr << "reading input..." << std::endl; // TODO: move up
-
   long long operationsNum = 0;
   int jobsNum;
   std::cin >> jobsNum;
@@ -54,8 +66,4 @@ void Input::readFromStdin()
       auto job = std::make_shared<Job>(jobId, jobPriority, jobArrivalTimestamp, operations);
       mQueue.push_back(job);
     }
-
-  std::cerr << "reading input done" << std::endl; // 
-  std::cerr << "jobs: " << jobsNum << std::endl;  // 
-  std::cerr << "operations: " << operationsNum << std::endl; // TODO: move up
 }
