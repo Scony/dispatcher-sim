@@ -38,7 +38,10 @@ int main(int argc, char ** argv)
   std::cerr << "running simulation done" << std::endl;
 
   auto jobs = input->getJobs();
+
+  std::cerr << "running validation..." << std::endl;
   Solution::validate(jobs, solution);
+  std::cerr << "running validation done" << std::endl;
 
   auto flowVec = Solution::calculateFlow(jobs, solution);
   for (const auto& kv : flowVec)

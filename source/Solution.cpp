@@ -16,10 +16,10 @@ namespace Solution
 	const auto& endTimestamp = pair.first;
 	const auto& operation = pair.second;
 
-	assert(endTimestamp + operation->duration >= jobsMap[operation->parentId]->arrivalTimestamp);
+	assert(endTimestamp - operation->duration >= jobsMap[operation->parentId]->arrivalTimestamp);
       }
 
-    // TODO: check if all operations executed
+    // TODO: check if each operation executed exactly once
     // TODO: check if solution is schedulable given the number of machines
   }
 
