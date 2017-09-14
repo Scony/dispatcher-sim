@@ -12,6 +12,7 @@ add_library(simulator-library
   Cloud.cpp
   Solution.cpp
   DispatcherFactory.cpp
+  SimpleDispatcher.cpp
 )
 
 add_executable(simulator
