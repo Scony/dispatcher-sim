@@ -9,14 +9,9 @@
 class DispatcherFactory
 {
 public:
-  DispatcherFactory(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud, std::vector<std::string> args) :
-    mInput(input),
-    mCloud(cloud),
-    mArgs(args) {}
+  DispatcherFactory(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud, std::vector<std::string> args);
 
-  std::shared_ptr<IDispatcher> getDispatcher() {
-    return std::shared_ptr<IDispatcher>(new RandomDispatcher(mInput, mCloud));
-  }
+  std::shared_ptr<IDispatcher> getDispatcher();
 
 private:
   std::shared_ptr<Input> mInput;
