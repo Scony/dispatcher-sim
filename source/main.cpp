@@ -10,17 +10,18 @@
 
 int main(int argc, char ** argv)
 {
+  srand(time(0));
+
   std::vector<std::string> args;
   for (int i = 0; i < argc; i++)
     args.push_back(argv[i]);
 
   assert(argc >= 2 + 1);
-
-  srand(time(0));
+  unsigned machinesNum = std::stoi(args[1]);
 
   auto input = std::make_shared<Input>();
   auto solution = std::make_shared<Solution::Solution>();
-  auto cloud = std::make_shared<Cloud>(std::stoi(args[1]), solution);
+  auto cloud = std::make_shared<Cloud>(machinesNum, solution);
 
   auto factoryArgs = std::vector<std::string>(args.begin() + 2, args.end());
   auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, factoryArgs);
@@ -40,7 +41,7 @@ int main(int argc, char ** argv)
   auto jobs = input->getJobs();
 
   std::cerr << "running validation..." << std::endl;
-  Solution::validate(jobs, solution);
+  Solution::validate(jobs, solution, machinesNum);
   std::cerr << "running validation done" << std::endl;
 
   auto flowVec = Solution::calculateFlow(jobs, solution);
