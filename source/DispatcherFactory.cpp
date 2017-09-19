@@ -1,6 +1,8 @@
 #include <cassert>
 
 #include "DispatcherFactory.hpp"
+#include "RandomDispatcher.hpp"
+#include "MaxDispatcher.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -19,6 +21,8 @@ std::shared_ptr<IDispatcher> DispatcherFactory::getDispatcher()
 
   if (mArgs[0] == "random")
     dispatcher.reset((new RandomDispatcher(mInput, mCloud)));
+  if (mArgs[0] == "max")
+    dispatcher.reset((new MaxDispatcher(mInput, mCloud)));
 
   assert(dispatcher != nullptr);
 

@@ -13,6 +13,7 @@ add_library(simulator-library
   Solution.cpp
   DispatcherFactory.cpp
   SimpleDispatcher.cpp
+  MaxDispatcher.cpp
 )
 
 add_executable(simulator
