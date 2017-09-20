@@ -8,42 +8,41 @@ MaxDispatcher::MaxDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud
 {
 }
 
-void MaxDispatcher::dispatch(std::shared_ptr<Job> job,
-			     std::vector<std::shared_ptr<Operation> > pendingOperations,
-			     Queue queue)
+void MaxDispatcher::dispatch(std::shared_ptr<Job> job, Queue queue)
 {
   using DoO = std::deque<std::shared_ptr<Operation> >;
 
-  std::map<long long, std::shared_ptr<DoO> > pendingJobOperations;
+  std::vector<std::shared_ptr<Operation> > pendingOperations;
+  pendingOperations.insert(pendingOperations.end(), job->operations.begin(), job->operations.end());
+  pendingOperations.insert(pendingOperations.end(), queue->begin(), queue->end());
+  queue->clear();
+
+  std::map<long long, std::shared_ptr<DoO> > orderedJobOperations;
   for (auto& operation : pendingOperations)
     {
-      if (pendingJobOperations.find(operation->parentId) == pendingJobOperations.end())
-	pendingJobOperations[operation->parentId] = std::make_shared<DoO>();
-      pendingJobOperations[operation->parentId]->push_back(operation);
-    }
-  for (auto& operation : job->operations)
-    {
-      if (pendingJobOperations.find(operation->parentId) == pendingJobOperations.end())
-	pendingJobOperations[operation->parentId] = std::make_shared<DoO>();
-      pendingJobOperations[operation->parentId]->push_back(operation);
+      if (orderedJobOperations.find(operation->parentId) == orderedJobOperations.end())
+	orderedJobOperations[operation->parentId] = std::make_shared<DoO>();
+      orderedJobOperations[operation->parentId]->push_back(operation);
     }
 
-  std::vector<std::shared_ptr<DoO> > pendingJobOperationsVec;
-  for (auto& kv : pendingJobOperations)
+  std::vector<std::shared_ptr<DoO> > orderedJobOperationsVec;
+  for (auto& kv : orderedJobOperations)
     {
       auto& voo = kv.second;
-      pendingJobOperationsVec.push_back(voo);
+      orderedJobOperationsVec.push_back(voo);
     }
 
-  std::sort(pendingJobOperationsVec.begin(),
-	    pendingJobOperationsVec.end(),
+  // assure deterministic processing (sort by job's ID)
+  std::sort(orderedJobOperationsVec.begin(),
+	    orderedJobOperationsVec.end(),
 	    [](std::shared_ptr<DoO> a, std::shared_ptr<DoO> b) {
 	      return a->at(0)->parentId < b->at(0)->parentId;
 	    });
 
-  for (auto& deq : pendingJobOperationsVec)
-    std::sort(deq->begin(),
-	      deq->end(),
+  // assure order of operations within job
+  for (auto& jobOperations : orderedJobOperationsVec)
+    std::sort(jobOperations->begin(),
+	      jobOperations->end(),
 	      [](std::shared_ptr<Operation> a, std::shared_ptr<Operation> b) {
 		return a->duration < b->duration; // ASC // TODO: estimation
 	      });
@@ -51,7 +50,7 @@ void MaxDispatcher::dispatch(std::shared_ptr<Job> job,
   while (true)
     {
       bool added = false;
-      for (auto& deq : pendingJobOperationsVec)
+      for (auto& deq : orderedJobOperationsVec)
 	if (deq->size() > 0)
 	  {
 	    queue->push_front(deq->back());

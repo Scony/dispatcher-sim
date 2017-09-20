@@ -10,7 +10,5 @@ public:
   void dispatch(std::shared_ptr<Job> job) override;
 
 protected:
-  virtual void dispatch(std::shared_ptr<Job> job,
-			std::vector<std::shared_ptr<Operation> > pendingOperations,
-			Queue queue) = 0;
+  virtual void dispatch(std::shared_ptr<Job> job, Queue queue) = 0;
 };
