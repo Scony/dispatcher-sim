@@ -8,11 +8,11 @@ MaxDispatcher::MaxDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud
 {
 }
 
-void MaxDispatcher::dispatch(std::shared_ptr<Job> job, Queue queue)
+void MaxDispatcher::dispatch(JobSP job, Queue queue)
 {
-  using DoO = std::deque<std::shared_ptr<Operation> >;
+  using DoO = std::deque<OperationSP>;
 
-  std::vector<std::shared_ptr<Operation> > pendingOperations;
+  std::vector<OperationSP> pendingOperations;
   pendingOperations.insert(pendingOperations.end(), job->operations.begin(), job->operations.end());
   pendingOperations.insert(pendingOperations.end(), queue->begin(), queue->end());
   queue->clear();
@@ -43,7 +43,7 @@ void MaxDispatcher::dispatch(std::shared_ptr<Job> job, Queue queue)
   for (auto& jobOperations : orderedJobOperationsVec)
     std::sort(jobOperations->begin(),
 	      jobOperations->end(),
-	      [](std::shared_ptr<Operation> a, std::shared_ptr<Operation> b) {
+	      [](OperationSP a, OperationSP b) {
 		return a->duration < b->duration; // ASC // TODO: estimation
 	      });
 

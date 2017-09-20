@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 struct Operation
 {
   Operation(long long aId, long long aParentId, long long aName, long long aResult, long long aDuration) :
@@ -17,3 +19,5 @@ struct Operation
   const long long result;
   const long long duration;
 };
+
+using OperationSP = std::shared_ptr<Operation>;

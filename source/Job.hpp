@@ -9,7 +9,7 @@ struct Job
   Job(long long aId,
       long long aPriority,
       long long aArrivalTimestamp,
-      std::vector<std::shared_ptr<Operation> > aOperations) :
+      std::vector<OperationSP> aOperations) :
     id(aId),
     priority(aPriority),
     arrivalTimestamp(aArrivalTimestamp),
@@ -20,5 +20,7 @@ struct Job
   const long long id;
   const long long priority;
   const long long arrivalTimestamp;
-  const std::vector<std::shared_ptr<Operation> > operations;
+  const std::vector<OperationSP> operations;
 };
+
+using JobSP = std::shared_ptr<Job>;
