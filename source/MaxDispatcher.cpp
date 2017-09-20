@@ -17,15 +17,15 @@ void MaxDispatcher::dispatch(std::shared_ptr<Job> job,
   std::map<long long, std::shared_ptr<DoO> > pendingJobOperations;
   for (auto& operation : pendingOperations)
     {
-      if (pendingJobOperations.find(operation->id) == pendingJobOperations.end())
-	pendingJobOperations[operation->id] = std::make_shared<DoO>();
-      pendingJobOperations[operation->id]->push_back(operation);
+      if (pendingJobOperations.find(operation->parentId) == pendingJobOperations.end())
+	pendingJobOperations[operation->parentId] = std::make_shared<DoO>();
+      pendingJobOperations[operation->parentId]->push_back(operation);
     }
   for (auto& operation : job->operations)
     {
-      if (pendingJobOperations.find(operation->id) == pendingJobOperations.end())
-	pendingJobOperations[operation->id] = std::make_shared<DoO>();
-      pendingJobOperations[operation->id]->push_back(operation);
+      if (pendingJobOperations.find(operation->parentId) == pendingJobOperations.end())
+	pendingJobOperations[operation->parentId] = std::make_shared<DoO>();
+      pendingJobOperations[operation->parentId]->push_back(operation);
     }
 
   std::vector<std::shared_ptr<DoO> > pendingJobOperationsVec;
