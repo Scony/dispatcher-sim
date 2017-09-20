@@ -40,7 +40,7 @@ void Cloud::advance(long long toTimestamp)
   mTimestamp = toTimestamp;
 }
 
-Queue Cloud::getQueue()
+QueueSP Cloud::getQueue()
 {
   return mQueue;
 }

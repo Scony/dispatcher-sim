@@ -7,7 +7,7 @@ RandomDispatcher::RandomDispatcher(std::shared_ptr<Input> input, std::shared_ptr
 {
 }
 
-void RandomDispatcher::dispatch(JobSP job, Queue queue)
+void RandomDispatcher::dispatch(JobSP job, QueueSP queue)
 {
   queue->insert(queue->end(), job->operations.begin(), job->operations.end());
   std::random_shuffle(queue->begin(), queue->end());

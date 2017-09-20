@@ -8,7 +8,7 @@ MaxDispatcher::MaxDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud
 {
 }
 
-void MaxDispatcher::dispatch(JobSP job, Queue queue)
+void MaxDispatcher::dispatch(JobSP job, QueueSP queue)
 {
   using DoO = std::deque<OperationSP>;
 
