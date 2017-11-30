@@ -6,9 +6,8 @@
 
 #include "Operation.hpp"
 #include "Solution.hpp"
+#include "IQueue.hpp"
 
-using Queue = std::deque<OperationSP>;
-using QueueSP = std::shared_ptr<Queue>;
 using Machine = std::pair<long long, OperationSP>;
 
 class Cloud
@@ -17,13 +16,13 @@ public:
   Cloud(unsigned machinesNum, std::shared_ptr<Solution::Solution> solution);
 
   void advance(long long toTimestamp);
-  QueueSP getQueue();
+  void assignQueue(IQueue* queue);
 
 private:
   const unsigned mMachinesNum;
 
   std::shared_ptr<Solution::Solution> mSolution;
   long long mTimestamp;
-  QueueSP mQueue;
+  IQueue* mQueue;
   std::priority_queue<Machine, std::vector<Machine>, std::greater<Machine> > mMachines;
 };

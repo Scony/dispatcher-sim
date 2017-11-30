@@ -1,21 +1,23 @@
+#include <cassert>
+
 #include "Cloud.hpp"
 
 Cloud::Cloud(unsigned machinesNum, std::shared_ptr<Solution::Solution> solution) :
   mMachinesNum(machinesNum),
   mSolution(solution),
   mTimestamp(0),
-  mQueue(std::make_shared<std::deque<std::shared_ptr<Operation> > >()),
+  mQueue(nullptr),
   mMachines()
 {
 }
 
 void Cloud::advance(long long toTimestamp)
 {
+  assert(mQueue != nullptr);
+
   while (mMachines.size() < mMachinesNum && mQueue->size() > 0)
     {
-      auto operation = mQueue->back();
-      mQueue->pop_back();
-
+      auto operation = mQueue->pop();
       auto newMachine = Machine{mTimestamp + operation->duration, operation};
       mMachines.push(newMachine);
     }
@@ -29,9 +31,7 @@ void Cloud::advance(long long toTimestamp)
 
       if (mQueue->size() > 0)
 	{
-	  auto operation = mQueue->back();
-	  mQueue->pop_back();
-
+	  auto operation = mQueue->pop();
 	  auto newMachine = Machine{mTimestamp + operation->duration, operation};
 	  mMachines.push(newMachine);
 	}
@@ -40,7 +40,7 @@ void Cloud::advance(long long toTimestamp)
   mTimestamp = toTimestamp;
 }
 
-QueueSP Cloud::getQueue()
+void Cloud::assignQueue(IQueue* queue)
 {
-  return mQueue;
+  mQueue = queue;
 }

@@ -12,7 +12,6 @@ add_library(simulator-library
   Cloud.cpp
   Solution.cpp
   DispatcherFactory.cpp
-  SimpleDispatcher.cpp
   MaxDispatcher.cpp
   IDispatcher.cpp
   )
