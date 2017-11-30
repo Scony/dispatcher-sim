@@ -3,6 +3,7 @@
 #include "DispatcherFactory.hpp"
 #include "RandomDispatcher.hpp"
 #include "MaxDispatcher.hpp"
+#include "MinDispatcher.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -23,6 +24,8 @@ std::shared_ptr<IDispatcher> DispatcherFactory::getDispatcher()
     dispatcher.reset((new RandomDispatcher(mInput, mCloud)));
   if (mArgs[0] == "max")
     dispatcher.reset((new MaxDispatcher(mInput, mCloud)));
+  if (mArgs[0] == "min")
+    dispatcher.reset((new MinDispatcher(mInput, mCloud)));
 
   assert(dispatcher != nullptr);
 

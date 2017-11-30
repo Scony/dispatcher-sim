@@ -14,7 +14,7 @@ public:
 
   virtual void dispatch(JobSP job) override;
 
-private:
+protected:
   std::map<long long, std::vector<OperationSP> > mJobOperations;
   unsigned mNextJob;
 };
