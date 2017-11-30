@@ -1,64 +1,52 @@
 #include <algorithm>
 #include <map>
+#include <cassert>
 
 #include "MaxDispatcher.hpp"
 
 MaxDispatcher::MaxDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud) :
-  IDispatcher(input, cloud)
+  IDispatcher(input, cloud),
+  mJobOperations(),
+  mNextJob(0)
 {
 }
 
 void MaxDispatcher::dispatch(JobSP job)
 {
-  // using DoO = std::deque<OperationSP>;
+  mJobOperations[job->id] = job->operations;
+  std::sort(mJobOperations[job->id].begin(),
+	    mJobOperations[job->id].end(),
+	    [](OperationSP a, OperationSP b) {
+	      return a->duration < b->duration; // ASC // TODO: estimation
+	    });
+}
 
-  // std::vector<OperationSP> pendingOperations;
-  // pendingOperations.insert(pendingOperations.end(), job->operations.begin(), job->operations.end());
-  // pendingOperations.insert(pendingOperations.end(), queue->begin(), queue->end());
-  // queue->clear();
+OperationSP MaxDispatcher::pop()
+{
+  assert(size() > 0);
 
-  // std::map<long long, std::shared_ptr<DoO> > orderedJobOperations;
-  // for (auto& operation : pendingOperations)
-  //   {
-  //     if (orderedJobOperations.find(operation->parentId) == orderedJobOperations.end())
-  // 	orderedJobOperations[operation->parentId] = std::make_shared<DoO>();
-  //     orderedJobOperations[operation->parentId]->push_back(operation);
-  //   }
+  auto jobToPopFrom = mJobOperations.begin();
+  std::advance(jobToPopFrom, mNextJob);
 
-  // std::vector<std::shared_ptr<DoO> > orderedJobOperationsVec;
-  // for (auto& kv : orderedJobOperations)
-  //   {
-  //     auto& voo = kv.second;
-  //     orderedJobOperationsVec.push_back(voo);
-  //   }
+  auto operation = jobToPopFrom->second.back();
+  jobToPopFrom->second.pop_back();
 
-  // // assure deterministic processing (sort by job's ID)
-  // std::sort(orderedJobOperationsVec.begin(),
-  // 	    orderedJobOperationsVec.end(),
-  // 	    [](std::shared_ptr<DoO> a, std::shared_ptr<DoO> b) {
-  // 	      return a->at(0)->parentId < b->at(0)->parentId;
-  // 	    });
+  if (jobToPopFrom->second.size() == 0)
+    mJobOperations.erase(jobToPopFrom);
 
-  // // assure order of operations within job
-  // for (auto& jobOperations : orderedJobOperationsVec)
-  //   std::sort(jobOperations->begin(),
-  // 	      jobOperations->end(),
-  // 	      [](OperationSP a, OperationSP b) {
-  // 		return a->duration < b->duration; // ASC // TODO: estimation
-  // 	      });
+  if (mJobOperations.size() == 0)
+    mNextJob = 0;
+  else
+    mNextJob = (mNextJob + 1) % mJobOperations.size();
 
-  // while (true)
-  //   {
-  //     bool added = false;
-  //     for (auto& deq : orderedJobOperationsVec)
-  // 	if (deq->size() > 0)
-  // 	  {
-  // 	    queue->push_front(deq->back());
-  // 	    deq->pop_back();
-  // 	    added = true;
-  // 	  }
+  return operation;
+}
 
-  //     if (!added)
-  // 	break;
-  //   }
+size_t MaxDispatcher::size()
+{
+  size_t totalSize = 0;
+  for (const auto& kv : mJobOperations)
+    totalSize += kv.second.size();
+
+  return totalSize;
 }
