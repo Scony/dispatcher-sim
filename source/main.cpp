@@ -34,7 +34,7 @@ int main(int argc, char ** argv)
   std::cerr << "reading input done" << std::endl;
 
   std::cerr << "running simulation..." << std::endl;
-  Simulator simulator(input, cloud, dispatcher);
+  Simulator simulator(input, dispatcher);
   simulator.run();
   std::cerr << "running simulation done" << std::endl;
 

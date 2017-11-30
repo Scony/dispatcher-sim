@@ -13,6 +13,7 @@ public:
     mCloud(cloud) {}
 
   virtual void dispatch(std::shared_ptr<Job> job) = 0;
+  virtual void advance(long long toTimestamp);
 
 protected:
   std::shared_ptr<Input> mInput;

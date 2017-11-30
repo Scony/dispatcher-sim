@@ -14,11 +14,12 @@ add_library(simulator-library
   DispatcherFactory.cpp
   SimpleDispatcher.cpp
   MaxDispatcher.cpp
-)
+  IDispatcher.cpp
+  )
 
 add_executable(simulator
   main.cpp
-)
+  )
 
 target_link_libraries(simulator simulator-library)
 

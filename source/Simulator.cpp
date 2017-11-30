@@ -3,10 +3,7 @@
 
 #include "Simulator.hpp"
 
-Simulator::Simulator(std::shared_ptr<Input> input,
-		     std::shared_ptr<Cloud> cloud,
-		     std::shared_ptr<IDispatcher> dispatcher) :
-  mCloud(cloud),
+Simulator::Simulator(std::shared_ptr<Input> input, std::shared_ptr<IDispatcher> dispatcher) :
   mDispatcher(dispatcher),
   mQueue()
 {
@@ -26,10 +23,10 @@ void Simulator::run()
   while (mQueue.size() > 0)
     {
       auto newestJob = mQueue.back();
-      mCloud->advance(newestJob->arrivalTimestamp);
+      mDispatcher->advance(newestJob->arrivalTimestamp);
       mDispatcher->dispatch(newestJob);
       mQueue.pop_back();
     }
 
-  mCloud->advance(LLONG_MAX);
+  mDispatcher->advance(LLONG_MAX);
 };
