@@ -6,10 +6,10 @@
 #include "Cloud.hpp"
 #include "IQueue.hpp"
 
-class IDispatcher : public IQueue
+class Dispatcher : public IQueue
 {
 public:
-  IDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud);
+  Dispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud);
 
   virtual void dispatch(std::shared_ptr<Job> job) = 0;
   virtual void advance(long long toTimestamp);

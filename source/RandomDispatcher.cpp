@@ -4,7 +4,7 @@
 #include "RandomDispatcher.hpp"
 
 RandomDispatcher::RandomDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud) :
-  IDispatcher(input, cloud),
+  Dispatcher(input, cloud),
   mQueue()
 {
 }

@@ -3,7 +3,7 @@
 
 #include "Simulator.hpp"
 
-Simulator::Simulator(std::shared_ptr<Input> input, std::shared_ptr<IDispatcher> dispatcher) :
+Simulator::Simulator(std::shared_ptr<Input> input, std::shared_ptr<Dispatcher> dispatcher) :
   mDispatcher(dispatcher),
   mQueue()
 {

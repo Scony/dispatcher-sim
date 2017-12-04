@@ -2,9 +2,9 @@
 
 #include <map>
 
-#include "IDispatcher.hpp"
+#include "Dispatcher.hpp"
 
-class MaxDispatcher : public IDispatcher
+class MaxDispatcher : public Dispatcher
 {
 public:
   MaxDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud);

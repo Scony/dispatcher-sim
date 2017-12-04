@@ -5,7 +5,7 @@
 #include "MaxDispatcher.hpp"
 
 MaxDispatcher::MaxDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud) :
-  IDispatcher(input, cloud),
+  Dispatcher(input, cloud),
   mJobOperations(),
   mNextJob(0)
 {

@@ -15,13 +15,13 @@ DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 {
 }
 
-std::shared_ptr<IDispatcher> DispatcherFactory::getDispatcher()
+std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
 {
   assert(mArgs.size() >= 2);
 
   // dispatcher
 
-  std::shared_ptr<IDispatcher> dispatcher;
+  std::shared_ptr<Dispatcher> dispatcher;
 
   if (mArgs[0] == "random")
     dispatcher.reset((new RandomDispatcher(mInput, mCloud)));

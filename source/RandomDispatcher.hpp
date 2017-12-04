@@ -1,8 +1,8 @@
 #pragma once
 
-#include "IDispatcher.hpp"
+#include "Dispatcher.hpp"
 
-class RandomDispatcher : public IDispatcher
+class RandomDispatcher : public Dispatcher
 {
 public:
   RandomDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud);

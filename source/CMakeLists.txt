@@ -13,7 +13,7 @@ add_library(simulator-library
   Solution.cpp
   DispatcherFactory.cpp
   MaxDispatcher.cpp
-  IDispatcher.cpp
+  Dispatcher.cpp
   MinDispatcher.cpp
   ExecutionsSubject.cpp
   NoEstimator.cpp
