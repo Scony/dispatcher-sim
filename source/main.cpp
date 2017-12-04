@@ -20,8 +20,10 @@ int main(int argc, char ** argv)
   unsigned machinesNum = std::stoi(args[1]);
 
   auto input = std::make_shared<Input>();
-  auto solution = std::make_shared<Solution::Solution>();
+  auto solution = std::make_shared<Solution>();
   auto cloud = std::make_shared<Cloud>(machinesNum);
+
+  cloud->subscribe(solution);
 
   auto factoryArgs = std::vector<std::string>(args.begin() + 2, args.end());
   auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, factoryArgs);
@@ -41,10 +43,10 @@ int main(int argc, char ** argv)
   auto jobs = input->getJobs();
 
   std::cerr << "running validation..." << std::endl;
-  Solution::validate(jobs, solution, machinesNum);
+  solution->validate(jobs, machinesNum);
   std::cerr << "running validation done" << std::endl;
 
-  auto flowVec = Solution::calculateFlow(jobs, solution);
+  auto flowVec = solution->calculateJobFlowVec(jobs);
   for (const auto& kv : flowVec)
     {
       const auto& flow = kv.first;

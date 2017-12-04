@@ -1,14 +1,24 @@
+#pragma once
+
 #include <vector>
 #include <memory>
 
 #include "Operation.hpp"
 #include "Job.hpp"
+#include "IExecutionsListener.hpp"
 
-namespace Solution
+class Solution : public IExecutionsListener
 {
-  using Solution = std::vector<std::pair<long long, std::shared_ptr<Operation> > >;
+public:
+  using SolutionVec = std::vector<std::pair<long long, std::shared_ptr<Operation> > >;
+  using JobFlowVec = std::vector<std::pair<long long, std::shared_ptr<Job> > >;
 
-  void validate(std::vector<std::shared_ptr<Job> > jobs, std::shared_ptr<Solution> solution, unsigned machinesNum);
-  std::vector<std::pair<long long, std::shared_ptr<Job> > > calculateFlow(std::vector<std::shared_ptr<Job> > jobs,
-									  std::shared_ptr<Solution> solution);
-}
+public:
+  void handleNotification(const std::pair<long long, OperationSP>& notification) override;
+
+  void validate(std::vector<std::shared_ptr<Job> > jobs, unsigned machinesNum);
+  JobFlowVec calculateJobFlowVec(std::vector<std::shared_ptr<Job> > jobs);
+
+private:
+  SolutionVec mSolutionVec;
+};
