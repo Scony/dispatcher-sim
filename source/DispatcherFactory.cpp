@@ -4,6 +4,7 @@
 #include "RandomDispatcher.hpp"
 #include "MaxDispatcher.hpp"
 #include "MinDispatcher.hpp"
+#include "NoEstimator.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -16,7 +17,9 @@ DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 
 std::shared_ptr<IDispatcher> DispatcherFactory::getDispatcher()
 {
-  assert(mArgs.size() >= 1);
+  assert(mArgs.size() >= 2);
+
+  // dispatcher
 
   std::shared_ptr<IDispatcher> dispatcher;
 
@@ -28,6 +31,15 @@ std::shared_ptr<IDispatcher> DispatcherFactory::getDispatcher()
     dispatcher.reset((new MinDispatcher(mInput, mCloud)));
 
   assert(dispatcher != nullptr);
+
+  // estimator
+
+  std::shared_ptr<IEstimator> estimator;
+
+  if (mArgs[1] == "no")
+    estimator.reset((new NoEstimator()));
+
+  assert(estimator != nullptr);
 
   return dispatcher;
 }

@@ -16,7 +16,7 @@ int main(int argc, char ** argv)
   for (int i = 0; i < argc; i++)
     args.push_back(argv[i]);
 
-  assert(argc >= 2 + 1);
+  assert(argc >= 3 + 1);
   unsigned machinesNum = std::stoi(args[1]);
 
   auto input = std::make_shared<Input>();
