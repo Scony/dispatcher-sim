@@ -15,6 +15,7 @@ add_library(simulator-library
   MaxDispatcher.cpp
   IDispatcher.cpp
   MinDispatcher.cpp
+  ExecutionsSubject.cpp
   )
 
 add_executable(simulator
