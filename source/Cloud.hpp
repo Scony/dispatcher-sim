@@ -5,15 +5,15 @@
 #include <queue>
 
 #include "Operation.hpp"
-#include "Solution.hpp"
 #include "IQueue.hpp"
+#include "ExecutionsSubject.hpp"
 
 using Machine = std::pair<long long, OperationSP>;
 
-class Cloud
+class Cloud : public ExecutionsSubject
 {
 public:
-  Cloud(unsigned machinesNum, std::shared_ptr<Solution::Solution> solution);
+  Cloud(unsigned machinesNum);
 
   void advance(long long toTimestamp);
   void assignQueue(IQueue* queue);
@@ -21,7 +21,6 @@ public:
 private:
   const unsigned mMachinesNum;
 
-  std::shared_ptr<Solution::Solution> mSolution;
   long long mTimestamp;
   IQueue* mQueue;
   std::priority_queue<Machine, std::vector<Machine>, std::greater<Machine> > mMachines;

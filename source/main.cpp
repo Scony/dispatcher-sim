@@ -21,7 +21,7 @@ int main(int argc, char ** argv)
 
   auto input = std::make_shared<Input>();
   auto solution = std::make_shared<Solution::Solution>();
-  auto cloud = std::make_shared<Cloud>(machinesNum, solution);
+  auto cloud = std::make_shared<Cloud>(machinesNum);
 
   auto factoryArgs = std::vector<std::string>(args.begin() + 2, args.end());
   auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, factoryArgs);

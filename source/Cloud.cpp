@@ -2,9 +2,8 @@
 
 #include "Cloud.hpp"
 
-Cloud::Cloud(unsigned machinesNum, std::shared_ptr<Solution::Solution> solution) :
+Cloud::Cloud(unsigned machinesNum) :
   mMachinesNum(machinesNum),
-  mSolution(solution),
   mTimestamp(0),
   mQueue(nullptr),
   mMachines()
@@ -26,7 +25,8 @@ void Cloud::advance(long long toTimestamp)
     {
       mTimestamp = mMachines.top().first;
       auto finishedOperation = mMachines.top().second;
-      mSolution->push_back({mTimestamp, finishedOperation});
+      auto execution = std::pair<long long, OperationSP>{mTimestamp, finishedOperation};
+      notify(execution);
       mMachines.pop();
 
       if (mQueue->size() > 0)
