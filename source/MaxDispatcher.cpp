@@ -18,8 +18,8 @@ void MaxDispatcher::dispatch(JobSP job)
   mJobOperations[job->id] = job->operations;
   std::sort(mJobOperations[job->id].begin(),
 	    mJobOperations[job->id].end(),
-	    [](OperationSP a, OperationSP b) {
-	      return a->duration < b->duration; // ASC // TODO: estimation
+	    [&](OperationSP a, OperationSP b) {
+	      return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
 	    });
 }
 

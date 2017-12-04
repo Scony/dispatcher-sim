@@ -6,4 +6,6 @@ class NoEstimator : public IEstimator
 {
 public:
   void handleNotification(const std::pair<long long, OperationSP>& notification) override;
+
+  long long estimate(OperationSP operation) override;
 };
