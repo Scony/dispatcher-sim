@@ -2,8 +2,10 @@
 
 #include "MinDispatcher.hpp"
 
-MinDispatcher::MinDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud) :
-  MaxDispatcher(input, cloud)
+MinDispatcher::MinDispatcher(std::shared_ptr<Input> input,
+			     std::shared_ptr<Cloud> cloud,
+			     std::shared_ptr<IEstimator> estimator) :
+  MaxDispatcher(input, cloud, estimator)
 {
 }
 

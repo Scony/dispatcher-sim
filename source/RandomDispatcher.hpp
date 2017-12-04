@@ -5,7 +5,9 @@
 class RandomDispatcher : public Dispatcher
 {
 public:
-  RandomDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud);
+  RandomDispatcher(std::shared_ptr<Input> input,
+		   std::shared_ptr<Cloud> cloud,
+		   std::shared_ptr<IEstimator> estimator);
 
   OperationSP pop() override;
   size_t size() override;

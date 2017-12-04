@@ -4,8 +4,10 @@
 
 #include "MaxDispatcher.hpp"
 
-MaxDispatcher::MaxDispatcher(std::shared_ptr<Input> input, std::shared_ptr<Cloud> cloud) :
-  Dispatcher(input, cloud),
+MaxDispatcher::MaxDispatcher(std::shared_ptr<Input> input,
+			     std::shared_ptr<Cloud> cloud,
+			     std::shared_ptr<IEstimator> estimator) :
+  Dispatcher(input, cloud, estimator),
   mJobOperations(),
   mNextJob(0)
 {
