@@ -1,0 +1,6 @@
+* short term
+** TODO sjlo - optimize calculations (recalculate present job only)
+** TODO SA
+** TODO opts instead of positional parameters
+* long term
+** TODO fuzzy SA

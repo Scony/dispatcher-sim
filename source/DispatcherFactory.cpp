@@ -5,6 +5,7 @@
 #include "MaxDispatcher.hpp"
 #include "MinDispatcher.hpp"
 #include "NoEstimator.hpp"
+#include "SJLODispatcher.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -38,6 +39,8 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
     dispatcher.reset((new MaxDispatcher(mInput, mCloud, estimator)));
   if (mArgs[0] == "min")
     dispatcher.reset((new MinDispatcher(mInput, mCloud, estimator)));
+  if (mArgs[0] == "sjlo")
+    dispatcher.reset((new SJLODispatcher(mInput, mCloud, estimator)));
 
   assert(dispatcher != nullptr);
 

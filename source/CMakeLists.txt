@@ -17,6 +17,7 @@ add_library(simulator-library
   MinDispatcher.cpp
   ExecutionsSubject.cpp
   NoEstimator.cpp
+  SJLODispatcher.cpp
   )
 
 add_executable(simulator
