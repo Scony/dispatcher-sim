@@ -18,6 +18,7 @@ add_library(simulator-library
   ExecutionsSubject.cpp
   NoEstimator.cpp
   SJLODispatcher.cpp
+  FIFODispatcher.cpp
   )
 
 add_executable(simulator
