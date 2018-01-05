@@ -7,6 +7,8 @@
 #include "NoEstimator.hpp"
 #include "SJLODispatcher.hpp"
 #include "FIFODispatcher.hpp"
+#include "SJSODispatcher.hpp"
+#include "LJSODispatcher.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -44,6 +46,10 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
     dispatcher.reset((new SJLODispatcher(mInput, mCloud, estimator)));
   if (mArgs[0] == "fifo")
     dispatcher.reset((new FIFODispatcher(mInput, mCloud, estimator)));
+  if (mArgs[0] == "sjso")
+    dispatcher.reset((new SJSODispatcher(mInput, mCloud, estimator)));
+  if (mArgs[0] == "ljso")
+    dispatcher.reset((new LJSODispatcher(mInput, mCloud, estimator)));
 
   assert(dispatcher != nullptr);
 
