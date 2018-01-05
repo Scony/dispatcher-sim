@@ -2,10 +2,10 @@
 
 #include "Dispatcher.hpp"
 
-class SOCmp
+class LOCmp
 {
 public:
-  SOCmp(const bool& revparam = false) : mReverse(revparam) {};
+  LOCmp(const bool& revparam = false) : mReverse(revparam) {};
 
   bool operator() (const OperationSP& lhs, const OperationSP& rhs) const
   {
@@ -19,17 +19,17 @@ private:
   {
     if (lhs->duration == rhs->duration)
       return (lhs->arrival < rhs->arrival);
-    return lhs->duration < rhs->duration;
+    return lhs->duration > rhs->duration;
   }
 
 private:
   bool mReverse;
 };
 
-class SODispatcher : public Dispatcher
+class LODispatcher : public Dispatcher
 {
 public:
-  SODispatcher(std::shared_ptr<Input> input,
+  LODispatcher(std::shared_ptr<Input> input,
 	       std::shared_ptr<Cloud> cloud,
 	       std::shared_ptr<IEstimator> estimator);
 
@@ -39,5 +39,5 @@ public:
   virtual void dispatch(JobSP job) override;
 
 protected:
-  std::priority_queue<OperationSP, std::vector<OperationSP>, SOCmp> mOperations;
+  std::priority_queue<OperationSP, std::vector<OperationSP>, LOCmp> mOperations;
 };

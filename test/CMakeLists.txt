@@ -14,6 +14,8 @@ add_executable(simulator-test
   main.cpp
   Fuzzy3Tests.cpp
   ExecutionsSubjectAndListener.cpp
+  SODispatcherTests.cpp
+  LODispatcherTests.cpp
   )
 
 target_link_libraries(simulator-test
