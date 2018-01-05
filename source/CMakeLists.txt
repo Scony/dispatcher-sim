@@ -22,6 +22,7 @@ add_library(simulator-library
   SJSODispatcher.cpp
   LJSODispatcher.cpp
   LazyClairvoyantEstimator.cpp
+  SODispatcher.cpp
   )
 
 add_executable(simulator
