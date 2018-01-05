@@ -59,6 +59,7 @@ void Input::readFromStdin()
 						       jobId,
 						       operationName,
 						       operationResult,
+						       jobArrivalTimestamp,
 						       operationDuration);
       	  operations.push_back(operation);
       	}
