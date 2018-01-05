@@ -16,6 +16,7 @@ add_executable(simulator-test
   ExecutionsSubjectAndListener.cpp
   SODispatcherTests.cpp
   LODispatcherTests.cpp
+  LazyClairvoyantEstimatorTests.cpp
   )
 
 target_link_libraries(simulator-test
