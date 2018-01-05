@@ -9,6 +9,7 @@
 #include "FIFODispatcher.hpp"
 #include "SJSODispatcher.hpp"
 #include "LJSODispatcher.hpp"
+#include "LazyClairvoyantEstimator.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -29,6 +30,8 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
 
   if (mArgs[1] == "no")
     estimator.reset((new NoEstimator()));
+  if (mArgs[1] == "lclv")
+    estimator.reset((new LazyClairvoyantEstimator()));
 
   assert(estimator != nullptr);
 

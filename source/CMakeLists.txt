@@ -21,6 +21,7 @@ add_library(simulator-library
   FIFODispatcher.cpp
   SJSODispatcher.cpp
   LJSODispatcher.cpp
+  LazyClairvoyantEstimator.cpp
   )
 
 add_executable(simulator
