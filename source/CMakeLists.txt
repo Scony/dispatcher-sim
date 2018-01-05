@@ -24,6 +24,7 @@ add_library(simulator-library
   LazyClairvoyantEstimator.cpp
   SODispatcher.cpp
   LODispatcher.cpp
+  ELODispatcher.cpp
   )
 
 add_executable(simulator

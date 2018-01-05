@@ -12,6 +12,7 @@
 #include "LazyClairvoyantEstimator.hpp"
 #include "LODispatcher.hpp"
 #include "SODispatcher.hpp"
+#include "ELODispatcher.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -57,6 +58,8 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
     dispatcher.reset((new LJSODispatcher(mInput, mCloud, estimator)));
   if (mArgs[0] == "lo")
     dispatcher.reset((new LODispatcher(mInput, mCloud, estimator)));
+  if (mArgs[0] == "elo")
+    dispatcher.reset((new ELODispatcher(mInput, mCloud, estimator)));
   if (mArgs[0] == "so")
     dispatcher.reset((new SODispatcher(mInput, mCloud, estimator)));
 
