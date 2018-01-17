@@ -5,30 +5,43 @@
 JobSADispatcher::JobSADispatcher(std::shared_ptr<Input> input,
 				 std::shared_ptr<Cloud> cloud,
 				 std::shared_ptr<IEstimator> estimator) :
-  Dispatcher(input, cloud, estimator),
-  mSolution(new Solution)
+  Dispatcher(input, cloud, estimator)
 {
-  mCloud->subscribe(mSolution);
 }
 
 void JobSADispatcher::dispatch(std::shared_ptr<Job> job)
 {
-  // add job to job pool
-  // run SA
-  // reset mQueue
+  mJobOperations[job->id] = {};	// job->operations;
+  mJobOperations[job->id].insert(mJobOperations[job->id].end(),
+				 job->operations.rbegin(),
+				 job->operations.rend());
+  mCurrentSolution.insert(mCurrentSolution.begin(), job->id);
+
+  // TODO: run SA to fix mCurrentSolution
 }
 
 OperationSP JobSADispatcher::pop()
 {
-  assert(mQueue.size() > 0);
+  assert(mJobOperations.size() > 0);
 
-  auto operation = mQueue.back();
-  mQueue.pop_back();
+  auto jobId = mCurrentSolution.back();
+  auto operation = mJobOperations[jobId].back();
+  mJobOperations[jobId].pop_back();
+
+  if (mJobOperations[jobId].size() == 0)
+    {
+      mJobOperations.erase(jobId);
+      mCurrentSolution.pop_back();
+    }
 
   return operation;
 }
 
 size_t JobSADispatcher::size()
 {
-  return mQueue.size();
+  size_t totalSize = 0;
+  for (const auto& kv : mJobOperations)
+    totalSize += kv.second.size();
+
+  return totalSize;
 }
