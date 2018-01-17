@@ -13,6 +13,7 @@
 #include "LODispatcher.hpp"
 #include "SODispatcher.hpp"
 #include "ELODispatcher.hpp"
+#include "JobSADispatcher.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -62,6 +63,8 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
     dispatcher.reset((new ELODispatcher(mInput, mCloud, estimator)));
   if (mArgs[0] == "so")
     dispatcher.reset((new SODispatcher(mInput, mCloud, estimator)));
+  if (mArgs[0] == "jobsa")
+    dispatcher.reset((new JobSADispatcher(mInput, mCloud, estimator)));
 
   assert(dispatcher != nullptr);
 

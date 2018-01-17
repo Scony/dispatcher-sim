@@ -25,6 +25,7 @@ add_library(simulator-library
   SODispatcher.cpp
   LODispatcher.cpp
   ELODispatcher.cpp
+  JobSADispatcher.cpp
   )
 
 add_executable(simulator
