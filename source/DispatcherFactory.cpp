@@ -14,6 +14,8 @@
 #include "SODispatcher.hpp"
 #include "ELODispatcher.hpp"
 #include "JobSADispatcher.hpp"
+#include "QOPTDispatcher.hpp"
+#include "QWORSTDispatcher.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -65,6 +67,10 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
     dispatcher.reset((new SODispatcher(mInput, mCloud, estimator)));
   if (mArgs[0] == "jobsa")
     dispatcher.reset((new JobSADispatcher(mInput, mCloud, estimator)));
+  if (mArgs[0] == "qopt")
+    dispatcher.reset((new QOPTDispatcher(mInput, mCloud, estimator)));
+  if (mArgs[0] == "qworst")
+    dispatcher.reset((new QWORSTDispatcher(mInput, mCloud, estimator)));
 
   assert(dispatcher != nullptr);
 

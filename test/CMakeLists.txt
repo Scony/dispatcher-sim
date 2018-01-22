@@ -18,6 +18,8 @@ add_executable(simulator-test
   LODispatcherTests.cpp
   LazyClairvoyantEstimatorTests.cpp
   ELODispatcherTests.cpp
+  CloudTests.cpp
+  SolutionTests.cpp
   )
 
 target_link_libraries(simulator-test

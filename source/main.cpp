@@ -20,6 +20,13 @@ int main(int argc, char ** argv)
   unsigned machinesNum = std::stoi(args[1]);
 
   auto input = std::make_shared<Input>();
+
+  std::cerr << "reading input..." << std::endl;
+  input->readFromStdin();
+  std::cerr << "> jobs: " << input->getJobsNum() << std::endl;
+  std::cerr << "> operations: " << input->getOperationsNum() << std::endl;
+  std::cerr << "reading input done" << std::endl;
+
   auto solution = std::make_shared<Solution>();
   auto cloud = std::make_shared<Cloud>(machinesNum);
 
@@ -28,12 +35,6 @@ int main(int argc, char ** argv)
   auto factoryArgs = std::vector<std::string>(args.begin() + 2, args.end());
   auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, factoryArgs);
   auto dispatcher = dispatcherFactory->getDispatcher();
-
-  std::cerr << "reading input..." << std::endl;
-  input->readFromStdin();
-  std::cerr << "> jobs: " << input->getJobsNum() << std::endl;
-  std::cerr << "> operations: " << input->getOperationsNum() << std::endl;
-  std::cerr << "reading input done" << std::endl;
 
   std::cerr << "running simulation..." << std::endl;
   Simulator simulator(input, dispatcher);

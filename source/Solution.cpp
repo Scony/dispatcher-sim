@@ -97,3 +97,26 @@ Solution::JobFlowVec Solution::calculateJobFlowVec(std::vector<std::shared_ptr<J
 
   return jobFlows;
 }
+
+long long Solution::evalTotalFlow(const SolutionVec& solution)
+{
+  std::map<long long, long long> jobFlows;
+
+  for (const auto& pair : solution)
+    {
+      const auto& endTimestamp = pair.first;
+      const auto& operation = pair.second;
+
+      if (jobFlows.find(operation->parentId) == jobFlows.end())
+	jobFlows[operation->parentId] = 0;
+
+      jobFlows[operation->parentId] = std::max(jobFlows[operation->parentId],
+					       endTimestamp - operation->arrival);
+    }
+
+  long long totalFlow = 0;
+  for (auto const& kv : jobFlows)
+    totalFlow += kv.second;
+
+  return totalFlow;
+}

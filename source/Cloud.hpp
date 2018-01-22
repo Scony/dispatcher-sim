@@ -13,10 +13,15 @@ using Machine = std::pair<long long, OperationSP>;
 class Cloud : public ExecutionsSubject
 {
 public:
+  static std::vector<std::pair<long long, OperationSP> > process(unsigned machinesNum,
+								 std::vector<OperationSP> operations);
+public:
   Cloud(unsigned machinesNum);
 
   void advance(long long toTimestamp);
   void assignQueue(IQueue* queue);
+
+  unsigned getMachinesNum();
 
 private:
   const unsigned mMachinesNum;
