@@ -1,24 +1,50 @@
 # dispatcher-sim
 Testing workload dispatcher simulator.
 
-## 1. Buidilng
+## Buidilng
 ```
 make
 ```
 
-## 2. Testing
+## Testing
 ```
 make test
 ```
 Note that you will need GTest & GMock
 
-## 3. Running
+## Running
 To run simple FIFO dispatcher (clairvoyant) over 20 machines type in following command:
 ```
 cat instances/692_10.txt | ./build/source/simulator fifo -m 20 -e no | ./build/helpers/stat-desc/stat-desc
 ```
 
-## 4. Instance format
+## Run options
+
+### Supported algorithms `algorithm`
+
+| Value | Algorithm |
+|---|---|
+| random | random (`srand(time(0))`) |
+| max | RR Job, Max Operation |
+| min | RR Job, Min Operation |
+| fifo | FIFO Job, As-is Operation |
+| sjlo | Shortest Job, Longest Operation |
+| sjso | Shortest Job, Shortest Operation |
+| ljso | Longest Job, Shortest Operation |
+| lo | Longest Operation (conflicts - Earliest Operation) |
+| elo | Earliest Operation (conflicts - Longest Operation) |
+| so | Shortest Operation (conflicts - Earliest Operation) |
+| qopt | Optimal from Queue POV |
+| qworst | Worst from Queue POV |
+
+### Supported testcase duration estimation methods `-e`
+
+| Value | Method |
+|---|---|
+| no | no estimation (clairvoyant) |
+| lclv | lazy clairvoyant (clairvoyant once known) |
+
+## Instance format
 ```
 [number of test suites]
 
