@@ -2,22 +2,52 @@
 #include <vector>
 #include <cassert>
 
+#include "args.hpp"
+
 #include "Input.hpp"
 #include "Cloud.hpp"
 #include "Simulator.hpp"
 #include "DispatcherFactory.hpp"
 #include "Solution.hpp"
+#include "Arguments.hpp"
 
 int main(int argc, char ** argv)
 {
   srand(time(0));
 
-  std::vector<std::string> args;
-  for (int i = 0; i < argc; i++)
-    args.push_back(argv[i]);
+  args::ArgumentParser parser("Test workload dispatcher simulator");
 
-  assert(argc >= 3 + 1);
-  unsigned machinesNum = std::stoi(args[1]);
+  args::HelpFlag help(parser, "help", "Display this help and exit",
+		      {'h', "help"});
+
+  args::ValueFlag<unsigned> machinesArg(parser, "number", "Number of machines",
+					{'m', "machines"});
+  args::ValueFlag<std::string> estimationArg(parser, "method", "Estimation method",
+					     {'e', "estimation"});
+
+  args::Positional<std::string> algorithmArg(parser, "algorithm", "Primary algorithm");
+
+  try
+    {
+      parser.ParseCLI(argc, argv);
+      if (!algorithmArg)
+	throw args::Help("");
+    }
+  catch (args::Help)
+    {
+      std::cout << parser;
+      return 0;
+    }
+  catch (args::ParseError e)
+    {
+      std::cerr << e.what() << std::endl;
+      return 1;
+    }
+
+  Arguments arguments;
+  arguments.primaryAlgorithm = args::get(algorithmArg);
+  arguments.machinesNum = machinesArg ? args::get(machinesArg) : 1;
+  arguments.estimationMethod = estimationArg ? args::get(estimationArg) : "no";
 
   auto input = std::make_shared<Input>();
 
@@ -28,12 +58,11 @@ int main(int argc, char ** argv)
   std::cerr << "reading input done" << std::endl;
 
   auto solution = std::make_shared<Solution>();
-  auto cloud = std::make_shared<Cloud>(machinesNum);
+  auto cloud = std::make_shared<Cloud>(arguments.machinesNum);
 
   cloud->subscribe(solution);
 
-  auto factoryArgs = std::vector<std::string>(args.begin() + 2, args.end());
-  auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, factoryArgs);
+  auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, arguments);
   auto dispatcher = dispatcherFactory->getDispatcher();
 
   std::cerr << "running simulation..." << std::endl;
@@ -44,7 +73,7 @@ int main(int argc, char ** argv)
   auto jobs = input->getJobs();
 
   std::cerr << "running validation..." << std::endl;
-  solution->validate(jobs, machinesNum);
+  solution->validate(jobs, arguments.machinesNum);
   std::cerr << "running validation done" << std::endl;
 
   auto flowVec = solution->calculateJobFlowVec(jobs);

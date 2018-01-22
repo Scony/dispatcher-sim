@@ -19,24 +19,22 @@
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
-				     std::vector<std::string> args) :
+				     Arguments arguments) :
   mInput(input),
   mCloud(cloud),
-  mArgs(args)
+  mArguments(arguments)
 {
 }
 
 std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
 {
-  assert(mArgs.size() >= 2);
-
   // estimator
 
   std::shared_ptr<IEstimator> estimator;
 
-  if (mArgs[1] == "no")
+  if (mArguments.estimationMethod == "no")
     estimator.reset((new NoEstimator()));
-  if (mArgs[1] == "lclv")
+  if (mArguments.estimationMethod == "lclv")
     estimator.reset((new LazyClairvoyantEstimator()));
 
   assert(estimator != nullptr);
@@ -45,31 +43,31 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
 
   std::shared_ptr<Dispatcher> dispatcher;
 
-  if (mArgs[0] == "random")
+  if (mArguments.primaryAlgorithm == "random")
     dispatcher.reset((new RandomDispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "max")
+  if (mArguments.primaryAlgorithm == "max")
     dispatcher.reset((new MaxDispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "min")
+  if (mArguments.primaryAlgorithm == "min")
     dispatcher.reset((new MinDispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "sjlo")
+  if (mArguments.primaryAlgorithm == "sjlo")
     dispatcher.reset((new SJLODispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "fifo")
+  if (mArguments.primaryAlgorithm == "fifo")
     dispatcher.reset((new FIFODispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "sjso")
+  if (mArguments.primaryAlgorithm == "sjso")
     dispatcher.reset((new SJSODispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "ljso")
+  if (mArguments.primaryAlgorithm == "ljso")
     dispatcher.reset((new LJSODispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "lo")
+  if (mArguments.primaryAlgorithm == "lo")
     dispatcher.reset((new LODispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "elo")
+  if (mArguments.primaryAlgorithm == "elo")
     dispatcher.reset((new ELODispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "so")
+  if (mArguments.primaryAlgorithm == "so")
     dispatcher.reset((new SODispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "jobsa")
+  if (mArguments.primaryAlgorithm == "jobsa")
     dispatcher.reset((new JobSADispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "qopt")
+  if (mArguments.primaryAlgorithm == "qopt")
     dispatcher.reset((new QOPTDispatcher(mInput, mCloud, estimator)));
-  if (mArgs[0] == "qworst")
+  if (mArguments.primaryAlgorithm == "qworst")
     dispatcher.reset((new QWORSTDispatcher(mInput, mCloud, estimator)));
 
   assert(dispatcher != nullptr);
