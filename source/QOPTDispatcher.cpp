@@ -6,11 +6,15 @@
 
 QOPTDispatcher::QOPTDispatcher(std::shared_ptr<Input> input,
 			       std::shared_ptr<Cloud> cloud,
-			       std::shared_ptr<IEstimator> estimator) :
+			       std::shared_ptr<IEstimator> estimator,
+			       bool calculateSolution) :
   Dispatcher(input, cloud, estimator),
   mQueue(),
   mTime(-1)
 {
+  if (!calculateSolution)
+    return;
+
   std::vector<OperationSP> permutation;
   for (auto const& job : input->getJobs())
     permutation.insert(permutation.end(), job->operations.begin(), job->operations.end());

@@ -24,6 +24,8 @@ int main(int argc, char ** argv)
 					{'m', "machines"});
   args::ValueFlag<std::string> estimationArg(parser, "method", "Estimation method",
 					     {'e', "estimation"});
+  args::ValueFlag<std::string> opAlgortihmArg(parser, "op_algorithm", "Operation-level algorithm",
+					      {"operation-level-algorithm"});
 
   args::Positional<std::string> algorithmArg(parser, "algorithm", "Primary algorithm");
 
@@ -48,6 +50,7 @@ int main(int argc, char ** argv)
   arguments.primaryAlgorithm = args::get(algorithmArg);
   arguments.machinesNum = machinesArg ? args::get(machinesArg) : 1;
   arguments.estimationMethod = estimationArg ? args::get(estimationArg) : "no";
+  arguments.operationLevelAlgorithm = opAlgortihmArg ? args::get(opAlgortihmArg) : "random";
 
   auto input = std::make_shared<Input>();
 

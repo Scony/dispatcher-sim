@@ -28,6 +28,7 @@ add_library(simulator-library
   JobSADispatcher.cpp
   QOPTDispatcher.cpp
   QWORSTDispatcher.cpp
+  JOPTDispatcher.cpp
   )
 
 add_executable(simulator

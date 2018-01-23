@@ -7,12 +7,13 @@ class QOPTDispatcher : public Dispatcher
 public:
   QOPTDispatcher(std::shared_ptr<Input> input,
 		 std::shared_ptr<Cloud> cloud,
-		 std::shared_ptr<IEstimator> estimator);
+		 std::shared_ptr<IEstimator> estimator,
+		 bool calculateSolution = true);
 
-  OperationSP pop() override;
-  size_t size() override;
+  virtual OperationSP pop() override;
+  virtual size_t size() override;
 
-  void dispatch(JobSP job) override;
+  virtual void dispatch(JobSP job) override;
 
 protected:
   std::vector<OperationSP> mQueue;

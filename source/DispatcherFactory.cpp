@@ -16,6 +16,7 @@
 #include "JobSADispatcher.hpp"
 #include "QOPTDispatcher.hpp"
 #include "QWORSTDispatcher.hpp"
+#include "JOPTDispatcher.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -63,12 +64,17 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
     dispatcher.reset((new ELODispatcher(mInput, mCloud, estimator)));
   if (mArguments.primaryAlgorithm == "so")
     dispatcher.reset((new SODispatcher(mInput, mCloud, estimator)));
-  if (mArguments.primaryAlgorithm == "jobsa")
+  if (mArguments.primaryAlgorithm == "jsa")
     dispatcher.reset((new JobSADispatcher(mInput, mCloud, estimator)));
   if (mArguments.primaryAlgorithm == "qopt")
     dispatcher.reset((new QOPTDispatcher(mInput, mCloud, estimator)));
   if (mArguments.primaryAlgorithm == "qworst")
     dispatcher.reset((new QWORSTDispatcher(mInput, mCloud, estimator)));
+  if (mArguments.primaryAlgorithm == "jopt")
+    dispatcher.reset((new JOPTDispatcher(mInput,
+					 mCloud,
+					 estimator,
+					 mArguments.operationLevelAlgorithm)));
 
   assert(dispatcher != nullptr);
 
