@@ -20,6 +20,7 @@ add_executable(simulator-test
   ELODispatcherTests.cpp
   CloudTests.cpp
   SolutionTests.cpp
+  MiscellaneousTests.cpp
   )
 
 target_link_libraries(simulator-test
