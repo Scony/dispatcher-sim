@@ -1,7 +1,9 @@
 #include <cassert>
 #include <algorithm>
+#include <iostream>
 
 #include "JOPTDispatcher.hpp"
+#include "Solution.hpp"
 
 JOPTDispatcher::JOPTDispatcher(std::shared_ptr<Input> input,
 			       std::shared_ptr<Cloud> cloud,
@@ -44,10 +46,31 @@ JOPTDispatcher::JOPTDispatcher(std::shared_ptr<Input> input,
 			 jobOperations[job->id].begin(),
 			 jobOperations[job->id].end());
 
-  auto bestJobPermutation = jobPermutation;
   auto bestOpPermutation = opPermutation;
+  auto bestOpPermutationCost = Solution::evalTotalFlow(Cloud::process(cloud->getMachinesNum(),
+								      opPermutation));
+  while (std::next_permutation(jobPermutation.begin(), jobPermutation.end()))
+    {
+      static unsigned iterations = 1;
 
-  // TODO
+      opPermutation.clear();
+      for (auto const& job : jobPermutation)
+	opPermutation.insert(opPermutation.end(),
+			     jobOperations[job->id].begin(),
+			     jobOperations[job->id].end());
+      auto opPermutationCost = Solution::evalTotalFlow(Cloud::process(cloud->getMachinesNum(),
+								      opPermutation));
+
+      if (opPermutationCost < bestOpPermutationCost)
+	{
+	  bestOpPermutation = opPermutation;
+	  bestOpPermutationCost = opPermutationCost;
+	}
+
+      iterations++;
+      if ((iterations % 100000) == 0)
+	std::cerr << iterations << std::endl;
+    }
 
   mQueue = bestOpPermutation;
 }
