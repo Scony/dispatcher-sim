@@ -17,6 +17,7 @@ void Cloud::advance(long long toTimestamp)
   while (mMachines.size() < mMachinesNum && mQueue->size() > 0)
     {
       auto operation = mQueue->pop();
+      assert(operation->arrival <= mTimestamp);
       auto newMachine = Machine{mTimestamp + operation->duration, operation};
       mMachines.push(newMachine);
     }
@@ -32,6 +33,7 @@ void Cloud::advance(long long toTimestamp)
       if (mQueue->size() > 0)
 	{
 	  auto operation = mQueue->pop();
+	  assert(operation->arrival <= mTimestamp);
 	  auto newMachine = Machine{mTimestamp + operation->duration, operation};
 	  mMachines.push(newMachine);
 	}
