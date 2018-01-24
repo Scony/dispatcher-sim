@@ -77,6 +77,58 @@ TEST(CloudTests, Cloud1) {
   cloud.advance(100);
 }
 
+TEST(CloudTests, Cloud2) {
+  auto op1 = std::make_shared<Operation>(1,1,1,1,5,5);
+  auto op2 = std::make_shared<Operation>(2,1,1,1,5,5);
+  auto op3 = std::make_shared<Operation>(3,1,1,1,5,5);
+  std::vector<OperationSP> operations;
+  std::shared_ptr<IQueue> queue = std::make_shared<QueueWrapper>(operations);
+
+  auto mock = std::make_shared<ExecutionsListenerProxyEndMock>();
+  auto proxy = std::make_shared<ExecutionsListenerProxy>(mock);
+  Cloud cloud(1);
+  cloud.assignQueue(queue.get());
+  cloud.subscribe(proxy);
+
+  InSequence dummy;
+
+  EXPECT_CALL(*mock, handleNotification(10,op1)).Times(1);
+  EXPECT_CALL(*mock, handleNotification(15,op2)).Times(1);
+  EXPECT_CALL(*mock, handleNotification(20,op3)).Times(1);
+
+  cloud.advance(5);
+  operations = {op3, op2, op1};
+  cloud.advance(100);
+}
+
+TEST(CloudTests, Cloud3) {
+  auto op1 = std::make_shared<Operation>(1,1,1,1,5,5);
+  auto op2 = std::make_shared<Operation>(2,1,1,1,11,5);
+  auto op3 = std::make_shared<Operation>(3,1,1,1,17,5);
+  std::vector<OperationSP> operations;
+  std::shared_ptr<IQueue> queue = std::make_shared<QueueWrapper>(operations);
+
+  auto mock = std::make_shared<ExecutionsListenerProxyEndMock>();
+  auto proxy = std::make_shared<ExecutionsListenerProxy>(mock);
+  Cloud cloud(1);
+  cloud.assignQueue(queue.get());
+  cloud.subscribe(proxy);
+
+  InSequence dummy;
+
+  EXPECT_CALL(*mock, handleNotification(10,op1)).Times(1);
+  EXPECT_CALL(*mock, handleNotification(16,op2)).Times(1);
+  EXPECT_CALL(*mock, handleNotification(22,op3)).Times(1);
+
+  cloud.advance(5);
+  operations = {op1};
+  cloud.advance(11);
+  operations = {op2};
+  cloud.advance(17);
+  operations = {op3};
+  cloud.advance(100);
+}
+
 TEST(CloudTests, Process1) {
   auto op1 = std::make_shared<Operation>(1,1,1,1,5,5);
   auto op2 = std::make_shared<Operation>(2,1,1,1,6,5);
