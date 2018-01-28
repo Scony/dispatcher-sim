@@ -15,13 +15,13 @@ QWORSTDispatcher::QWORSTDispatcher(std::shared_ptr<Input> input,
   std::sort(permutation.begin(), permutation.end());
 
   auto worstPermutation = permutation;
-  auto worstPermutationCost = Solution::evalTotalFlow(Cloud::process(cloud->getMachinesNum(),
-								     permutation));
+  auto worstPermutationCost = Solution::evalTotalFlow(Cloud::simulate(cloud->getMachinesNum(),
+								      permutation));
 
   while (std::next_permutation(permutation.begin(), permutation.end()))
     {
-      auto permutationCost = Solution::evalTotalFlow(Cloud::process(cloud->getMachinesNum(),
-								    permutation));
+      auto permutationCost = Solution::evalTotalFlow(Cloud::simulate(cloud->getMachinesNum(),
+								     permutation));
       if (permutationCost > worstPermutationCost)
 	{
 	  worstPermutation = permutation;

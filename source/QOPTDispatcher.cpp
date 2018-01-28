@@ -22,13 +22,13 @@ QOPTDispatcher::QOPTDispatcher(std::shared_ptr<Input> input,
   std::sort(permutation.begin(), permutation.end());
 
   auto bestPermutation = permutation;
-  auto bestPermutationCost = Solution::evalTotalFlow(Cloud::process(cloud->getMachinesNum(),
-								    permutation));
+  auto bestPermutationCost = Solution::evalTotalFlow(Cloud::simulate(cloud->getMachinesNum(),
+								     permutation));
 
   while (std::next_permutation(permutation.begin(), permutation.end()))
     {
-      auto permutationCost = Solution::evalTotalFlow(Cloud::process(cloud->getMachinesNum(),
-								    permutation));
+      auto permutationCost = Solution::evalTotalFlow(Cloud::simulate(cloud->getMachinesNum(),
+								     permutation));
       if (permutationCost < bestPermutationCost)
 	{
 	  bestPermutation = permutation;

@@ -13,8 +13,8 @@ using Machine = std::pair<long long, OperationSP>;
 class Cloud : public ExecutionsSubject
 {
 public:
-  static std::vector<std::pair<long long, OperationSP> > process(unsigned machinesNum,
-								 std::vector<OperationSP> operations);
+  static std::vector<std::pair<long long, OperationSP> > simulate(unsigned machinesNum,
+								  std::vector<OperationSP> operations);
 public:
   Cloud(unsigned machinesNum);
 

@@ -47,8 +47,8 @@ void Cloud::assignQueue(IQueue* queue)
   mQueue = queue;
 }
 
-std::vector<std::pair<long long, OperationSP> > Cloud::process(unsigned machinesNum,
-							       std::vector<OperationSP> operations)
+std::vector<std::pair<long long, OperationSP> > Cloud::simulate(unsigned machinesNum,
+								std::vector<OperationSP> operations)
 {
   if (operations.size() == 0)
     return {};
