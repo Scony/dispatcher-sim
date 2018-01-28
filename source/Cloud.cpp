@@ -30,7 +30,7 @@ void Cloud::advance(long long toTimestamp)
       notify(execution);
       mMachines.pop();
 
-      if (mQueue->size() > 0)
+      if (mQueue->size() > 0 && mTimestamp < toTimestamp)
 	{
 	  auto operation = mQueue->pop();
 	  assert(operation->arrival <= mTimestamp);

@@ -53,7 +53,7 @@ private:
   std::vector<OperationSP>& mOperations;
 };
 
-TEST(CloudTests, Cloud1) {
+TEST(Cloud, OperationsInSequence) {
   auto op1 = std::make_shared<Operation>(1,1,1,1,5,5);
   auto op2 = std::make_shared<Operation>(2,1,1,1,6,5);
   auto op3 = std::make_shared<Operation>(3,1,1,1,7,5);
@@ -77,7 +77,7 @@ TEST(CloudTests, Cloud1) {
   cloud.advance(100);
 }
 
-TEST(CloudTests, Cloud2) {
+TEST(Cloud, QueueFetchingOrder) {
   auto op1 = std::make_shared<Operation>(1,1,1,1,5,5);
   auto op2 = std::make_shared<Operation>(2,1,1,1,5,5);
   auto op3 = std::make_shared<Operation>(3,1,1,1,5,5);
@@ -101,7 +101,7 @@ TEST(CloudTests, Cloud2) {
   cloud.advance(100);
 }
 
-TEST(CloudTests, Cloud3) {
+TEST(Cloud, QueueWithGaps) {
   auto op1 = std::make_shared<Operation>(1,1,1,1,5,5);
   auto op2 = std::make_shared<Operation>(2,1,1,1,11,5);
   auto op3 = std::make_shared<Operation>(3,1,1,1,17,5);
@@ -129,7 +129,33 @@ TEST(CloudTests, Cloud3) {
   cloud.advance(100);
 }
 
-TEST(CloudTests, Process1) {
+TEST(Cloud, RuntimeQueueChangeOnEdge) {
+  auto op1 = std::make_shared<Operation>(1,1,1,1,5,5);
+  auto op2 = std::make_shared<Operation>(2,1,1,1,5,5);
+  auto op3 = std::make_shared<Operation>(3,1,1,1,10,5);
+  std::vector<OperationSP> operations;
+  std::shared_ptr<IQueue> queue = std::make_shared<QueueWrapper>(operations);
+
+  auto mock = std::make_shared<ExecutionsListenerProxyEndMock>();
+  auto proxy = std::make_shared<ExecutionsListenerProxy>(mock);
+  Cloud cloud(1);
+  cloud.assignQueue(queue.get());
+  cloud.subscribe(proxy);
+
+  InSequence dummy;
+
+  EXPECT_CALL(*mock, handleNotification(10,op1)).Times(1);
+  EXPECT_CALL(*mock, handleNotification(15,op3)).Times(1);
+  EXPECT_CALL(*mock, handleNotification(20,op2)).Times(1);
+
+  cloud.advance(5);
+  operations = {op2,op1};
+  cloud.advance(10);
+  operations = {op2,op3};
+  cloud.advance(100);
+}
+
+TEST(Cloud, Process1) {
   auto op1 = std::make_shared<Operation>(1,1,1,1,5,5);
   auto op2 = std::make_shared<Operation>(2,1,1,1,6,5);
   auto op3 = std::make_shared<Operation>(3,1,1,1,7,5);
@@ -142,7 +168,7 @@ TEST(CloudTests, Process1) {
   EXPECT_EQ(schedule[2].first, 20);
 }
 
-TEST(CloudTests, Process2) {
+TEST(Cloud, Process2) {
   auto op1 = std::make_shared<Operation>(1,1,1,1,5,5);
   auto op2 = std::make_shared<Operation>(2,1,1,1,10,5);
   auto op3 = std::make_shared<Operation>(3,1,1,1,15,5);
@@ -155,7 +181,7 @@ TEST(CloudTests, Process2) {
   EXPECT_EQ(schedule[2].first, 20);
 }
 
-TEST(CloudTests, Process3) {
+TEST(Cloud, Process3) {
   auto op1 = std::make_shared<Operation>(1,1,1,1,5,5);
   auto op2 = std::make_shared<Operation>(2,1,1,1,11,5);
   auto op3 = std::make_shared<Operation>(3,1,1,1,4,5);
