@@ -21,6 +21,7 @@ add_executable(simulator-test
   CloudTests.cpp
   SolutionTests.cpp
   MiscellaneousTests.cpp
+  SJSODispatcherTests.cpp
   )
 
 target_link_libraries(simulator-test
