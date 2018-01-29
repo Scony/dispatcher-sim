@@ -1,8 +1,6 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-file(GLOB ${PROJECT_NAME}-ut-sources "*Tests.cpp")
+file(GLOB ${PROJECT_NAME}-ut-sources "*.cpp")
 
 include_directories(
   ${PROJECT_SOURCE_DIR}/src/simulator
