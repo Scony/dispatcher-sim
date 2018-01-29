@@ -14,39 +14,15 @@ Cloud::Cloud(unsigned machinesNum) :
 void Cloud::advance(long long toTimestamp)
 {
   assert(mQueue != nullptr);
+  static IEstimatorSP noEstimator(new NoEstimator);
 
-  // for (auto const& assignment : process(mTimestamp,
-  //					toTimestamp,
-  //					mMachinesNum,
-  //					IEstimatorSP(new NoEstimator),
-  //					mQueue,
-  //					mMachines))
-  //   notify(assignment);
-
-  while (mMachines.size() < mMachinesNum && mQueue->size() > 0)
-    {
-      auto operation = mQueue->pop();
-      assert(operation->arrival <= mTimestamp);
-      auto newMachine = Machine{mTimestamp + operation->duration, operation};
-      mMachines.push(newMachine);
-    }
-
-  while (mMachines.size() > 0 && mMachines.top().first <= toTimestamp)
-    {
-      mTimestamp = mMachines.top().first;
-      auto finishedOperation = mMachines.top().second;
-      auto execution = std::pair<long long, OperationSP>{mTimestamp, finishedOperation};
-      notify(execution);
-      mMachines.pop();
-
-      if (mQueue->size() > 0 && mTimestamp < toTimestamp)
-	{
-	  auto operation = mQueue->pop();
-	  assert(operation->arrival <= mTimestamp);
-	  auto newMachine = Machine{mTimestamp + operation->duration, operation};
-	  mMachines.push(newMachine);
-	}
-    }
+  for (auto const& assignment : process(mTimestamp,
+					toTimestamp,
+					mMachinesNum,
+					noEstimator,
+					mQueue,
+					mMachines))
+    notify(assignment);
 
   mTimestamp = toTimestamp;
 }
