@@ -2,8 +2,8 @@
 ** TODO UAT
 ** TODO Cloud refa
 ** TODO QWORST fix
-** TODO Benchmark setup
-** TODO GTest & GMock in repo + CMake fix
+** DONE Benchmark setup
+** DONE GTest & GMock in repo + CMake fix
 ** TODO Setup times
 ** TODO JSA
 ** TODO Solution refa
