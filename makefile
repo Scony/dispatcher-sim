@@ -7,6 +7,11 @@ ut:
 benchmarks:
 	mkdir -p build && cd build && cmake -DBUILD_TESTS=ON .. && make -j simulator-benchmarks-run
 
+uat: build
+	tox -c test/py
+
+tests: ut uat
+
 build:
 	mkdir -p build && cd build && cmake -DBUILD_TESTS=OFF .. && make -j
 
@@ -14,4 +19,4 @@ clean:
 	find -name '*~' | xargs rm -f
 	rm -rf build bin
 
-.PHONY: clean ut build benchmarks
+.PHONY: clean ut build benchmarks uat tests
