@@ -1,40 +1,21 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-project(simulator)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -g")
+file(GLOB ${PROJECT_NAME}-library-sources "[A-Z]*.cpp")
 
-add_library(simulator-library
-  Fuzzy3.cpp
-  Input.cpp
-  RandomDispatcher.cpp
-  Simulator.cpp
-  Cloud.cpp
-  Solution.cpp
-  DispatcherFactory.cpp
-  MaxDispatcher.cpp
-  Dispatcher.cpp
-  MinDispatcher.cpp
-  ExecutionsSubject.cpp
-  NoEstimator.cpp
-  SJLODispatcher.cpp
-  FIFODispatcher.cpp
-  SJSODispatcher.cpp
-  LJSODispatcher.cpp
-  LazyClairvoyantEstimator.cpp
-  SODispatcher.cpp
-  LODispatcher.cpp
-  ELODispatcher.cpp
-  JobSADispatcher.cpp
-  QOPTDispatcher.cpp
-  QWORSTDispatcher.cpp
-  JOPTDispatcher.cpp
+add_library(${PROJECT_NAME}-library
+  ${${PROJECT_NAME}-library-sources}
   )
 
-add_executable(simulator
+add_executable(${PROJECT_NAME}
   main.cpp
   )
 
-target_link_libraries(simulator simulator-library)
+target_link_libraries(${PROJECT_NAME}
+  ${PROJECT_NAME}-library
+  )
 
-add_dependencies(simulator simulator-library)
+add_dependencies(${PROJECT_NAME}
+  ${PROJECT_NAME}-library
+  )
