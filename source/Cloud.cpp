@@ -1,6 +1,7 @@
 #include <cassert>
 
 #include "Cloud.hpp"
+#include "NoEstimator.hpp"
 
 Cloud::Cloud(unsigned machinesNum) :
   mMachinesNum(machinesNum),
@@ -13,6 +14,14 @@ Cloud::Cloud(unsigned machinesNum) :
 void Cloud::advance(long long toTimestamp)
 {
   assert(mQueue != nullptr);
+
+  // for (auto const& assignment : process(mTimestamp,
+  //					toTimestamp,
+  //					mMachinesNum,
+  //					IEstimatorSP(new NoEstimator),
+  //					mQueue,
+  //					mMachines))
+  //   notify(assignment);
 
   while (mMachines.size() < mMachinesNum && mQueue->size() > 0)
     {
@@ -45,6 +54,50 @@ void Cloud::advance(long long toTimestamp)
 void Cloud::assignQueue(IQueue* queue)
 {
   mQueue = queue;
+}
+
+std::vector<std::pair<long long, OperationSP> > Cloud::process(long long fromTimestamp,
+							       long long toTimestamp,
+							       unsigned machinesNum,
+							       IEstimatorSP estimator,
+							       IQueue* queue,
+							       Machines& machines)
+{
+  // assumption: machines finishing before or at fromTimestamp should be emptied
+  assert(machines.size() == 0 || machines.top().first > fromTimestamp);
+
+  std::vector<std::pair<long long, OperationSP> > result;
+  long long timestamp = fromTimestamp;
+
+  // fill machines
+  while (machines.size() < machinesNum && queue->size() > 0)
+    {
+      auto operation = queue->pop();
+      // assumption: no operations from future
+      assert(operation->arrival <= timestamp);
+      auto newMachine = Machine{timestamp + estimator->estimate(operation), operation};
+      machines.push(newMachine);
+    }
+
+  // loop over finishing machines and fill them
+  while (machines.size() > 0 && machines.top().first <= toTimestamp)
+    {
+      timestamp = machines.top().first;
+      auto finishedOperation = machines.top().second;
+      result.emplace_back(timestamp, finishedOperation);
+      machines.pop();
+
+      if (queue->size() > 0 && timestamp < toTimestamp)
+	{
+	  auto operation = queue->pop();
+	  // assumption: no operations from future
+	  assert(operation->arrival <= timestamp);
+	  auto newMachine = Machine{timestamp + estimator->estimate(operation), operation};
+	  machines.push(newMachine);
+	}
+    }
+
+  return result;
 }
 
 std::vector<std::pair<long long, OperationSP> > Cloud::simulate(unsigned machinesNum,

@@ -7,12 +7,21 @@
 #include "Operation.hpp"
 #include "IQueue.hpp"
 #include "ExecutionsSubject.hpp"
+#include "IEstimator.hpp"
 
 using Machine = std::pair<long long, OperationSP>;
 
 class Cloud : public ExecutionsSubject
 {
 public:
+  using Machines = std::priority_queue<Machine, std::vector<Machine>, std::greater<Machine> >;
+public:
+  static std::vector<std::pair<long long, OperationSP> > process(long long fromTimestamp,
+								 long long toTimestamp,
+								 unsigned machinesNum,
+								 IEstimatorSP estimator,
+								 IQueue* queue,
+								 Machines& machines);
   static std::vector<std::pair<long long, OperationSP> > simulate(unsigned machinesNum,
 								  std::vector<OperationSP> operations);
 public:
