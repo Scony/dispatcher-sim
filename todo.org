@@ -1,8 +1,12 @@
 * short term
-** TODO JSA
+** TODO UAT
 ** TODO Cloud refa
-** TODO Solution refa
+** TODO QWORST fix
+** TODO Benchmark setup
+** TODO GTest & GMock in repo + CMake fix
 ** TODO Setup times
+** TODO JSA
+** TODO Solution refa
 ** TODO k-recent estimation
 ** TODO SA
 ** DONE opts instead of positional parameters
