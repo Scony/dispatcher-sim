@@ -8,14 +8,24 @@ make
 
 ## Testing
 ```
-make test
+# UT
+make ut
+
+# Benchmarks
+make benchmarks
+
+# UAT (requires tox [sudo pip install tox])
+make uat
+
+# UT + UAT
+make tests
 ```
 Note that you will need GTest & GMock
 
 ## Running
 To run simple FIFO dispatcher (clairvoyant) over 20 machines type in following command:
 ```
-cat instances/692_10.txt | ./build/source/simulator fifo -m 20 -e no | ./build/helpers/stat-desc/stat-desc
+cat instances/692_10.txt | ./bin/simulator fifo -m 20 -e no | ./bin/stat-desc
 ```
 
 ## Run options
