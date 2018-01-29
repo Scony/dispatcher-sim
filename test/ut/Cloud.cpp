@@ -2,6 +2,7 @@
 #include <gmock/gmock.h>
 
 #include "Cloud.hpp"
+#include "VectorQueue.hpp"
 
 using ::testing::_;
 using ::testing::InSequence;
@@ -33,32 +34,12 @@ private:
   std::shared_ptr<IExecutionsListenerProxyEnd> mProxyEnd;
 };
 
-class QueueWrapper : public IQueue
-{
-public:
-  QueueWrapper(std::vector<OperationSP>& operations) : mOperations(operations) {}
-
-  OperationSP pop() override
-  {
-    auto operation = mOperations.back();
-    mOperations.pop_back();
-    return operation;
-  }
-  size_t size() override
-  {
-    return mOperations.size();
-  }
-
-private:
-  std::vector<OperationSP>& mOperations;
-};
-
 TEST(Cloud, OperationsInSequence) {
   auto op1 = std::make_shared<Operation>(1,1,1,1,5,5);
   auto op2 = std::make_shared<Operation>(2,1,1,1,6,5);
   auto op3 = std::make_shared<Operation>(3,1,1,1,7,5);
   std::vector<OperationSP> operations;
-  std::shared_ptr<IQueue> queue = std::make_shared<QueueWrapper>(operations);
+  std::shared_ptr<IQueue> queue = std::make_shared<VectorQueue>(operations);
 
   auto mock = std::make_shared<ExecutionsListenerProxyEndMock>();
   auto proxy = std::make_shared<ExecutionsListenerProxy>(mock);
@@ -82,7 +63,7 @@ TEST(Cloud, QueueFetchingOrder) {
   auto op2 = std::make_shared<Operation>(2,1,1,1,5,5);
   auto op3 = std::make_shared<Operation>(3,1,1,1,5,5);
   std::vector<OperationSP> operations;
-  std::shared_ptr<IQueue> queue = std::make_shared<QueueWrapper>(operations);
+  std::shared_ptr<IQueue> queue = std::make_shared<VectorQueue>(operations);
 
   auto mock = std::make_shared<ExecutionsListenerProxyEndMock>();
   auto proxy = std::make_shared<ExecutionsListenerProxy>(mock);
@@ -106,7 +87,7 @@ TEST(Cloud, QueueWithGaps) {
   auto op2 = std::make_shared<Operation>(2,1,1,1,11,5);
   auto op3 = std::make_shared<Operation>(3,1,1,1,17,5);
   std::vector<OperationSP> operations;
-  std::shared_ptr<IQueue> queue = std::make_shared<QueueWrapper>(operations);
+  std::shared_ptr<IQueue> queue = std::make_shared<VectorQueue>(operations);
 
   auto mock = std::make_shared<ExecutionsListenerProxyEndMock>();
   auto proxy = std::make_shared<ExecutionsListenerProxy>(mock);
@@ -134,7 +115,7 @@ TEST(Cloud, RuntimeQueueChangeOnEdge) {
   auto op2 = std::make_shared<Operation>(2,1,1,1,5,5);
   auto op3 = std::make_shared<Operation>(3,1,1,1,10,5);
   std::vector<OperationSP> operations;
-  std::shared_ptr<IQueue> queue = std::make_shared<QueueWrapper>(operations);
+  std::shared_ptr<IQueue> queue = std::make_shared<VectorQueue>(operations);
 
   auto mock = std::make_shared<ExecutionsListenerProxyEndMock>();
   auto proxy = std::make_shared<ExecutionsListenerProxy>(mock);

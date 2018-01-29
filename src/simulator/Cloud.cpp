@@ -56,9 +56,9 @@ void Cloud::assignQueue(IQueue* queue)
   mQueue = queue;
 }
 
-std::vector<std::pair<long long, OperationSP> > Cloud::process(long long fromTimestamp,
-							       long long toTimestamp,
-							       unsigned machinesNum,
+std::vector<std::pair<long long, OperationSP> > Cloud::process(const long long& fromTimestamp,
+							       const long long& toTimestamp,
+							       const unsigned& machinesNum,
 							       IEstimatorSP estimator,
 							       IQueue* queue,
 							       Machines& machines)
@@ -75,15 +75,14 @@ std::vector<std::pair<long long, OperationSP> > Cloud::process(long long fromTim
       auto operation = queue->pop();
       // assumption: no operations from future
       assert(operation->arrival <= timestamp);
-      auto newMachine = Machine{timestamp + estimator->estimate(operation), operation};
-      machines.push(newMachine);
+      machines.emplace(timestamp + estimator->estimate(operation), operation);
     }
 
   // loop over finishing machines and fill them
   while (machines.size() > 0 && machines.top().first <= toTimestamp)
     {
       timestamp = machines.top().first;
-      auto finishedOperation = machines.top().second;
+      auto& finishedOperation = machines.top().second;
       result.emplace_back(timestamp, finishedOperation);
       machines.pop();
 
@@ -92,8 +91,7 @@ std::vector<std::pair<long long, OperationSP> > Cloud::process(long long fromTim
 	  auto operation = queue->pop();
 	  // assumption: no operations from future
 	  assert(operation->arrival <= timestamp);
-	  auto newMachine = Machine{timestamp + estimator->estimate(operation), operation};
-	  machines.push(newMachine);
+	  machines.emplace(timestamp + estimator->estimate(operation), operation);
 	}
     }
 

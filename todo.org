@@ -1,7 +1,6 @@
 * short term
-** TODO UAT
+** DONE UAT
 ** TODO Cloud refa
-** TODO QWORST fix
 ** DONE Benchmark setup
 ** DONE GTest & GMock in repo + CMake fix
 ** TODO Setup times
@@ -10,5 +9,6 @@
 ** TODO k-recent estimation
 ** TODO SA
 ** DONE opts instead of positional parameters
+** TODO QWORST fix
 * long term
 ** TODO fuzzy SA

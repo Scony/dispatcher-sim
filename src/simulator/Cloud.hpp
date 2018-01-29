@@ -16,9 +16,9 @@ class Cloud : public ExecutionsSubject
 public:
   using Machines = std::priority_queue<Machine, std::vector<Machine>, std::greater<Machine> >;
 public:
-  static std::vector<std::pair<long long, OperationSP> > process(long long fromTimestamp,
-								 long long toTimestamp,
-								 unsigned machinesNum,
+  static std::vector<std::pair<long long, OperationSP> > process(const long long& fromTimestamp,
+								 const long long& toTimestamp,
+								 const unsigned& machinesNum,
 								 IEstimatorSP estimator,
 								 IQueue* queue,
 								 Machines& machines);
