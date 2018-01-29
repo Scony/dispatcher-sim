@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 file(GLOB ${PROJECT_NAME}-ut-sources "*Tests.cpp")
 
 include_directories(
-  ${PROJECT_SOURCE_DIR}/source
+  ${PROJECT_SOURCE_DIR}/src/simulator
   ${PROJECT_SOURCE_DIR}/3rdparty/gtest
   )
 
@@ -24,7 +24,7 @@ add_dependencies(${PROJECT_NAME}-ut
   )
 
 add_test(NAME ${PROJECT_NAME}-ut
-  COMMAND ./simulator-test
+  COMMAND ./${PROJECT_NAME}-ut
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/bin
   )
 

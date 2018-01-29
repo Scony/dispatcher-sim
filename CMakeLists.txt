@@ -5,8 +5,7 @@ project(simulator)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/${TARGET})
 option(BUILD_TESTS "Include test targets" ON)
 
-add_subdirectory(source)
-add_subdirectory(helpers/stat-desc)
+add_subdirectory(src)
 
 IF(BUILD_TESTS)
   enable_testing()
