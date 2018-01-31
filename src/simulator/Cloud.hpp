@@ -28,6 +28,8 @@ public:
   Cloud(unsigned machinesNum);
 
   void advance(long long toTimestamp);
+  std::vector<std::pair<long long, OperationSP> > simulate(IEstimatorSP estimator,
+							   std::vector<OperationSP> operations) const;
   void assignQueue(IQueue* queue);
 
   unsigned getMachinesNum();

@@ -6,4 +6,5 @@ struct Arguments
   unsigned machinesNum;
   std::string estimationMethod;
   std::string operationLevelAlgorithm;
+  unsigned saIterations;
 };

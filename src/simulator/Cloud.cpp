@@ -1,7 +1,9 @@
 #include <cassert>
+#include <climits>
 
 #include "Cloud.hpp"
 #include "NoEstimator.hpp"
+#include "VectorQueue.hpp"
 
 Cloud::Cloud(unsigned machinesNum) :
   mMachinesNum(machinesNum),
@@ -116,6 +118,22 @@ std::vector<std::pair<long long, OperationSP> > Cloud::simulate(unsigned machine
     }
 
   return result;
+}
+
+std::vector<std::pair<long long, OperationSP> > Cloud::simulate(IEstimatorSP estimator,
+								std::vector<OperationSP> operations)
+  const
+{
+  const auto& fromTimestamp = mTimestamp;
+  long long toTimestamp = LLONG_MAX;
+  auto queue = std::make_shared<VectorQueue>(operations);
+  auto machinesCpy = mMachines;
+  return process(fromTimestamp,
+		 toTimestamp,
+		 mMachinesNum,
+		 estimator,
+		 queue.get(),
+		 machinesCpy);
 }
 
 unsigned Cloud::getMachinesNum()

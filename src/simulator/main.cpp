@@ -22,6 +22,8 @@ int main(int argc, char ** argv)
 
   args::ValueFlag<unsigned> machinesArg(parser, "number", "Number of machines",
 					{'m', "machines"});
+  args::ValueFlag<unsigned> saIterationsArg(parser, "number", "Number of SA iterations",
+					{'i', "iterations"});
   args::ValueFlag<std::string> estimationArg(parser, "method", "Estimation method",
 					     {'e', "estimation"});
   args::ValueFlag<std::string> opAlgortihmArg(parser, "op_algorithm", "Operation-level algorithm",
@@ -51,6 +53,7 @@ int main(int argc, char ** argv)
   arguments.machinesNum = machinesArg ? args::get(machinesArg) : 1;
   arguments.estimationMethod = estimationArg ? args::get(estimationArg) : "no";
   arguments.operationLevelAlgorithm = opAlgortihmArg ? args::get(opAlgortihmArg) : "random";
+  arguments.saIterations = saIterationsArg ? args::get(saIterationsArg) : 1;
 
   auto input = std::make_shared<Input>();
 

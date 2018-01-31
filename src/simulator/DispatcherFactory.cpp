@@ -13,7 +13,7 @@
 #include "LODispatcher.hpp"
 #include "SODispatcher.hpp"
 #include "ELODispatcher.hpp"
-#include "JobSADispatcher.hpp"
+#include "JSADispatcher.hpp"
 #include "QOPTDispatcher.hpp"
 #include "QWORSTDispatcher.hpp"
 #include "JOPTDispatcher.hpp"
@@ -65,7 +65,11 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
   if (mArguments.primaryAlgorithm == "so")
     dispatcher.reset((new SODispatcher(mInput, mCloud, estimator)));
   if (mArguments.primaryAlgorithm == "jsa")
-    dispatcher.reset((new JobSADispatcher(mInput, mCloud, estimator)));
+    dispatcher.reset((new JSADispatcher(mInput,
+					mCloud,
+					estimator,
+					mArguments.operationLevelAlgorithm,
+					mArguments.saIterations)));
   if (mArguments.primaryAlgorithm == "qopt")
     dispatcher.reset((new QOPTDispatcher(mInput, mCloud, estimator)));
   if (mArguments.primaryAlgorithm == "qworst")
