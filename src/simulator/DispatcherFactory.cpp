@@ -18,6 +18,7 @@
 #include "QWORSTDispatcher.hpp"
 #include "JOPTDispatcher.hpp"
 #include "SASADispatcher.hpp"
+#include "SJSADispatcher.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -82,6 +83,12 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
 					 mArguments.operationLevelAlgorithm)));
   if (mArguments.primaryAlgorithm == "sasa")
     dispatcher.reset((new SASADispatcher(mInput,
+					 mCloud,
+					 estimator,
+					 mArguments.operationLevelAlgorithm,
+					 mArguments.saIterations)));
+  if (mArguments.primaryAlgorithm == "sjsa")
+    dispatcher.reset((new SJSADispatcher(mInput,
 					 mCloud,
 					 estimator,
 					 mArguments.operationLevelAlgorithm,
