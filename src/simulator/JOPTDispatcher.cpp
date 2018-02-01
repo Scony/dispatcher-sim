@@ -16,10 +16,7 @@ JOPTDispatcher::JOPTDispatcher(std::shared_ptr<Input> input,
   for (auto const& job : input->getJobs())
     {
       jobPermutation.push_back(job);
-      jobOperations[job->id] = {};
-      jobOperations[job->id].insert(jobOperations[job->id].end(),
-				    job->operations.begin(),
-				    job->operations.end());
+      jobOperations[job->id] = job->operations;
 
       if (operationLevelAlgorithm == "random")
 	std::random_shuffle(jobOperations[job->id].begin(), jobOperations[job->id].end());

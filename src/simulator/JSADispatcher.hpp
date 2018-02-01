@@ -20,15 +20,15 @@ public:
 
   virtual void dispatch(std::shared_ptr<Job> job) override;
 
-private:
+protected:
   long long eval(const Solution& solution);
   void sa();
 
-private:
+protected:
   const std::string mOperationLevelAlgorithm;
   const unsigned mIterations;
 
-private:
+protected:
   Solution mCurrentSolution;
   std::map<long long, std::vector<OperationSP> > mJobOperations;
 };

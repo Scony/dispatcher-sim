@@ -18,10 +18,7 @@ JSADispatcher::JSADispatcher(std::shared_ptr<Input> input,
 
 void JSADispatcher::dispatch(std::shared_ptr<Job> job)
 {
-  mJobOperations[job->id] = {};	// job->operations;
-  mJobOperations[job->id].insert(mJobOperations[job->id].end(),
-				 job->operations.rbegin(),
-				 job->operations.rend());
+  mJobOperations[job->id] = job->operations;
 
   if (mOperationLevelAlgorithm == "random")
     std::random_shuffle(mJobOperations[job->id].begin(), mJobOperations[job->id].end());
