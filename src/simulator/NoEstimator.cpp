@@ -1,6 +1,6 @@
 #include "NoEstimator.hpp"
 
-void NoEstimator::handleNotification(const std::pair<long long, OperationSP>& notification)
+void NoEstimator::handleNotification(const Assignation& notification)
 {
 }
 

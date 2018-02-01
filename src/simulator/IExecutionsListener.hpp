@@ -3,9 +3,10 @@
 #include <utility>
 
 #include "Operation.hpp"
+#include "Types.hpp"
 
 class IExecutionsListener
 {
 public:
-  virtual void handleNotification(const std::pair<long long, OperationSP>& notification) = 0;
+  virtual void handleNotification(const Assignation& notification) = 0;
 };

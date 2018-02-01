@@ -8,7 +8,7 @@ using ::testing::_;
 class MockExecutionsListener : public IExecutionsListener
 {
 public:
-  MOCK_METHOD1(handleNotification, void(const std::pair<long long, OperationSP>& notification));
+  MOCK_METHOD1(handleNotification, void(const Assignation& notification));
 };
 
 TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif1) {
@@ -47,7 +47,7 @@ TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif4) {
   auto subject = ExecutionsSubject();
 
   subject.subscribe(listener);
-  EXPECT_CALL(*listener,handleNotification(std::pair<long long, OperationSP>{123,OperationSP()}))
+  EXPECT_CALL(*listener,handleNotification(std::make_tuple(123ll,OperationSP())))
     .Times(1);
   subject.notify({123,OperationSP()});
 }

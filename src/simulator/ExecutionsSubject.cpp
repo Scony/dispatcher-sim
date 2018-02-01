@@ -18,7 +18,7 @@ void ExecutionsSubject::unsubscribe(std::shared_ptr<IExecutionsListener> listene
 		     mSubscribers.end());
 }
 
-void ExecutionsSubject::notify(const std::pair<long long, OperationSP>& notification)
+void ExecutionsSubject::notify(const Assignation& notification)
 {
   for (const auto& subscriber : mSubscribers)
     subscriber->handleNotification(notification);

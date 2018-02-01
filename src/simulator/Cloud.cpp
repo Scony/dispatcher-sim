@@ -34,17 +34,17 @@ void Cloud::assignQueue(IQueue* queue)
   mQueue = queue;
 }
 
-std::vector<std::pair<long long, OperationSP> > Cloud::process(const long long& fromTimestamp,
-							       const long long& toTimestamp,
-							       const unsigned& machinesNum,
-							       IEstimatorSP estimator,
-							       IQueue* queue,
-							       Machines& machines)
+std::vector<Assignation> Cloud::process(const long long& fromTimestamp,
+					const long long& toTimestamp,
+					const unsigned& machinesNum,
+					IEstimatorSP estimator,
+					IQueue* queue,
+					Machines& machines)
 {
   // assumption: machines finishing before or at fromTimestamp should be emptied
   assert(machines.size() == 0 || machines.top().first > fromTimestamp);
 
-  std::vector<std::pair<long long, OperationSP> > result;
+  std::vector<Assignation> result;
   long long timestamp = fromTimestamp;
 
   // fill machines
@@ -76,13 +76,13 @@ std::vector<std::pair<long long, OperationSP> > Cloud::process(const long long& 
   return result;
 }
 
-std::vector<std::pair<long long, OperationSP> > Cloud::simulate(unsigned machinesNum,
-								std::vector<OperationSP> operations)
+std::vector<Assignation> Cloud::simulate(unsigned machinesNum,
+					 std::vector<OperationSP> operations)
 {
   if (operations.size() == 0)
     return {};
 
-  std::vector<std::pair<long long, OperationSP> > result;
+  std::vector<Assignation> result;
   std::priority_queue<Machine, std::vector<Machine>, std::greater<Machine> > machines;
   long long timestamp = operations.back()->arrival;
 
@@ -102,7 +102,7 @@ std::vector<std::pair<long long, OperationSP> > Cloud::simulate(unsigned machine
 	{
 	  auto finishedTimestamp = machines.top().first;
 	  auto finishedOperation = machines.top().second;
-	  result.push_back({finishedTimestamp, finishedOperation});
+	  result.emplace_back(finishedTimestamp, finishedOperation);
 	  machines.pop();
 	}
 
@@ -120,8 +120,8 @@ std::vector<std::pair<long long, OperationSP> > Cloud::simulate(unsigned machine
   return result;
 }
 
-std::vector<std::pair<long long, OperationSP> > Cloud::simulate(IEstimatorSP estimator,
-								std::vector<OperationSP> operations)
+std::vector<Assignation> Cloud::simulate(IEstimatorSP estimator,
+					 std::vector<OperationSP> operations)
   const
 {
   const auto& fromTimestamp = mTimestamp;

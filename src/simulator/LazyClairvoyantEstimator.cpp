@@ -7,10 +7,11 @@ LazyClairvoyantEstimator::LazyClairvoyantEstimator() :
 {
 }
 
-void LazyClairvoyantEstimator::handleNotification(const std::pair<long long, OperationSP>& notification)
+void LazyClairvoyantEstimator::handleNotification(const Assignation& notification)
 {
-  mKnownOperations.insert(notification.second->id);
-  mTotalOperationsDurations += notification.second->duration;
+  auto& finishedOperation = std::get<1>(notification);
+  mKnownOperations.insert(finishedOperation->id);
+  mTotalOperationsDurations += finishedOperation->duration;
   mExecutedOperationsNum++;
 }
 

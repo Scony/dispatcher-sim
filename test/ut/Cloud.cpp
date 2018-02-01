@@ -25,9 +25,9 @@ public:
   ExecutionsListenerProxy(std::shared_ptr<IExecutionsListenerProxyEnd> proxyEnd) :
     mProxyEnd(proxyEnd) {}
 
-  void handleNotification(const std::pair<long long, OperationSP>& notification) override
+  void handleNotification(const Assignation& notification) override
   {
-    mProxyEnd->handleNotification(notification.first, notification.second);
+    mProxyEnd->handleNotification(std::get<0>(notification), std::get<1>(notification));
   }
 
 private:
@@ -144,9 +144,9 @@ TEST(Cloud, Simulate1) {
 
   auto schedule = Cloud::simulate(1,operations);
   ASSERT_EQ(schedule.size(), 3);
-  EXPECT_EQ(schedule[0].first, 10);
-  EXPECT_EQ(schedule[1].first, 15);
-  EXPECT_EQ(schedule[2].first, 20);
+  EXPECT_EQ(std::get<0>(schedule[0]), 10);
+  EXPECT_EQ(std::get<0>(schedule[1]), 15);
+  EXPECT_EQ(std::get<0>(schedule[2]), 20);
 }
 
 TEST(Cloud, Simulate2) {
@@ -157,9 +157,9 @@ TEST(Cloud, Simulate2) {
 
   auto schedule = Cloud::simulate(1,operations);
   ASSERT_EQ(schedule.size(), 3);
-  EXPECT_EQ(schedule[0].first, 10);
-  EXPECT_EQ(schedule[1].first, 15);
-  EXPECT_EQ(schedule[2].first, 20);
+  EXPECT_EQ(std::get<0>(schedule[0]), 10);
+  EXPECT_EQ(std::get<0>(schedule[1]), 15);
+  EXPECT_EQ(std::get<0>(schedule[2]), 20);
 }
 
 TEST(Cloud, Simulate3) {
@@ -170,7 +170,7 @@ TEST(Cloud, Simulate3) {
 
   auto schedule = Cloud::simulate(1,operations);
   ASSERT_EQ(schedule.size(), 3);
-  EXPECT_EQ(schedule[0].first, 10);
-  EXPECT_EQ(schedule[1].first, 16);
-  EXPECT_EQ(schedule[2].first, 21);
+  EXPECT_EQ(std::get<0>(schedule[0]), 10);
+  EXPECT_EQ(std::get<0>(schedule[1]), 16);
+  EXPECT_EQ(std::get<0>(schedule[2]), 21);
 }

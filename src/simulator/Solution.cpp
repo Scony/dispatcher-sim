@@ -4,7 +4,7 @@
 
 #include "Solution.hpp"
 
-void Solution::handleNotification(const std::pair<long long, OperationSP>& notification)
+void Solution::handleNotification(const Assignation& notification)
 {
   mSolutionVec.push_back(notification);
 }
@@ -16,10 +16,10 @@ void Solution::validate(std::vector<std::shared_ptr<Job> > jobs, unsigned machin
     jobsMap[job->id] = job;
 
   // each operation ended properly
-  for (const auto& pair : mSolutionVec)
+  for (const auto& tuple : mSolutionVec)
     {
-      const auto& endTimestamp = pair.first;
-      const auto& operation = pair.second;
+      const auto& endTimestamp = std::get<0>(tuple);
+      const auto& operation = std::get<1>(tuple);
 
       assert(endTimestamp - operation->duration >= jobsMap[operation->parentId]->arrivalTimestamp);
     }
@@ -29,9 +29,9 @@ void Solution::validate(std::vector<std::shared_ptr<Job> > jobs, unsigned machin
   for (const auto& job : jobs)
     for (const auto& operation : job->operations)
       operationExecutions[operation->id] = 0;
-  for (const auto& pair : mSolutionVec)
+  for (const auto& tuple : mSolutionVec)
     {
-      const auto& operation = pair.second;
+      const auto& operation = std::get<1>(tuple);
       operationExecutions[operation->id]++;
     }
   for (const auto& kv : operationExecutions)
@@ -43,10 +43,10 @@ void Solution::validate(std::vector<std::shared_ptr<Job> > jobs, unsigned machin
   // solution is schedulable given the number of machines
   // FIXME: make sure this algorithm is correct
   std::vector<std::pair<long long, int> > cloudUsageChanges;
-  for (const auto& pair : mSolutionVec)
+  for (const auto& tuple : mSolutionVec)
     {
-      const auto& endTimestamp = pair.first;
-      const auto& operation = pair.second;
+      const auto& endTimestamp = std::get<0>(tuple);
+      const auto& operation = std::get<1>(tuple);
       long long beginTimestamp = endTimestamp - operation->duration;
       cloudUsageChanges.push_back({beginTimestamp, +1});
       cloudUsageChanges.push_back({endTimestamp, -1});
@@ -79,10 +79,10 @@ Solution::JobFlowVec Solution::calculateJobFlowVec(std::vector<std::shared_ptr<J
 {
   std::map<long long, long long> jobEnds;
 
-  for (const auto& pair : mSolutionVec)
+  for (const auto& tuple : mSolutionVec)
     {
-      const auto& endTimestamp = pair.first;
-      const auto& operation = pair.second;
+      const auto& endTimestamp = std::get<0>(tuple);
+      const auto& operation = std::get<1>(tuple);
 
       if (jobEnds.find(operation->parentId) == jobEnds.end())
 	jobEnds[operation->parentId] = 0;
@@ -102,10 +102,10 @@ long long Solution::evalTotalFlow(const SolutionVec& solution)
 {
   std::map<long long, long long> jobFlows;
 
-  for (const auto& pair : solution)
+  for (const auto& tuple : solution)
     {
-      const auto& endTimestamp = pair.first;
-      const auto& operation = pair.second;
+      const auto& endTimestamp = std::get<0>(tuple);
+      const auto& operation = std::get<1>(tuple);
 
       if (jobFlows.find(operation->parentId) == jobFlows.end())
 	jobFlows[operation->parentId] = 0;

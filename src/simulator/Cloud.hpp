@@ -16,20 +16,20 @@ class Cloud : public ExecutionsSubject
 public:
   using Machines = std::priority_queue<Machine, std::vector<Machine>, std::greater<Machine> >;
 public:
-  static std::vector<std::pair<long long, OperationSP> > process(const long long& fromTimestamp,
-								 const long long& toTimestamp,
-								 const unsigned& machinesNum,
-								 IEstimatorSP estimator,
-								 IQueue* queue,
-								 Machines& machines);
-  static std::vector<std::pair<long long, OperationSP> > simulate(unsigned machinesNum,
-								  std::vector<OperationSP> operations);
+  static std::vector<Assignation> process(const long long& fromTimestamp,
+					  const long long& toTimestamp,
+					  const unsigned& machinesNum,
+					  IEstimatorSP estimator,
+					  IQueue* queue,
+					  Machines& machines);
+  static std::vector<Assignation> simulate(unsigned machinesNum, // FIXME: obsolete
+					   std::vector<OperationSP> operations);
 public:
   Cloud(unsigned machinesNum);
 
   void advance(long long toTimestamp);
-  std::vector<std::pair<long long, OperationSP> > simulate(IEstimatorSP estimator,
-							   std::vector<OperationSP> operations) const;
+  std::vector<Assignation> simulate(IEstimatorSP estimator,
+				    std::vector<OperationSP> operations) const;
   void assignQueue(IQueue* queue);
 
   unsigned getMachinesNum();
