@@ -27,7 +27,9 @@ int main(int argc, char ** argv)
   args::ValueFlag<std::string> estimationArg(parser, "method", "Estimation method",
 					     {'e', "estimation"});
   args::ValueFlag<std::string> opAlgortihmArg(parser, "op_algorithm", "Operation-level algorithm",
-					      {"operation-level-algorithm"});
+					      {'l', "operation-level-algorithm"});
+  args::ValueFlag<std::string> outputArg(parser, "type", "Output type",
+					 {'o', "output-type"});
 
   args::Positional<std::string> algorithmArg(parser, "algorithm", "Primary algorithm");
 
@@ -82,11 +84,21 @@ int main(int argc, char ** argv)
   solution->validate(jobs, arguments.machinesNum);
   std::cerr << "running validation done" << std::endl;
 
-  auto flowVec = solution->calculateJobFlowVec(jobs);
-  for (const auto& kv : flowVec)
+  auto outputType = outputArg ? args::get(outputArg) : "jflows";
+
+  if (outputType == "jflows")
     {
-      const auto& flow = kv.first;
-      std::cout << flow << std::endl;
+      auto flowVec = solution->calculateJobFlowVec(jobs);
+      for (const auto& kv : flowVec)
+	{
+	  const auto& flow = kv.first;
+	  std::cout << flow << std::endl;
+	}
+    }
+  else if (outputType == "opfins")
+    {
+      for (const auto& tuple : solution->getSolutionVec())
+	std::cout << std::get<0>(tuple) << " " << std::get<1>(tuple)->id << " " << -1 << std::endl;
     }
 
   return 0;

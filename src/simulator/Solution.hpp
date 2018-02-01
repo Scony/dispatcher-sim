@@ -22,6 +22,8 @@ public:
   void validate(std::vector<JobSP> jobs, unsigned machinesNum);
   JobFlowVec calculateJobFlowVec(std::vector<JobSP> jobs);
 
+  SolutionVec getSolutionVec() { return mSolutionVec; }
+
 private:
   SolutionVec mSolutionVec;
 };
