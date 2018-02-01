@@ -4,7 +4,7 @@
 ** DONE Benchmark setup
 ** DONE GTest & GMock in repo + CMake fix
 ** TODO Setup times
-** TODO JSA
+** DONE JSA
 ** TODO Solution refa
 ** TODO k-recent estimation
 ** TODO SA

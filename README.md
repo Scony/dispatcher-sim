@@ -20,7 +20,6 @@ make uat
 # UT + UAT
 make tests
 ```
-Note that you will need GTest & GMock
 
 ## Running
 To run simple FIFO dispatcher (clairvoyant) over 20 machines type in following command:
