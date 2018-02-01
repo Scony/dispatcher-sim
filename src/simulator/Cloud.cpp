@@ -76,53 +76,8 @@ std::vector<Assignation> Cloud::process(const long long& fromTimestamp,
   return result;
 }
 
-std::vector<Assignation> Cloud::simulate(unsigned machinesNum,
-					 std::vector<OperationSP> operations)
-{
-  if (operations.size() == 0)
-    return {};
-
-  std::vector<Assignation> result;
-  std::priority_queue<Machine, std::vector<Machine>, std::greater<Machine> > machines;
-  long long timestamp = operations.back()->arrival;
-
-  while (machines.size() != 0 || operations.size() != 0)
-    {
-      while (machines.size() < machinesNum &&
-	     operations.size() > 0 &&
-	     operations.back()->arrival <= timestamp)
-	{
-	  auto operation = operations.back();
-	  operations.pop_back();
-	  auto newMachine = Machine{timestamp + operation->duration, operation};
-	  machines.push(newMachine);
-	}
-
-      while (machines.size() > 0 && machines.top().first <= timestamp)
-	{
-	  auto finishedTimestamp = machines.top().first;
-	  auto finishedOperation = machines.top().second;
-	  result.emplace_back(finishedTimestamp, finishedOperation);
-	  machines.pop();
-	}
-
-      if (machines.size() < machinesNum)
-	{
-	  if (operations.size() > 0)
-	    timestamp = std::max(timestamp, operations.back()->arrival);
-	  else
-	    timestamp = machines.top().first;
-	}
-      else
-	timestamp = machines.top().first;
-    }
-
-  return result;
-}
-
 std::vector<Assignation> Cloud::simulate(IEstimatorSP estimator,
-					 std::vector<OperationSP> operations)
-  const
+					 std::vector<OperationSP> operations) const
 {
   const auto& fromTimestamp = mTimestamp;
   long long toTimestamp = LLONG_MAX;
@@ -134,6 +89,39 @@ std::vector<Assignation> Cloud::simulate(IEstimatorSP estimator,
 		 estimator,
 		 queue.get(),
 		 machinesCpy);
+}
+
+std::vector<Assignation> Cloud::simulateWithFuture(IEstimatorSP estimator,
+						   std::vector<OperationSP> operations) const
+{
+  if (operations.size() == 0)
+    return {};
+
+  std::vector<Assignation> result;
+  std::vector<OperationSP> queue;
+  auto queueWrapper = std::make_shared<VectorQueue>(queue);
+  auto machinesCpy = mMachines;
+
+  long long fromTimestamp = operations.back()->arrival;
+  while (operations.size() > 0)
+    {
+      while (operations.size() > 0 && operations.back()->arrival <= fromTimestamp)
+	{
+	  queue.insert(queue.begin(), operations.back());
+	  operations.pop_back();
+	}
+      long long toTimestamp = operations.size() > 0 ? operations.back()->arrival : LLONG_MAX;
+      auto partialResult = process(fromTimestamp,
+				   toTimestamp,
+				   mMachinesNum,
+				   estimator,
+				   queueWrapper.get(),
+				   machinesCpy);
+      result.insert(result.end(), partialResult.begin(), partialResult.end());
+      fromTimestamp = toTimestamp;
+    }
+
+  return result;
 }
 
 unsigned Cloud::getMachinesNum()

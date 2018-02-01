@@ -4,6 +4,7 @@
 
 #include "JOPTDispatcher.hpp"
 #include "Solution.hpp"
+#include "NoEstimator.hpp"
 
 JOPTDispatcher::JOPTDispatcher(std::shared_ptr<Input> input,
 			       std::shared_ptr<Cloud> cloud,
@@ -44,8 +45,9 @@ JOPTDispatcher::JOPTDispatcher(std::shared_ptr<Input> input,
 			 jobOperations[job->id].end());
 
   auto bestOpPermutation = opPermutation;
-  auto bestOpPermutationCost = Solution::evalTotalFlow(Cloud::simulate(cloud->getMachinesNum(),
-								       opPermutation));
+  auto bestOpPermutationCost =
+    Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
+						       opPermutation));
   while (std::next_permutation(jobPermutation.begin(), jobPermutation.end()))
     {
       static unsigned iterations = 1;
@@ -55,8 +57,9 @@ JOPTDispatcher::JOPTDispatcher(std::shared_ptr<Input> input,
 	opPermutation.insert(opPermutation.end(),
 			     jobOperations[job->id].begin(),
 			     jobOperations[job->id].end());
-      auto opPermutationCost = Solution::evalTotalFlow(Cloud::simulate(cloud->getMachinesNum(),
-								       opPermutation));
+      auto opPermutationCost =
+	Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
+							   opPermutation));
 
       if (opPermutationCost < bestOpPermutationCost)
 	{

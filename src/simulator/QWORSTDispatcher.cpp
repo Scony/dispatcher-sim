@@ -2,6 +2,7 @@
 
 #include "QWORSTDispatcher.hpp"
 #include "Solution.hpp"
+#include "NoEstimator.hpp"
 
 QWORSTDispatcher::QWORSTDispatcher(std::shared_ptr<Input> input,
 				   std::shared_ptr<Cloud> cloud,
@@ -15,13 +16,15 @@ QWORSTDispatcher::QWORSTDispatcher(std::shared_ptr<Input> input,
   std::sort(permutation.begin(), permutation.end());
 
   auto worstPermutation = permutation;
-  auto worstPermutationCost = Solution::evalTotalFlow(Cloud::simulate(cloud->getMachinesNum(),
-								      permutation));
+  auto worstPermutationCost =
+    Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
+						       permutation));
 
   while (std::next_permutation(permutation.begin(), permutation.end()))
     {
-      auto permutationCost = Solution::evalTotalFlow(Cloud::simulate(cloud->getMachinesNum(),
-								     permutation));
+      auto permutationCost =
+	Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
+							   permutation));
       if (permutationCost > worstPermutationCost)
 	{
 	  worstPermutation = permutation;

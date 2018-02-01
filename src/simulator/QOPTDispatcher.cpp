@@ -3,6 +3,7 @@
 
 #include "QOPTDispatcher.hpp"
 #include "Solution.hpp"
+#include "NoEstimator.hpp"
 
 QOPTDispatcher::QOPTDispatcher(std::shared_ptr<Input> input,
 			       std::shared_ptr<Cloud> cloud,
@@ -22,13 +23,15 @@ QOPTDispatcher::QOPTDispatcher(std::shared_ptr<Input> input,
   std::sort(permutation.begin(), permutation.end());
 
   auto bestPermutation = permutation;
-  auto bestPermutationCost = Solution::evalTotalFlow(Cloud::simulate(cloud->getMachinesNum(),
-								     permutation));
+  auto bestPermutationCost =
+    Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
+						       permutation));
 
   while (std::next_permutation(permutation.begin(), permutation.end()))
     {
-      auto permutationCost = Solution::evalTotalFlow(Cloud::simulate(cloud->getMachinesNum(),
-								     permutation));
+      auto permutationCost =
+	Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
+							   permutation));
       if (permutationCost < bestPermutationCost)
 	{
 	  bestPermutation = permutation;
