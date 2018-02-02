@@ -9,12 +9,20 @@
 #include "ExecutionsSubject.hpp"
 #include "IEstimator.hpp"
 
-using Machine = std::pair<long long, OperationSP>;
+using BusyMachine = std::tuple<long long,  // timestamp of finish
+			       long long,  // assignationsCounter
+			       OperationSP,
+			       unsigned>;  // machine ID
+using FreeMachine = std::tuple<unsigned,   // machine ID
+			       long long>; // recently processed job ID
 
 class Cloud : public ExecutionsSubject
 {
 public:
-  using Machines = std::priority_queue<Machine, std::vector<Machine>, std::greater<Machine> >;
+  using BusyMachines = std::priority_queue<BusyMachine,
+					   std::vector<BusyMachine>,
+					   std::greater<BusyMachine> >;
+  using FreeMachines = std::deque<FreeMachine>;
 
 public:
   static std::vector<Assignation> process(const long long& fromTimestamp,
@@ -22,7 +30,9 @@ public:
 					  const unsigned& machinesNum,
 					  IEstimatorSP estimator,
 					  IQueue* queue,
-					  Machines& machines);
+					  FreeMachines& freeMachines,
+					  BusyMachines& busyMachines,
+					  long long& assignationsCounter);
 
 public:
   Cloud(unsigned machinesNum);
@@ -41,5 +51,7 @@ private:
 
   long long mTimestamp;
   IQueue* mQueue;
-  std::priority_queue<Machine, std::vector<Machine>, std::greater<Machine> > mMachines;
+  FreeMachines mFreeMachines;
+  BusyMachines mBusyMachines;
+  long long mAssignationsCounter;
 };

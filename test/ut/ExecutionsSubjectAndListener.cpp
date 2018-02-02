@@ -17,7 +17,7 @@ TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif1) {
 
   subject.subscribe(listener);
   EXPECT_CALL(*listener, handleNotification(_)).Times(1);
-  subject.notify({0,OperationSP()});
+  subject.notify({0,OperationSP(),0});
 }
 
 TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif2) {
@@ -28,7 +28,7 @@ TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif2) {
   subject.subscribe(listener);
   subject.subscribe(listener);
   EXPECT_CALL(*listener, handleNotification(_)).Times(1);
-  subject.notify({0,OperationSP()});
+  subject.notify({0,OperationSP(),0});
 }
 
 TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif3) {
@@ -37,9 +37,9 @@ TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif3) {
 
   subject.subscribe(listener);
   EXPECT_CALL(*listener, handleNotification(_)).Times(3);
-  subject.notify({0,OperationSP()});
-  subject.notify({0,OperationSP()});
-  subject.notify({0,OperationSP()});
+  subject.notify({0,OperationSP(),0});
+  subject.notify({0,OperationSP(),0});
+  subject.notify({0,OperationSP(),0});
 }
 
 TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif4) {
@@ -47,9 +47,9 @@ TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif4) {
   auto subject = ExecutionsSubject();
 
   subject.subscribe(listener);
-  EXPECT_CALL(*listener,handleNotification(std::make_tuple(123ll,OperationSP())))
+  EXPECT_CALL(*listener,handleNotification(std::make_tuple(123ll,OperationSP(),234u)))
     .Times(1);
-  subject.notify({123,OperationSP()});
+  subject.notify({123,OperationSP(),234});
 }
 
 TEST(ExecutionsSubjectAndListenerTests, UnsubscribeNotif1) {
@@ -59,7 +59,7 @@ TEST(ExecutionsSubjectAndListenerTests, UnsubscribeNotif1) {
   subject.subscribe(listener);
   subject.unsubscribe(listener);
   EXPECT_CALL(*listener, handleNotification(_)).Times(0);
-  subject.notify({0,OperationSP()});
+  subject.notify({0,OperationSP(),0});
 }
 
 TEST(ExecutionsSubjectAndListenerTests, UnsubscribeNotif2) {
@@ -70,5 +70,5 @@ TEST(ExecutionsSubjectAndListenerTests, UnsubscribeNotif2) {
   subject.unsubscribe(listener);
   subject.subscribe(listener);
   EXPECT_CALL(*listener, handleNotification(_)).Times(1);
-  subject.notify({0,OperationSP()});
+  subject.notify({0,OperationSP(),0});
 }

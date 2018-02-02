@@ -98,7 +98,9 @@ int main(int argc, char ** argv)
   else if (outputType == "opfins")
     {
       for (const auto& tuple : solution->getSolutionVec())
-	std::cout << std::get<0>(tuple) << " " << std::get<1>(tuple)->id << " " << -1 << std::endl;
+	std::cout << std::get<0>(tuple) << " "
+		  << std::get<1>(tuple)->id << " "
+		  << std::get<2>(tuple) << std::endl;
     }
 
   return 0;
