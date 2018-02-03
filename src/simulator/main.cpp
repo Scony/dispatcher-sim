@@ -30,6 +30,8 @@ int main(int argc, char ** argv)
 					      {'l', "operation-level-algorithm"});
   args::ValueFlag<std::string> outputArg(parser, "type", "Output type",
 					 {'o', "output-type"});
+  args::ValueFlag<unsigned> setupTimeArg(parser, "number", "Operations setup time",
+					 {'s', "setup-time"});
 
   args::Positional<std::string> algorithmArg(parser, "algorithm", "Primary algorithm");
 
@@ -56,6 +58,7 @@ int main(int argc, char ** argv)
   arguments.estimationMethod = estimationArg ? args::get(estimationArg) : "no";
   arguments.operationLevelAlgorithm = opAlgortihmArg ? args::get(opAlgortihmArg) : "random";
   arguments.saIterations = saIterationsArg ? args::get(saIterationsArg) : 1;
+  unsigned setupTime = setupTimeArg ? args::get(setupTimeArg) : 0;
 
   auto input = std::make_shared<Input>();
 
@@ -66,7 +69,7 @@ int main(int argc, char ** argv)
   std::cerr << "reading input done" << std::endl;
 
   auto solution = std::make_shared<Solution>();
-  auto cloud = std::make_shared<Cloud>(arguments.machinesNum);
+  auto cloud = std::make_shared<Cloud>(arguments.machinesNum, setupTime);
 
   cloud->subscribe(solution);
 

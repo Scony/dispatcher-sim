@@ -32,10 +32,11 @@ public:
 					  IQueue* queue,
 					  FreeMachines& freeMachines,
 					  BusyMachines& busyMachines,
-					  long long& assignationsCounter);
+					  long long& assignationsCounter,
+					  const unsigned& setupTime = 0);
 
 public:
-  Cloud(unsigned machinesNum);
+  Cloud(unsigned machinesNum, unsigned setupTime = 0);
 
   void advance(long long toTimestamp);
   std::vector<Assignation> simulate(IEstimatorSP estimator,
@@ -48,6 +49,7 @@ public:
 
 private:
   const unsigned mMachinesNum;
+  const unsigned mSetupTime;
 
   long long mTimestamp;
   IQueue* mQueue;

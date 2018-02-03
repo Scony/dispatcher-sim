@@ -5,8 +5,9 @@
 #include "NoEstimator.hpp"
 #include "VectorQueue.hpp"
 
-Cloud::Cloud(unsigned machinesNum) :
+Cloud::Cloud(unsigned machinesNum, unsigned setupTime) :
   mMachinesNum(machinesNum),
+  mSetupTime(setupTime),
   mTimestamp(0),
   mQueue(nullptr),
   mBusyMachines(),
@@ -23,7 +24,8 @@ std::vector<Assignation> Cloud::process(const long long& fromTimestamp,
 					IQueue* queue,
 					FreeMachines& freeMachines,
 					BusyMachines& busyMachines,
-					long long& assignationsCounter)
+					long long& assignationsCounter,
+					const unsigned& setupTime)
 {
   // assumption: machines finishing before or at fromTimestamp should be emptied
   assert(busyMachines.size() == 0 || std::get<0>(busyMachines.top()) > fromTimestamp);
@@ -37,7 +39,10 @@ std::vector<Assignation> Cloud::process(const long long& fromTimestamp,
       auto operation = queue->pop();
       // assumption: no operations from future
       assert(operation->arrival <= timestamp);
-      busyMachines.emplace(timestamp + estimator->estimate(operation),
+      auto& recentlyProcessedJobId = std::get<1>(freeMachines.back());
+      busyMachines.emplace(timestamp +
+			   estimator->estimate(operation) +
+			   (recentlyProcessedJobId == operation->parentId ? 0 : setupTime),
 			   ++assignationsCounter,
 			   operation,
 			   std::get<0>(freeMachines.back()));
@@ -59,7 +64,10 @@ std::vector<Assignation> Cloud::process(const long long& fromTimestamp,
 	  auto operation = queue->pop();
 	  // assumption: no operations from future
 	  assert(operation->arrival <= timestamp);
-	  busyMachines.emplace(timestamp + estimator->estimate(operation),
+	  auto& recentlyProcessedJobId = std::get<1>(freeMachines.back());
+	  busyMachines.emplace(timestamp +
+			       estimator->estimate(operation) +
+			       (recentlyProcessedJobId == operation->parentId ? 0 : setupTime),
 			       ++assignationsCounter,
 			       operation,
 			       std::get<0>(freeMachines.back()));
@@ -82,7 +90,8 @@ void Cloud::advance(long long toTimestamp)
 					mQueue,
 					mFreeMachines,
 					mBusyMachines,
-					mAssignationsCounter))
+					mAssignationsCounter,
+					mSetupTime))
     notify(assignment);
 
   mTimestamp = toTimestamp;
@@ -104,7 +113,8 @@ std::vector<Assignation> Cloud::simulate(IEstimatorSP estimator,
 		 queue.get(),
 		 freeMachinesCpy,
 		 busyMachinesCpy,
-		 assignationsCounterCpy);
+		 assignationsCounterCpy,
+		 mSetupTime);
 }
 
 std::vector<Assignation> Cloud::simulateWithFuture(IEstimatorSP estimator,
@@ -136,7 +146,8 @@ std::vector<Assignation> Cloud::simulateWithFuture(IEstimatorSP estimator,
 				   queueWrapper.get(),
 				   freeMachinesCpy,
 				   busyMachinesCpy,
-				   assignationsCounterCpy);
+				   assignationsCounterCpy,
+				   mSetupTime);
       result.insert(result.end(), partialResult.begin(), partialResult.end());
       fromTimestamp = toTimestamp;
     }
