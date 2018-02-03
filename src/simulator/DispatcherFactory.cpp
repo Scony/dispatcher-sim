@@ -19,6 +19,7 @@
 #include "JOPTDispatcher.hpp"
 #include "SASADispatcher.hpp"
 #include "SJSADispatcher.hpp"
+#include "SADispatcher.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -93,6 +94,8 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
 					 estimator,
 					 mArguments.operationLevelAlgorithm,
 					 mArguments.saIterations)));
+  if (mArguments.primaryAlgorithm == "sa")
+    dispatcher.reset((new SADispatcher(mInput, mCloud, estimator, mArguments.saIterations)));
 
   assert(dispatcher != nullptr);
 

@@ -7,7 +7,7 @@
 ** DONE JSA
 ** TODO Solution refa
 ** TODO k-recent estimation
-** TODO SA
+** DONE SA
 ** DONE opts instead of positional parameters
 ** TODO QWORST fix
 * long term

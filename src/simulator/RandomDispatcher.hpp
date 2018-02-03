@@ -12,8 +12,8 @@ public:
   OperationSP pop() override;
   size_t size() override;
 
-  void dispatch(JobSP job) override;
+  virtual void dispatch(JobSP job) override;
 
-private:
+protected:
   std::vector<OperationSP> mQueue;
 };
