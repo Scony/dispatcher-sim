@@ -27,6 +27,12 @@ To run simple FIFO dispatcher (clairvoyant) over 20 machines type in following c
 cat instances/692_10.txt | ./bin/simulator fifo -m 20 -e no | ./bin/stat-desc
 ```
 
+To plot Gantt chart type in following command:
+```
+cat instances/692_10.txt | ./bin/simulator fifo -m 20 -e no -o opfins | python ./bin/gantt.py instances/692_10.txt
+```
+note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linux package
+
 ## Run options
 
 ### Supported algorithms `algorithm`
@@ -45,6 +51,11 @@ cat instances/692_10.txt | ./bin/simulator fifo -m 20 -e no | ./bin/stat-desc
 | so | Shortest Operation (conflicts - Earliest Operation) |
 | qopt | Optimal from Queue POV |
 | qworst | Worst from Queue POV |
+| jopt | Optimal Job permutation, Operations by `-l` |
+| jsa | SA over Job permutation, Operations by `-l` |
+| sasa | SA over Job permutation, SA over Job Operations permutation |
+| sjsa | Shortest Job, SA over Job Operations permutation |
+| sa | SA over all Operations |
 
 ### Supported testcase duration estimation methods `-e`
 
@@ -52,6 +63,21 @@ cat instances/692_10.txt | ./bin/simulator fifo -m 20 -e no | ./bin/stat-desc
 |---|---|
 | no | no estimation (clairvoyant) |
 | lclv | lazy clairvoyant (clairvoyant once known) |
+
+### Supported operation-level algorithms `-l`
+
+| Value | Algorithm |
+|---|---|
+| random | Random |
+| max | Longest Operation |
+| min | Shortest Operation |
+
+### Supported stdout formats `-o`
+
+| Value | Fromat |
+|---|---|
+| jflows | Flows of consecutive Jobs |
+| opfins | Triples `[finish timestamp] [operation id] [machine id]` |
 
 ## Instance format
 ```
