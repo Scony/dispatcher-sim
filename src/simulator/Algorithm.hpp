@@ -6,7 +6,7 @@
 namespace Algorithm
 {
   template <typename Solution, typename Cost>
-  Solution sa(Solution initialSolution,
+  Solution sa(const Solution& initialSolution,
 	      std::function<Cost(const Solution&)> costFunction,
 	      std::function<void(Solution&)> neighbouringSolution,
 	      unsigned iterations)
@@ -32,9 +32,10 @@ namespace Algorithm
 	  {
 	    bestSolution = candidate;
 	    bestCost = candidateCost;
+	    prevSolution = candidate;
+	    prevCost = candidateCost;
 	  }
-
-	if (candidateCost < prevCost)
+	else if (candidateCost < prevCost)
 	  {
 	    prevSolution = candidate;
 	    prevCost = candidateCost;

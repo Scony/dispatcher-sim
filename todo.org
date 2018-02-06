@@ -3,7 +3,7 @@
 ** DONE Cloud refa
 ** DONE Benchmark setup
 ** DONE GTest & GMock in repo + CMake fix
-** TODO Setup times
+** DONE Setup times
 ** DONE JSA
 ** TODO Solution refa
 ** TODO k-recent estimation

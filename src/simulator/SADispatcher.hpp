@@ -12,8 +12,6 @@ public:
 
   virtual void dispatch(JobSP job) override;
 
-  void sa();
-
 protected:
   unsigned mIterations;
 };
