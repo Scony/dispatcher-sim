@@ -17,23 +17,16 @@ namespace Algorithm
     Solution prevSolution = bestSolution;
     Cost prevCost = bestCost;
 
-    double T = 1.0;
+    float T = 1.0f;
     for (unsigned i = 0; i < iterations; i++)
       {
 	// calculate temperature
-	T = 1.0 - ((double)i / iterations);
+	T = 1.0f - ((float)i / iterations);
 
 	// prepare new candidate
 	Solution candidate = prevSolution;
 	neighbouringSolution(candidate);
 	Cost candidateCost = costFunction(candidate);
-
-	// calculate acceptance probability
-	double ap;
-	if (candidateCost < prevCost)
-	  ap = 1.0;
-	else
-	  ap = exp((double)(prevCost - candidateCost) / T);
 
 	if (candidateCost < bestCost)
 	  {
@@ -41,10 +34,20 @@ namespace Algorithm
 	    bestCost = candidateCost;
 	  }
 
-	if (ap >= ((double)((rand() % 1000)+1)/1000))
+	if (candidateCost < prevCost)
 	  {
 	    prevSolution = candidate;
 	    prevCost = candidateCost;
+	  }
+	else
+	  {
+	    // calculate acceptance probability
+	    float ap = exp((float)(prevCost - candidateCost) / T);
+	    if (ap >= ((float)((rand() % 1000) + 1) / 1000))
+	      {
+		prevSolution = candidate;
+		prevCost = candidateCost;
+	      }
 	  }
       }
 
