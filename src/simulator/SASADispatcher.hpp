@@ -14,6 +14,5 @@ public:
   virtual void dispatch(std::shared_ptr<Job> job) override;
 
 protected:
-  long long eval2(std::map<long long, std::vector<OperationSP> >& jobOperations);
-  void sa2();
+  void operationLevelSA();
 };

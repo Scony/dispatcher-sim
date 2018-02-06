@@ -21,10 +21,6 @@ public:
   virtual void dispatch(std::shared_ptr<Job> job) override;
 
 protected:
-  long long eval(const Solution& solution);
-  void sa();
-
-protected:
   const std::string mOperationLevelAlgorithm;
   const unsigned mIterations;
 

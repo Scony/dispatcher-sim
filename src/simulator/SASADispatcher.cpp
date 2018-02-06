@@ -2,6 +2,7 @@
 
 #include "SASADispatcher.hpp"
 #include "Solution.hpp"
+#include "Algorithm.hpp"
 
 SASADispatcher::SASADispatcher(std::shared_ptr<Input> input,
 			       std::shared_ptr<Cloud> cloud,
@@ -14,61 +15,32 @@ SASADispatcher::SASADispatcher(std::shared_ptr<Input> input,
 
 void SASADispatcher::dispatch(std::shared_ptr<Job> job)
 {
-  JSADispatcher::dispatch(job);
-  sa2();
+  JSADispatcher::dispatch(job);	// job SA here
+  operationLevelSA();
 }
 
-long long SASADispatcher::eval2(std::map<long long, std::vector<OperationSP> >& jobOperations)
+void SASADispatcher::operationLevelSA()
 {
-  std::vector<OperationSP> opPermutation;
-  for (auto const& jobId : mCurrentSolution)
-    opPermutation.insert(opPermutation.end(),
-  			 jobOperations[jobId].begin(),
-  			 jobOperations[jobId].end());
-
-  return ::Solution::evalTotalFlow(mCloud->simulate(mEstimator, opPermutation));
-}
-
-void SASADispatcher::sa2()
-{
-  std::map<long long, std::vector<OperationSP> > bestSolution = mJobOperations;
-  long long bestCost = eval(mCurrentSolution);
-
-  std::map<long long, std::vector<OperationSP> > prevSolution = bestSolution;
-  long long prevCost = bestCost;
-
-  double T = 1.0;
-  for (unsigned i = 0; i < mIterations; i++)
+  auto costFunction = [&](const std::map<long long, std::vector<OperationSP> >& solution)
     {
-      // calculate temperature
-      T = 1.0 - ((double)i / mIterations);
+      std::vector<OperationSP> opPermutation;
+      for (auto const& jobId : mCurrentSolution)
+	opPermutation.insert(opPermutation.end(),
+			     solution.at(jobId).begin(),
+			     solution.at(jobId).end());
 
-      // prepare new candidate
-      auto candidate = prevSolution;
+      return ::Solution::evalTotalFlow(mCloud->simulate(mEstimator, opPermutation));
+    };
+  auto neighbouringSolution = [&](std::map<long long, std::vector<OperationSP> >& solution)
+    {
       auto jobId = mCurrentSolution[rand() % mCurrentSolution.size()];
-      std::swap(candidate[jobId][rand() % candidate[jobId].size()],
-		candidate[jobId][rand() % candidate[jobId].size()]);
-      long long candidateCost = eval2(candidate);
+      std::swap(solution[jobId][rand() % solution[jobId].size()],
+		solution[jobId][rand() % solution[jobId].size()]);
+    };
 
-      // calculate acceptance probability
-      double ap;
-      if (candidateCost < prevCost)
-	ap = 1.0;
-      else
-	ap = exp((double)(prevCost - candidateCost) / T);
-
-      if (candidateCost < bestCost)
-	{
-	  bestSolution = candidate;
-	  bestCost = candidateCost;
-	}
-
-      if (ap >= ((double)((rand() % 1000)+1)/1000))
-	{
-	  prevSolution = candidate;
-	  prevCost = candidateCost;
-	}
-    }
-
-  mJobOperations = bestSolution;
+  mJobOperations = Algorithm::sa<std::map<long long, std::vector<OperationSP> >,
+				 long long>(mJobOperations,
+					    costFunction,
+					    neighbouringSolution,
+					    mIterations);
 }

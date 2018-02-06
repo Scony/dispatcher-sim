@@ -52,5 +52,5 @@ void SJSADispatcher::dispatch(std::shared_ptr<Job> job)
   for (const auto& pair : mWeightsOfJobs)
     mCurrentSolution.push_back(pair.second);
 
-  sa2();
+  operationLevelSA();
 }
