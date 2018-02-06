@@ -20,6 +20,11 @@ make uat
 # UT + UAT
 make tests
 ```
+Note that benchmarking results may be affected by CPU scaling. To control that you can use following commands:
+```
+sudo cpupower frequency-set --governor performance # disable
+sudo cpupower frequency-set --governor powersave   # enable
+```
 
 ## Running
 To run simple FIFO dispatcher (clairvoyant) over 20 machines type in following command:
@@ -96,4 +101,9 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 (...)
 
 (...)
+```
+
+## Examples
+```
+time cat instances/5596_80.txt | ./bin/simulator sa -m 10 -e no -l max -i 1000 2>/dev/null | ./bin/stat-desc
 ```

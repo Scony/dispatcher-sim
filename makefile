@@ -17,6 +17,7 @@ build:
 
 clean:
 	find -name '*~' | xargs rm -f
-	rm -rf build bin
+	find bin/ -executable -type f | xargs rm -f
+	rm -rf build
 
 .PHONY: clean ut build benchmarks uat tests
