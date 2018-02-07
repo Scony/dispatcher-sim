@@ -59,6 +59,17 @@ int main(int argc, char ** argv)
   arguments.operationLevelAlgorithm = opAlgortihmArg ? args::get(opAlgortihmArg) : "random";
   arguments.saIterations = saIterationsArg ? args::get(saIterationsArg) : 1;
   unsigned setupTime = setupTimeArg ? args::get(setupTimeArg) : 0;
+  auto outputType = outputArg ? args::get(outputArg) : "jflows";
+
+  std::cerr << "reading arguments..." << std::endl;
+  std::cerr << "> algorithm: " << arguments.primaryAlgorithm << std::endl;
+  std::cerr << "> machines: " << arguments.machinesNum << std::endl;
+  std::cerr << "> estimation: " << arguments.estimationMethod << std::endl;
+  std::cerr << "> o-l-algorithm: " << arguments.operationLevelAlgorithm << std::endl;
+  std::cerr << "> iterations: " << arguments.saIterations << std::endl;
+  std::cerr << "> setup: " << setupTime << std::endl;
+  std::cerr << "> output: " << outputType << std::endl;
+  std::cerr << "reading arguments done" << std::endl;
 
   auto input = std::make_shared<Input>();
 
@@ -86,8 +97,6 @@ int main(int argc, char ** argv)
   std::cerr << "running validation..." << std::endl;
   solution->validate(jobs, arguments.machinesNum);
   std::cerr << "running validation done" << std::endl;
-
-  auto outputType = outputArg ? args::get(outputArg) : "jflows";
 
   if (outputType == "jflows")
     {
