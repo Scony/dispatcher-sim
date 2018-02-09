@@ -6,7 +6,7 @@ inputDir="${1}"
 outputDir="${2}"
 
 algorithms=(random max min fifo sjlo sjso rvr dvr)
-opts=(-m20 -eno)
+opts=(-m32 -eno)
 
 mkdir -p "${outputDir}"
 

@@ -28,7 +28,7 @@ for feile in files:
         results[run] = {}
 
     with open('%s/%s' % (directory, feile)) as fh:
-        dataLine = fh.read().split('\n')[0]
+        dataLine = fh.read().split('\n')[0].split(' ')[0]
         data = [float(x) for x in dataLine.split()]
         results[run][algorithm] = data
 
