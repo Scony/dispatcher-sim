@@ -20,6 +20,7 @@
 #include "SASADispatcher.hpp"
 #include "SJSADispatcher.hpp"
 #include "SADispatcher.hpp"
+#include "VRDispatcher.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -96,6 +97,10 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
 					 mArguments.saIterations)));
   if (mArguments.primaryAlgorithm == "sa")
     dispatcher.reset((new SADispatcher(mInput, mCloud, estimator, mArguments.saIterations)));
+  if (mArguments.primaryAlgorithm == "rvr")
+    dispatcher.reset((new VRDispatcher(mInput, mCloud, estimator, false)));
+  if (mArguments.primaryAlgorithm == "dvr")
+    dispatcher.reset((new VRDispatcher(mInput, mCloud, estimator, true)));
 
   assert(dispatcher != nullptr);
 
