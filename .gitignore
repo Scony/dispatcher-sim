@@ -5,3 +5,4 @@ bin
 .tox
 __pycache__
 *egg-info*
+results
