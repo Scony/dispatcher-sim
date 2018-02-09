@@ -61,6 +61,8 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 | sasa | SA over Job permutation, SA over Job Operations permutation |
 | sjsa | Shortest Job, SA over Job Operations permutation |
 | sa | SA over all Operations |
+| rvr | Random Variable Rule |
+| dvr | Determininstic Variable Rule |
 
 ### Supported testcase duration estimation methods `-e`
 
