@@ -1,23 +1,24 @@
 all: build
 
 ut:
-	mkdir -p build && cd build && cmake -DBUILD_TESTS=ON .. && make -j simulator-ut
+	mkdir -p build && cd build && cmake -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug .. && make -j simulator-ut
 	./bin/simulator-ut
 
 benchmarks:
-	mkdir -p build && cd build && cmake -DBUILD_TESTS=ON .. && make -j simulator-benchmarks-run
+	mkdir -p build && cd build && cmake -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug .. && make -j simulator-benchmarks-run
 
-uat: build
+uat:
+	mkdir -p build && cd build && cmake -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug .. && make -j
 	tox -c test/py
 
 tests: ut uat
 
 build:
-	mkdir -p build && cd build && cmake -DBUILD_TESTS=OFF .. && make -j
+	mkdir -p build && cd build && cmake -DBUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release .. && make -j
 
 clean:
 	find -name '*~' | xargs rm -f
-	find bin/ -executable -type f | xargs rm -f
+	find bin/ -executable -type f ! -name '*.sh' | xargs rm -f
 	rm -rf build
 
 .PHONY: clean ut build benchmarks uat tests

@@ -9,8 +9,8 @@
 ** TODO k-recent estimation
 ** DONE SA
 ** DONE opts instead of positional parameters
-** TODO RVR
-** TODO DVR
+** DONE RVR
+** DONE DVR
 ** TODO QWORST fix
 * long term
 ** TODO fuzzy SA

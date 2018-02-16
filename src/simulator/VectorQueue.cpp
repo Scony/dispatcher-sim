@@ -7,7 +7,7 @@ VectorQueue::VectorQueue(std::vector<OperationSP>& operations) :
 
 OperationSP VectorQueue::pop()
 {
-  auto operation = mOperations.back();
+  auto operation = std::move(mOperations.back());
   mOperations.pop_back();
   return operation;
 }

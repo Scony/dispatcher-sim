@@ -1,4 +1,5 @@
 #include <map>
+#include <unordered_map>
 #include <cassert>
 #include <algorithm>
 
@@ -39,7 +40,7 @@ void Solution::validate(std::vector<std::shared_ptr<Job> > jobs, unsigned machin
       const auto& executionsNum = kv.second;
       assert(executionsNum == 1);
     }
-    
+
   // solution is schedulable given the number of machines
   // FIXME: make sure this algorithm is correct
   std::vector<std::pair<long long, int> > cloudUsageChanges;
@@ -100,18 +101,22 @@ Solution::JobFlowVec Solution::calculateJobFlowVec(std::vector<std::shared_ptr<J
 
 long long Solution::evalTotalFlow(const SolutionVec& solution)
 {
-  std::map<long long, long long> jobFlows;
+  std::unordered_map<long long, long long> jobFlows;
 
   for (const auto& tuple : solution)
     {
       const auto& endTimestamp = std::get<0>(tuple);
       const auto& operation = std::get<1>(tuple);
 
-      if (jobFlows.find(operation->parentId) == jobFlows.end())
-	jobFlows[operation->parentId] = 0;
+      auto iterator = jobFlows.find(operation->parentId);
+      if (iterator == jobFlows.end())
+	{
+	  auto tmp = jobFlows.emplace(operation->parentId, 0);
+	  iterator = tmp.first;
+	}
+      auto& jobFlow = iterator->second;
 
-      jobFlows[operation->parentId] = std::max(jobFlows[operation->parentId],
-					       endTimestamp - operation->arrival);
+      jobFlow = std::max(jobFlow, endTimestamp - operation->arrival);
     }
 
   long long totalFlow = 0;
