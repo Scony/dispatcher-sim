@@ -5,8 +5,8 @@
 inputDir="${1}"
 outputDir="${2}"
 
-algorithms=(random max min fifo sjlo sjso rvr dvr)
-opts=(-m32 -eno)
+algorithms=(random max min fifo sjlo sjso rvr dvr jsa sasa sjsa sa)
+opts=(-m32 -eno -lmax -i100)
 
 mkdir -p "${outputDir}"
 
