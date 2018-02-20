@@ -32,6 +32,8 @@ int main(int argc, char ** argv)
 					 {'o', "output-type"});
   args::ValueFlag<unsigned> setupTimeArg(parser, "number", "Operations setup time",
 					 {'s', "setup-time"});
+  args::ValueFlag<unsigned> kArg(parser, "number", "K-Recent's window size",
+					 {'k', "window-size"});
 
   args::Positional<std::string> algorithmArg(parser, "algorithm", "Primary algorithm");
 
@@ -58,6 +60,7 @@ int main(int argc, char ** argv)
   arguments.estimationMethod = estimationArg ? args::get(estimationArg) : "no";
   arguments.operationLevelAlgorithm = opAlgortihmArg ? args::get(opAlgortihmArg) : "random";
   arguments.saIterations = saIterationsArg ? args::get(saIterationsArg) : 1;
+  arguments.k = kArg ? args::get(kArg) : 3;
   unsigned setupTime = setupTimeArg ? args::get(setupTimeArg) : 0;
   auto outputType = outputArg ? args::get(outputArg) : "jflows";
 
@@ -65,6 +68,7 @@ int main(int argc, char ** argv)
   std::cerr << "> algorithm: " << arguments.primaryAlgorithm << std::endl;
   std::cerr << "> machines: " << arguments.machinesNum << std::endl;
   std::cerr << "> estimation: " << arguments.estimationMethod << std::endl;
+  std::cerr << "> k: " << arguments.k << std::endl;
   std::cerr << "> o-l-algorithm: " << arguments.operationLevelAlgorithm << std::endl;
   std::cerr << "> iterations: " << arguments.saIterations << std::endl;
   std::cerr << "> setup: " << setupTime << std::endl;

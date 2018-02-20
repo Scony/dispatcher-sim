@@ -16,7 +16,7 @@ public:
 
 private:
   const long long mDefaultEstimate = 42;
-  const long long mK;
+  const unsigned mK;
 
   std::unordered_map<long long, std::deque<long long> > operationDurations;
   std::unordered_map<long long, long long> operationDurationSums;

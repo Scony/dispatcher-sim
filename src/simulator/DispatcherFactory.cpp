@@ -21,6 +21,7 @@
 #include "SJSADispatcher.hpp"
 #include "SADispatcher.hpp"
 #include "VRDispatcher.hpp"
+#include "KRecentEstimator.hpp"
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<Cloud> cloud,
@@ -41,6 +42,8 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
     estimator.reset((new NoEstimator()));
   if (mArguments.estimationMethod == "lclv")
     estimator.reset((new LazyClairvoyantEstimator()));
+  if (mArguments.estimationMethod == "krec")
+    estimator.reset((new KRecentEstimator(mArguments.k)));
 
   assert(estimator != nullptr);
 
