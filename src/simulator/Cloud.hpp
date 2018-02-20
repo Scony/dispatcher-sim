@@ -4,10 +4,6 @@
 #include <deque>
 #include <queue>
 
-#ifdef USE_HEAP_FROM_BOOST
-#include <boost/heap/skew_heap.hpp>
-#endif
-
 #include "Operation.hpp"
 #include "IQueue.hpp"
 #include "ExecutionsSubject.hpp"
@@ -23,14 +19,9 @@ using FreeMachine = std::tuple<unsigned,   // machine ID
 class Cloud : public ExecutionsSubject
 {
 public:
-#ifndef USE_HEAP_FROM_BOOST
   using BusyMachines = std::priority_queue<BusyMachine,
 					   std::vector<BusyMachine>,
 					   std::greater<BusyMachine> >;
-#else
-  using BusyMachines = boost::heap::skew_heap<BusyMachine,
-					      boost::heap::compare<std::greater<BusyMachine> > >;
-#endif
   using FreeMachines = std::deque<FreeMachine>;
 
 public:
