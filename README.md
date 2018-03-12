@@ -29,12 +29,12 @@ sudo cpupower frequency-set --governor powersave   # enable
 ## Running
 To run simple FIFO dispatcher (clairvoyant) over 20 machines type in following command:
 ```
-cat instances/692_10.txt | ./bin/simulator fifo -m 20 -e no | ./bin/stat-desc
+cat instances_v1/692_10.txt | ./bin/simulator fifo -m 20 -e no | ./bin/stat-desc
 ```
 
 To plot Gantt chart type in following command:
 ```
-cat instances/692_10.txt | ./bin/simulator fifo -m 20 -e no -o opfins | python ./bin/gantt.py instances/692_10.txt
+cat instances_v1/692_10.txt | ./bin/simulator fifo -m 20 -e no -o opfins | python ./bin/gantt.py instances_v1/692_10.txt
 ```
 note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linux package
 
@@ -108,7 +108,27 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 (...)
 ```
 
+### V2
+
+```
+0 # for backward compatibility
+2 # version of instance format
+
+[number of test suites]
+
+[test suite uuid] [test suite priority (1>0)] [arrival time (s)]
+[test suite uuid] [test suite priority (1>0)] [arrival time (s)]
+[test suite uuid] [test suite priority (1>0)] [arrival time (s)]
+(...)
+
+[number of test cases]
+[test suite uuid] [test case uuid] [test case type]  [test case outcome (0 - pass)] [test case duration (s)] [required machine capacity]
+[test suite uuid] [test case uuid] [test case type]  [test case outcome (0 - pass)] [test case duration (s)] [required machine capacity]
+[test suite uuid] [test case uuid] [test case type]  [test case outcome (0 - pass)] [test case duration (s)] [required machine capacity]
+(...)
+```
+
 ## Examples
 ```
-time cat instances/5596_80.txt | ./bin/simulator sa -m 10 -e no -l max -i 1000 2>/dev/null | ./bin/stat-desc
+time cat instances_v1/5596_80.txt | ./bin/simulator sa -m 10 -e no -l max -i 1000 2>/dev/null | ./bin/stat-desc
 ```
