@@ -81,12 +81,15 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 
 ### Supported stdout formats `-o`
 
-| Value | Fromat |
+| Value | Format |
 |---|---|
 | jflows | Flows of consecutive Jobs |
 | opfins | Triples `[finish timestamp] [operation id] [machine id]` |
 
 ## Instance format
+
+### V1
+
 ```
 [number of test suites]
 
