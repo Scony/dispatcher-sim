@@ -264,14 +264,14 @@ int main( int argc , char ** argv )
 
 	cout << jobs.size() << endl;
 
-	for ( int j = 0; j < jobs.size(); ++j )
+	for ( size_t j = 0; j < jobs.size(); ++j )
 	{
 		cout << endl;
 
 		cout << jobId++ << " " << jobs[j].priority << " " << jobs[j].arrivalTime << endl;
 		cout << jobs[j].operations.size() << endl;
 
-		for ( int i = 0; i < jobs[j].operations.size(); ++i )
+		for ( size_t i = 0; i < jobs[j].operations.size(); ++i )
 		{
 			cout << operationId++ << " " << jobs[j].operations[i].type << " " << jobs[j].operations[i].result << " " << jobs[j].operations[i].processingTime << endl;
 		}

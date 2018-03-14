@@ -8,7 +8,7 @@ int main(int argc, char** argv)
 {
   srand(time(0));
 
-  std::map<unsigned, unsigned> capacityToShare = { // TODO: retrieve from argv
+  std::map<unsigned, unsigned> capacityToShare = { // TODO: retrieve from file
     { 1, 1600 },
     { 4, 240 },
   };
@@ -30,16 +30,18 @@ int main(int argc, char** argv)
 
   std::cout << 0 << std::endl;
   std::cout << 2 << std::endl;
-  std::cout << std::endl;
 
   std::cout << input.getJobsNum() << std::endl;
-  std::cout << input.getOperationsNum() << std::endl;
+  for (const auto& job : input.getJobs())
+    std::cout << job->id << " "
+	      << job->priority << " "
+	      << job->arrivalTimestamp
+	      << std::endl;
 
+  std::cout << input.getOperationsNum() << std::endl;
   for (const auto& job : input.getJobs())
     for (const auto& operation : job->operations)
       std::cout << job->id << " "
-		<< job->priority << " "
-		<< job->arrivalTimestamp << " "
 		<< operation->id << " "
 		<< operation->name << " "
 		<< operation->result << " "

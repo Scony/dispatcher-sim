@@ -113,12 +113,15 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 ```
 0 # for backward compatibility
 2 # version of instance format
-
 [number of test suites]
+[test suite uuid] [test suite priority (1>0)] [arrival time (s)]
+[test suite uuid] [test suite priority (1>0)] [arrival time (s)]
+[test suite uuid] [test suite priority (1>0)] [arrival time (s)]
+(...)
 [number of test cases]
-[test suite uuid] [test suite priority (1>0)] [arrival time (s)] [test case uuid] [test case type]  [test case outcome (0 - pass)] [test case duration (s)] [required machine capacity]
-[test suite uuid] [test suite priority (1>0)] [arrival time (s)] [test case uuid] [test case type]  [test case outcome (0 - pass)] [test case duration (s)] [required machine capacity]
-[test suite uuid] [test suite priority (1>0)] [arrival time (s)] [test case uuid] [test case type]  [test case outcome (0 - pass)] [test case duration (s)] [required machine capacity]
+[test suite uuid] [test case uuid] [test case type]  [test case outcome (0 - pass)] [test case duration (s)] [required machine capacity]
+[test suite uuid] [test case uuid] [test case type]  [test case outcome (0 - pass)] [test case duration (s)] [required machine capacity]
+[test suite uuid] [test case uuid] [test case type]  [test case outcome (0 - pass)] [test case duration (s)] [required machine capacity]
 (...)
 ```
 
