@@ -1,6 +1,7 @@
 module Main where
 
-import Lib
+import Input
 
 main :: IO ()
-main = someFunc
+main = do
+  readInstanceV2
