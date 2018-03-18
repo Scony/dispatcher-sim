@@ -1,5 +1,5 @@
 module Operation
-  ( Operation
+  ( Operation(uuid)
   ) where
 
 data Operation = Operation { parent :: Int

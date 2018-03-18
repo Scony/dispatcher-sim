@@ -1,21 +1,32 @@
 module Input
-  ( readInstanceV2
+  ( parseInstanceV2
   ) where
 
 import Job
 import Operation
 
-readInstanceV2 = do
-  sequence $ replicate 2 getLine -- omit header
+slice a b = take (b - a) . drop a
 
-  rawJobsNum <- getLine
-  let jobsNum = read rawJobsNum :: Int
-  rawJobs <- sequence $ replicate jobsNum getLine
-  let jobs = map read rawJobs :: [Job]
+-- readInstanceV2 = do
+--   sequence $ replicate 2 getLine -- omit header
 
-  rawOperationsNum <- getLine
-  let operationsNum = read rawOperationsNum :: Int
-  rawOperations <- sequence $ replicate operationsNum getLine
-  let operations = map read rawOperations :: [Operation]
+--   rawJobsNum <- getLine
+--   let jobsNum = read rawJobsNum :: Int
+--   rawJobs <- sequence $ replicate jobsNum getLine
+--   let jobs = map read rawJobs :: [Job]
 
-  putStrLn $ show (jobs, operations)
+--   rawOperationsNum <- getLine
+--   let operationsNum = read rawOperationsNum :: Int
+--   rawOperations <- sequence $ replicate operationsNum getLine
+--   let operations = map read rawOperations :: [Operation]
+
+--   putStrLn $ show (jobs, operations)
+
+parseInstanceV2 :: [String] -> ([Job], [Operation])
+parseInstanceV2 lines =
+  let jobsNum = read $ lines !! 2 :: Int
+      jobs = map read $ slice 3 (3 + jobsNum) lines :: [Job]
+      operationsNum = read $ lines !! (3 + jobsNum) :: Int
+      operations = map read
+        $ slice (4 + jobsNum) (4 + jobsNum + operationsNum) lines :: [Operation]
+  in (jobs, operations)
