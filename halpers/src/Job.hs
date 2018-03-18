@@ -1,5 +1,5 @@
 module Job
-  ( Job
+  ( Job(uuid)
   ) where
 
 data Job = Job { uuid :: Int
