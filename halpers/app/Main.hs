@@ -5,6 +5,7 @@ import System.Environment
 import Input
 import Algorithm
 import Machine
+import Solution
 
 replace a b s = map (\x -> if x == a then b else x) s
 mkLines x = map (replace '_' ' ') $ words $ replace ' ' '_' x
@@ -27,3 +28,5 @@ main = do
   putStrLn $ "operations: " ++ show operationsNum
 
   putStrLn $ show $ allInOne jobs operations machines
+  putStrLn ""
+  putStrLn $ show $ calculateAssignments jobs $ allInOne jobs operations machines
