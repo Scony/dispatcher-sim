@@ -37,3 +37,6 @@ main = do
   putStrLn $ show $ calculateJobFlows jobs $ calculateAssignments jobs $ allInOne jobs operations machines
   putStrLn ""
   putStrLn $ show $ calculateJobsTotalFlow $ calculateJobFlows jobs $ calculateAssignments jobs $ allInOne jobs operations machines
+
+  putStrLn ""
+  putStrLn $ show $ calculateJobsTotalFlow $ calculateJobFlows jobs $ calculateAssignments jobs $ opt jobs operations machines
