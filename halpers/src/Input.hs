@@ -4,8 +4,7 @@ module Input
 
 import Job
 import Operation
-
-slice a b = take (b - a) . drop a
+import Utils
 
 -- readInstanceV2 = do
 --   sequence $ replicate 2 getLine -- omit header
