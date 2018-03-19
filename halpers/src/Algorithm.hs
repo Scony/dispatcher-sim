@@ -1,6 +1,7 @@
 module Algorithm
   ( allInOne
   , opt
+  , worst
   ) where
 
 import Data.List (permutations, elemIndex)
@@ -16,15 +17,21 @@ allInOne js ops ms = [(ms !! 0, ops)]
 
 
 opt :: [Job] -> [Operation] -> [Machine] -> [(Machine, [Operation])]
-opt js ops ms = snd $ (filter ((==bestWeight) . fst) weightedSolutions) !! 0
-  where solutions = map (zip ms) $ possibilities ops $ length ms
-        weightedSolutions = map (\x -> (eval x, x)) solutions
-          where
-            eval = calculateJobsTotalFlow
-              . calculateJobFlows js
-              . calculateAssignments js
-        bestWeight :: Int
-        bestWeight = minimum $ map fst weightedSolutions
+opt js ops ms = pickWeightedSolution js ops ms minimum
+
+worst :: [Job] -> [Operation] -> [Machine] -> [(Machine, [Operation])]
+worst js ops ms = pickWeightedSolution js ops ms maximum
+
+pickWeightedSolution js ops ms fun = snd $ (filter ((==bestWeight) . fst) weightedSolutions') !! 0
+  where weightedSolutions' = weightedSolutions js ops ms
+        bestWeight = fun $ map fst weightedSolutions'
+
+weightedSolutions js ops ms = map (\x -> (eval x, x)) solutions
+  where
+    solutions = map (zip ms) $ possibilities ops $ length ms
+    eval = calculateJobsTotalFlow
+      . calculateJobFlows js
+      . calculateAssignments js
 
 possibilities :: [a] -> Int -> [[[a]]]
 possibilities xs subsetsNum = process xs
