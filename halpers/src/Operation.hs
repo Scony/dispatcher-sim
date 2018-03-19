@@ -1,6 +1,12 @@
 module Operation
-  ( Operation(uuid)
+  ( Operation(uuid,duration)
+  , parentOf
   ) where
+
+import Job
+
+parentOf :: [Job] -> Operation -> Job -- TODO maybe ?
+parentOf js op = [j | j <- js, Job.uuid j == Operation.parent op] !! 0
 
 data Operation = Operation { parent :: Int
                            , uuid :: Int

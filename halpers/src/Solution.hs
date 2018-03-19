@@ -13,4 +13,13 @@ calculateAssignments js mos =
 
 calculateMachineAssignments :: [Job] -> (Machine, [Operation]) -> [Assignment]
 calculateMachineAssignments js mo =
-  foldl (\acc op -> if acc == [] then [] else []) [] (snd mo) -- TODO
+  let machine = fst mo
+      x [] op =
+        let jobArrival = arrival $ parentOf js op
+        in [Assignment (jobArrival + duration op) op machine]
+      x acc op =
+        let finishOfPrev = finish $ last acc
+            jobArrival = arrival $ parentOf js op
+            beginTime = max finishOfPrev jobArrival
+        in acc ++ [Assignment (beginTime + duration op) op machine]
+  in foldl x [] (snd mo) -- TODO

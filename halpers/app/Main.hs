@@ -27,6 +27,9 @@ main = do
   putStrLn $ "jobs: " ++ show jobsNum
   putStrLn $ "operations: " ++ show operationsNum
 
+  putStrLn ""
+  putStrLn $ show $ jobs
+  putStrLn ""
   putStrLn $ show $ allInOne jobs operations machines
   putStrLn ""
   putStrLn $ show $ calculateAssignments jobs $ allInOne jobs operations machines
