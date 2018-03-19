@@ -40,3 +40,6 @@ main = do
 
   putStrLn ""
   putStrLn $ show $ calculateJobsTotalFlow $ calculateJobFlows jobs $ calculateAssignments jobs $ opt jobs operations machines
+
+  putStrLn ""
+  putStrLn $ show $ calculateJobsTotalFlow $ calculateJobFlows jobs $ calculateAssignments jobs $ worst jobs operations machines
