@@ -24,3 +24,4 @@ struct Job
 };
 
 using JobSP = std::shared_ptr<Job>;
+using JobID = long long;

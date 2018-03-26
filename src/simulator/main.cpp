@@ -5,6 +5,7 @@
 #include "args.hpp"
 
 #include "Input.hpp"
+#include "InputV2.hpp"
 #include "Cloud.hpp"
 #include "Simulator.hpp"
 #include "DispatcherFactory.hpp"
@@ -32,8 +33,10 @@ int main(int argc, char ** argv)
 					 {'o', "output-type"});
   args::ValueFlag<unsigned> setupTimeArg(parser, "number", "Operations setup time",
 					 {'s', "setup-time"});
+  args::ValueFlag<unsigned> instanceVersionArg(parser, "number", "Instance file version",
+					    {'v', "version"});
   args::ValueFlag<unsigned> kArg(parser, "number", "K-Recent's window size",
-					 {'k', "window-size"});
+				 {'k', "window-size"});
 
   args::Positional<std::string> algorithmArg(parser, "algorithm", "Primary algorithm");
 
@@ -63,6 +66,7 @@ int main(int argc, char ** argv)
   arguments.k = kArg ? args::get(kArg) : 3;
   unsigned setupTime = setupTimeArg ? args::get(setupTimeArg) : 0;
   auto outputType = outputArg ? args::get(outputArg) : "jflows";
+  auto instanceVersion = instanceVersionArg ? args::get(instanceVersionArg) : 1;
 
   std::cerr << "reading arguments..." << std::endl;
   std::cerr << "> algorithm: " << arguments.primaryAlgorithm << std::endl;
@@ -75,7 +79,17 @@ int main(int argc, char ** argv)
   std::cerr << "> output: " << outputType << std::endl;
   std::cerr << "reading arguments done" << std::endl;
 
-  auto input = std::make_shared<Input>();
+  std::shared_ptr<Input> input;
+
+  switch (instanceVersion)
+    {
+    case 2:
+      input = std::make_shared<InputV2>();
+      break;
+    case 1:
+    default:
+      input = std::make_shared<Input>();
+    };
 
   std::cerr << "reading input..." << std::endl;
   input->readFromStdin();

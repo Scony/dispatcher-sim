@@ -3,25 +3,25 @@
 #include "Input.hpp"
 
 Input::Input() :
-  mQueue()
+  mJobs()
 {
 }
 
 std::vector<std::shared_ptr<Job> > Input::getJobs()
 {
-  return mQueue;
+  return mJobs;
 }
 
 long long Input::getJobsNum()
 {
-  return mQueue.size();
+  return mJobs.size();
 }
 
 long long Input::getOperationsNum()
 {
   long long operationsNum = 0;
 
-  for (const auto& job : mQueue)
+  for (const auto& job : mJobs)
     operationsNum += job->operations.size();
 
   return operationsNum;
@@ -65,6 +65,6 @@ void Input::readFromStdin()
       	}
 
       auto job = std::make_shared<Job>(jobId, jobPriority, jobArrivalTimestamp, operations);
-      mQueue.push_back(job);
+      mJobs.push_back(job);
     }
 }
