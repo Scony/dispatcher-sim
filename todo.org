@@ -1,16 +1,18 @@
 * short term
+** TODO multiQ Cloud (with packing algs)
+** TODO multiQ constructive
+** TODO Solution refa
 ** DONE UAT
 ** DONE Cloud refa
 ** DONE Benchmark setup
 ** DONE GTest & GMock in repo + CMake fix
 ** DONE Setup times
 ** DONE JSA
-** TODO Solution refa
-** TODO k-recent estimation
+** DONE k-recent estimation
 ** DONE SA
 ** DONE opts instead of positional parameters
 ** DONE RVR
 ** DONE DVR
-** TODO QWORST fix
 * long term
+** TODO QWORST fix
 ** TODO fuzzy SA
