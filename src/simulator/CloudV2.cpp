@@ -58,6 +58,6 @@ void CloudV2::readMachinesFromStdin()
       long long machineCapacity;
       std::cin >> machineId;
       std::cin >> machineCapacity;
-      // ...
+      mMachines.emplace_back(new Machine(machineId, machineCapacity));
     }
 }

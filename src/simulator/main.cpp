@@ -104,8 +104,9 @@ int main(int argc, char ** argv)
     {
     case 2:
       {
-	cloud = std::make_shared<CloudV2>(setupTime);
-	// cloud->readMachinesFromStdin();
+	auto cloudV2 = std::make_shared<CloudV2>(setupTime);;
+	cloudV2->readMachinesFromStdin();
+	cloud = cloudV2;
 	break;
       }
     case 1:
