@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Cloud.hpp"
+#include "Machine.hpp"
 
 class CloudV2 : public Cloud
 {
@@ -15,8 +16,12 @@ public:
 					      std::vector<OperationSP> operations) const override;
   void assignQueue(IQueue* queue);
 
+  void readMachinesFromStdin();
+
 private:
   const unsigned mSetupTime;
+
+  std::vector<MachineSP> mMachines;
 
   IQueue* mQueue;
 };
