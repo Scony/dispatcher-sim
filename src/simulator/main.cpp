@@ -7,6 +7,7 @@
 #include "Input.hpp"
 #include "InputV2.hpp"
 #include "Cloud.hpp"
+#include "CloudV2.hpp"
 #include "Simulator.hpp"
 #include "DispatcherFactory.hpp"
 #include "Solution.hpp"
@@ -80,7 +81,6 @@ int main(int argc, char ** argv)
   std::cerr << "reading arguments done" << std::endl;
 
   std::shared_ptr<Input> input;
-
   switch (instanceVersion)
     {
     case 2:
@@ -91,15 +91,27 @@ int main(int argc, char ** argv)
       input = std::make_shared<Input>();
     };
 
-  std::cerr << "reading input..." << std::endl;
+  std::cerr << "reading instance..." << std::endl;
   input->readFromStdin();
   std::cerr << "> jobs: " << input->getJobsNum() << std::endl;
   std::cerr << "> operations: " << input->getOperationsNum() << std::endl;
-  std::cerr << "reading input done" << std::endl;
+  std::cerr << "reading instance done" << std::endl;
 
   auto solution = std::make_shared<Solution>();
-  auto cloud = std::make_shared<Cloud>(arguments.machinesNum, setupTime);
 
+  std::shared_ptr<Cloud> cloud;
+  switch (instanceVersion)
+    {
+    case 2:
+      {
+	cloud = std::make_shared<CloudV2>(setupTime);
+	// cloud->readMachinesFromStdin();
+	break;
+      }
+    case 1:
+    default:
+      cloud = std::make_shared<Cloud>(arguments.machinesNum, setupTime);
+    };
   cloud->subscribe(solution);
 
   auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, arguments);

@@ -54,7 +54,8 @@ void InputV2::readFromStdin()
 						      operationName,
 						      operationResult,
 						      jobs[jobId]->arrivalTimestamp,
-						      operationDuration));
+						      operationDuration,
+						      operationCapacityReq));
     }
 
   for (auto const& kv : jobs)

@@ -37,15 +37,14 @@ public:
 
 public:
   Cloud(unsigned machinesNum, unsigned setupTime = 0);
+  virtual ~Cloud();
 
-  void advance(long long toTimestamp);
-  std::vector<Assignation> simulate(IEstimatorSP estimator,
-				    std::vector<OperationSP> operations) const;
-  std::vector<Assignation> simulateWithFuture(IEstimatorSP estimator,
-					      std::vector<OperationSP> operations) const;
-  void assignQueue(IQueue* queue);
-
-  unsigned getMachinesNum();
+  virtual void advance(long long toTimestamp);
+  virtual std::vector<Assignation> simulate(IEstimatorSP estimator,
+					    std::vector<OperationSP> operations) const;
+  virtual std::vector<Assignation> simulateWithFuture(IEstimatorSP estimator,
+						      std::vector<OperationSP> operations) const;
+  virtual void assignQueue(IQueue* queue);
 
 private:
   const unsigned mMachinesNum;
