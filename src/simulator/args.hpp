@@ -40,6 +40,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <type_traits>
+#include <stdexcept>
 
 #ifdef ARGS_TESTNAMESPACE
 namespace argstest
@@ -247,7 +248,7 @@ namespace args
     {
         public:
             Error(const std::string &problem) : std::runtime_error(problem) {}
-            virtual ~Error() {}
+            virtual ~Error() noexcept {}
     };
 
     /** Errors that occur during usage
@@ -256,7 +257,7 @@ namespace args
     {
         public:
             UsageError(const std::string &problem) : Error(problem) {}
-            virtual ~UsageError() {}
+            virtual ~UsageError() noexcept {}
     };
 
     /** Errors that occur during regular parsing
@@ -265,7 +266,7 @@ namespace args
     {
         public:
             ParseError(const std::string &problem) : Error(problem) {}
-            virtual ~ParseError() {}
+            virtual ~ParseError() noexcept {}
     };
 
     /** Errors that are detected from group validation after parsing finishes
@@ -274,7 +275,7 @@ namespace args
     {
         public:
             ValidationError(const std::string &problem) : Error(problem) {}
-            virtual ~ValidationError() {}
+            virtual ~ValidationError() noexcept {}
     };
 
     /** Errors that when a required flag is omitted
@@ -283,7 +284,7 @@ namespace args
     {
         public:
             RequiredError(const std::string &problem) : ValidationError(problem) {}
-            virtual ~RequiredError() {}
+            virtual ~RequiredError() noexcept {}
     };
 
     /** Errors in map lookups
@@ -292,7 +293,7 @@ namespace args
     {
         public:
             MapError(const std::string &problem) : ParseError(problem) {}
-            virtual ~MapError() {}
+            virtual ~MapError() noexcept {}
     };
 
     /** Error that occurs when a singular flag is specified multiple times
@@ -301,7 +302,7 @@ namespace args
     {
         public:
             ExtraError(const std::string &problem) : ParseError(problem) {}
-            virtual ~ExtraError() {}
+            virtual ~ExtraError() noexcept {}
     };
 
     /** An exception that indicates that the user has requested help
@@ -310,7 +311,7 @@ namespace args
     {
         public:
             Help(const std::string &flag) : Error(flag) {}
-            virtual ~Help() {}
+            virtual ~Help() noexcept {}
     };
 
     /** (INTERNAL) An exception that emulates coroutine-like control flow for subparsers.
@@ -319,7 +320,7 @@ namespace args
     {
         public:
             SubparserError() : Error("") {}
-            virtual ~SubparserError() {}
+            virtual ~SubparserError() noexcept {}
     };
 
     /** An exception that contains autocompletion reply
@@ -328,7 +329,7 @@ namespace args
     {
         public:
             Completion(const std::string &flag) : Error(flag) {}
-            virtual ~Completion() {}
+            virtual ~Completion() noexcept {}
     };
 #endif
 

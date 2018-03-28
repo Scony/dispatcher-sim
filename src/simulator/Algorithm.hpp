@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <math.h>
+#include <stdlib.h>
 
 namespace Algorithm
 {
