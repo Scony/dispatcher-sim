@@ -78,6 +78,10 @@ std::vector<Assignation> Cloud::process(const long long& fromTimestamp,
   return result;
 }
 
+Cloud::~Cloud()
+{
+}
+
 void Cloud::advance(long long toTimestamp)
 {
   assert(mQueue != nullptr);
@@ -158,9 +162,4 @@ std::vector<Assignation> Cloud::simulateWithFuture(IEstimatorSP estimator,
 void Cloud::assignQueue(IQueue* queue)
 {
   mQueue = queue;
-}
-
-unsigned Cloud::getMachinesNum()
-{
-  return mMachinesNum;
 }
