@@ -125,6 +125,19 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 (...)
 ```
 
+## Machinefile format
+
+### V1
+
+```
+1 # version of machinefile format
+[number of machines]
+[machine uuid] [capacity of machine]
+[machine uuid] [capacity of machine]
+[machine uuid] [capacity of machine]
+(...)
+```
+
 ## Examples
 ```
 time cat instances_v1/5596_80.txt | ./bin/simulator sa -m 10 -e no -l max -i 1000 2>/dev/null | ./bin/stat-desc
