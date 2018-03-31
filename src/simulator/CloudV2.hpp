@@ -6,7 +6,7 @@
 class CloudV2 : public Cloud
 {
 public:
-  CloudV2(unsigned setupTime = 0);
+  CloudV2(const std::vector<MachineSP>& machines, unsigned setupTime = 0);
   ~CloudV2();
 
   void advance(long long toTimestamp);
@@ -16,12 +16,9 @@ public:
 					      std::vector<OperationSP> operations) const override;
   void assignQueue(IQueue* queue);
 
-  void readMachinesFromStdin();
-
 private:
   const unsigned mSetupTime;
-
-  std::vector<MachineSP> mMachines;
+  const std::vector<MachineSP>& mMachines;
 
   IQueue* mQueue;
 };

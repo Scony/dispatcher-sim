@@ -12,6 +12,7 @@
 #include "DispatcherFactory.hpp"
 #include "Solution.hpp"
 #include "Arguments.hpp"
+#include "Utility.hpp"
 
 int main(int argc, char ** argv)
 {
@@ -98,14 +99,15 @@ int main(int argc, char ** argv)
   std::cerr << "reading instance done" << std::endl;
 
   auto solution = std::make_shared<Solution>();
+  std::vector<MachineSP> machines;
 
   std::shared_ptr<Cloud> cloud;
   switch (instanceVersion)
     {
     case 2:
       {
-	auto cloudV2 = std::make_shared<CloudV2>(setupTime);;
-	cloudV2->readMachinesFromStdin();
+	machines = Utility::Machines::readFromStdin();
+	auto cloudV2 = std::make_shared<CloudV2>(machines, setupTime);;
 	cloud = cloudV2;
 	break;
       }
