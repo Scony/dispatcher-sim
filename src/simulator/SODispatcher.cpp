@@ -13,6 +13,11 @@ void SODispatcher::dispatch(JobSP job)
     mOperations.push(operation);
 }
 
+OperationSP SODispatcher::peek()
+{
+  return mOperations.top();
+}
+
 OperationSP SODispatcher::pop()
 {
   auto ret = mOperations.top();

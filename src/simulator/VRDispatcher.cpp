@@ -43,6 +43,12 @@ void VRDispatcher::dispatch(std::shared_ptr<Job> job)
   std::sort(mJobsInOrder.begin(), mJobsInOrder.end(), std::greater<std::pair<long long, long long> >());
 }
 
+OperationSP VRDispatcher::peek()
+{
+  assert(false);		// FIXME
+  return OperationSP(nullptr);
+}
+
 OperationSP VRDispatcher::pop()
 {
   assert(mJobOperations.size() > 0);

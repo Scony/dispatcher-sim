@@ -13,6 +13,11 @@ void ELODispatcher::dispatch(JobSP job)
     mOperations.push(operation);
 }
 
+OperationSP ELODispatcher::peek()
+{
+  return mOperations.top();
+}
+
 OperationSP ELODispatcher::pop()
 {
   auto ret = mOperations.top();

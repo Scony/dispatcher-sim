@@ -16,6 +16,7 @@ public:
 		std::string operationLevelAlgorithm,
 		unsigned iterations);
 
+  OperationSP peek() override;
   OperationSP pop() override;
   size_t size() override;
 

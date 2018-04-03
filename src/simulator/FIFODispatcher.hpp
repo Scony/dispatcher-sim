@@ -11,6 +11,7 @@ public:
 		 std::shared_ptr<Cloud> cloud,
 		 std::shared_ptr<IEstimator> estimator);
 
+  OperationSP peek() override;
   OperationSP pop() override;
   size_t size() override;
 

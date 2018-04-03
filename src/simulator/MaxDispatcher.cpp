@@ -23,6 +23,16 @@ void MaxDispatcher::dispatch(JobSP job)
 	    });
 }
 
+OperationSP MaxDispatcher::peek()
+{
+  assert(size() > 0);
+
+  auto jobToPopFrom = mJobOperations.begin();
+  std::advance(jobToPopFrom, mNextJob);
+
+  return jobToPopFrom->second.back();
+}
+
 OperationSP MaxDispatcher::pop()
 {
   assert(size() > 0);

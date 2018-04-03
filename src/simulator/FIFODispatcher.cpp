@@ -15,6 +15,13 @@ void FIFODispatcher::dispatch(JobSP job)
   mOperations.insert(mOperations.end(), job->operations.begin(), job->operations.end());
 }
 
+OperationSP FIFODispatcher::peek()
+{
+  assert(size() > 0);
+
+  return mOperations.front();
+}
+
 OperationSP FIFODispatcher::pop()
 {
   assert(size() > 0);
