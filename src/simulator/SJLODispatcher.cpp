@@ -38,6 +38,15 @@ void SJLODispatcher::dispatch(JobSP job)
   std::sort(mJobsInOrder.begin(), mJobsInOrder.end(), std::greater<std::pair<long long, long long> >());
 }
 
+OperationSP SJLODispatcher::peek()
+{
+  assert(size() > 0);
+
+  const auto& jobToPopFrom = mJobsInOrder.back().second;
+
+  return mJobOperations[jobToPopFrom].back();
+}
+
 OperationSP SJLODispatcher::pop()
 {
   assert(size() > 0);

@@ -5,6 +5,11 @@ VectorQueue::VectorQueue(std::vector<OperationSP>& operations) :
 {
 }
 
+OperationSP VectorQueue::peek()
+{
+  return std::move(mOperations.back());
+}
+
 OperationSP VectorQueue::pop()
 {
   auto operation = std::move(mOperations.back());

@@ -12,6 +12,7 @@ public:
 	       std::shared_ptr<IEstimator> estimator,
 	       bool deterministic);
 
+  OperationSP peek() override;
   OperationSP pop() override;
   size_t size() override;
 

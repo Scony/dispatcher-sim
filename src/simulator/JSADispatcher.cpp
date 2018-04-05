@@ -62,6 +62,14 @@ void JSADispatcher::dispatch(std::shared_ptr<Job> job)
 								      mIterations);
 }
 
+OperationSP JSADispatcher::peek()
+{
+  assert(mJobOperations.size() > 0);
+
+  auto jobId = mCurrentSolution.back();
+  return mJobOperations[jobId].back();
+}
+
 OperationSP JSADispatcher::pop()
 {
   assert(mJobOperations.size() > 0);

@@ -10,6 +10,7 @@ public:
 		 std::shared_ptr<IEstimator> estimator,
 		 bool calculateSolution = true);
 
+  virtual OperationSP peek() override;
   virtual OperationSP pop() override;
   virtual size_t size() override;
 

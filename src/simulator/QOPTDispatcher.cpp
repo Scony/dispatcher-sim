@@ -47,6 +47,13 @@ void QOPTDispatcher::dispatch(JobSP job)
   mTime = job->arrivalTimestamp;
 }
 
+OperationSP QOPTDispatcher::peek()
+{
+  assert(size() > 0);
+
+  return mQueue.back();
+}
+
 OperationSP QOPTDispatcher::pop()
 {
   assert(size() > 0);

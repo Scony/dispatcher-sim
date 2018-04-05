@@ -17,6 +17,13 @@ void RandomDispatcher::dispatch(JobSP job)
   std::random_shuffle(mQueue.begin(), mQueue.end());
 }
 
+OperationSP RandomDispatcher::peek()
+{
+  assert(mQueue.size() > 0);
+
+  return mQueue.back();
+}
+
 OperationSP RandomDispatcher::pop()
 {
   assert(mQueue.size() > 0);
