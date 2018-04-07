@@ -1,7 +1,8 @@
 * short term
+** TODO Solution refa
+** TODO Capacity Cloud
 ** TODO multiQ Cloud (with packing algs)
 ** TODO multiQ constructive
-** TODO Solution refa
 ** DONE UAT
 ** DONE Cloud refa
 ** DONE Benchmark setup
