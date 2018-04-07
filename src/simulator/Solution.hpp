@@ -6,6 +6,7 @@
 #include "Operation.hpp"
 #include "Job.hpp"
 #include "IExecutionsListener.hpp"
+#include "Machine.hpp"
 
 class Solution : public IExecutionsListener
 {
@@ -15,6 +16,13 @@ public:
 
 public:
   static long long evalTotalFlow(const SolutionVec& solution);
+
+public:
+  static bool validateOperationEnds(const SolutionVec& solution);
+  static bool validateSingularOperationExecutions(const SolutionVec& solution,
+						  const std::vector<JobSP>& jobs);
+  static bool validateMachineCapacityUsage(const SolutionVec& solution,
+					   const std::vector<MachineSP>& machines);
 
 public:
   void handleNotification(const Assignation& notification) override;
