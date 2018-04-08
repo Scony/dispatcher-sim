@@ -27,7 +27,6 @@ public:
 public:
   void handleNotification(const Assignation& notification) override;
 
-  void validate(std::vector<JobSP> jobs, unsigned machinesNum);
   JobFlowVec calculateJobFlowVec(std::vector<JobSP> jobs);
 
   SolutionVec getSolutionVec() { return mSolutionVec; }

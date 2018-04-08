@@ -113,7 +113,11 @@ int main(int argc, char ** argv)
       }
     case 1:
     default:
-      cloud = std::make_shared<Cloud>(arguments.machinesNum, setupTime);
+      {
+	machines = Utility::Machines::generate(0, arguments.machinesNum, 1);
+	assert(machines.size() == arguments.machinesNum);
+	cloud = std::make_shared<Cloud>(arguments.machinesNum, setupTime);
+      }
     };
   cloud->subscribe(solution);
 
@@ -128,7 +132,9 @@ int main(int argc, char ** argv)
   auto jobs = input->getJobs();
 
   std::cerr << "running validation..." << std::endl;
-  solution->validate(jobs, arguments.machinesNum);
+  assert(Solution::validateOperationEnds(solution->getSolutionVec()));
+  assert(Solution::validateSingularOperationExecutions(solution->getSolutionVec(), jobs));
+  assert(Solution::validateMachineCapacityUsage(solution->getSolutionVec(), machines));
   std::cerr << "running validation done" << std::endl;
 
   if (outputType == "jflows")

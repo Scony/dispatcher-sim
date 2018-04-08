@@ -11,5 +11,6 @@ namespace Utility
   namespace Machines
   {
     std::vector<MachineSP> readFromStdin();
+    std::vector<MachineSP> generate(unsigned firstId, unsigned machinesNum, unsigned capacity);
   }
 }

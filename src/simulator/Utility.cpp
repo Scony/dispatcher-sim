@@ -27,5 +27,13 @@ namespace Utility
 
       return machines;
     }
+
+    std::vector<MachineSP> generate(unsigned firstId, unsigned machinesNum, unsigned capacity)
+    {
+      std::vector<MachineSP> machines;
+      for (unsigned id = firstId; id < firstId + machinesNum; id++)
+	machines.emplace_back(new Machine(id, capacity));
+      return machines;
+    }
   }
 }
