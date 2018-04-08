@@ -22,10 +22,10 @@ void VRDispatcher::dispatch(std::shared_ptr<Job> job)
 				 job->operations.begin(),
 				 job->operations.end());
   std::sort(mJobOperations[job->id].begin(),
-  	    mJobOperations[job->id].end(),
-  	    [&](OperationSP a, OperationSP b) {
-  	      return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
-  	    });
+	    mJobOperations[job->id].end(),
+	    [&](OperationSP a, OperationSP b) {
+	      return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
+	    });
 
   // update weights of jobs
   mJobsInOrder.clear();
@@ -59,43 +59,43 @@ OperationSP VRDispatcher::pop()
     {
     case 0:			// SJLO
       {
-      	const auto& jobToPopFrom = mJobsInOrder.back().second;
+	const auto& jobToPopFrom = mJobsInOrder.back().second;
 
-      	auto operation = mJobOperations[jobToPopFrom].back();
-      	mJobOperations[jobToPopFrom].pop_back();
+	auto operation = mJobOperations[jobToPopFrom].back();
+	mJobOperations[jobToPopFrom].pop_back();
 
-      	if (mJobOperations[jobToPopFrom].size() == 0)
-      	  {
-      	    mJobOperations.erase(jobToPopFrom);
-      	    mJobsInOrder.pop_back();
-      	  }
+	if (mJobOperations[jobToPopFrom].size() == 0)
+	  {
+	    mJobOperations.erase(jobToPopFrom);
+	    mJobsInOrder.pop_back();
+	  }
 
 	if (mJobOperations.size() == 0)
 	  mNextJob = 0;
 	else
 	  mNextJob = mNextJob % mJobOperations.size();
 
-      	return operation;
+	return operation;
       }
     case 1:			// SJSO
       {
-      	const auto& jobToPopFrom = mJobsInOrder.back().second;
+	const auto& jobToPopFrom = mJobsInOrder.back().second;
 
-      	auto operation = mJobOperations[jobToPopFrom].front();
-      	mJobOperations[jobToPopFrom].pop_front();
+	auto operation = mJobOperations[jobToPopFrom].front();
+	mJobOperations[jobToPopFrom].pop_front();
 
-      	if (mJobOperations[jobToPopFrom].size() == 0)
-      	  {
-      	    mJobOperations.erase(jobToPopFrom);
-      	    mJobsInOrder.pop_back();
-      	  }
+	if (mJobOperations[jobToPopFrom].size() == 0)
+	  {
+	    mJobOperations.erase(jobToPopFrom);
+	    mJobsInOrder.pop_back();
+	  }
 
 	if (mJobOperations.size() == 0)
 	  mNextJob = 0;
 	else
 	  mNextJob = mNextJob % mJobOperations.size();
 
-      	return operation;
+	return operation;
       }
     case 2:			// MAX
       {

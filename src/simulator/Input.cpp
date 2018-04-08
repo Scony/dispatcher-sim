@@ -45,24 +45,24 @@ void Input::readFromStdin()
 
       std::vector<std::shared_ptr<Operation> > operations;
       for (int j = 0; j < jobOperationsNum; j++)
-      	{
+	{
 	  operationsNum++;
 	  long long operationId;
 	  long long operationName;
 	  long long operationResult;
 	  long long operationDuration;
 	  std::cin >> operationId;
-          std::cin >> operationName;
-          std::cin >> operationResult;
-      	  std::cin >> operationDuration;
-      	  auto operation = std::make_shared<Operation>(operationId,
+	  std::cin >> operationName;
+	  std::cin >> operationResult;
+	  std::cin >> operationDuration;
+	  auto operation = std::make_shared<Operation>(operationId,
 						       jobId,
 						       operationName,
 						       operationResult,
 						       jobArrivalTimestamp,
 						       operationDuration);
-      	  operations.push_back(operation);
-      	}
+	  operations.push_back(operation);
+	}
 
       auto job = std::make_shared<Job>(jobId, jobPriority, jobArrivalTimestamp, operations);
       mJobs.push_back(job);
