@@ -6,19 +6,18 @@
 
 #include "Operation.hpp"
 #include "IQueue.hpp"
-#include "ExecutionsSubject.hpp"
+#include "ICloud.hpp"
 #include "IEstimator.hpp"
 
-using BusyMachine = std::tuple<long long,  // timestamp of finish
-			       long long,  // assignationsCounter
-			       OperationSP,
-			       unsigned>;  // machine ID
-using FreeMachine = std::tuple<unsigned,   // machine ID
-			       long long>; // recently processed job ID
-
-class Cloud : public ExecutionsSubject
+class Cloud : public ICloud
 {
 public:
+  using BusyMachine = std::tuple<long long,  // timestamp of finish
+				 long long,  // assignationsCounter
+				 OperationSP,
+				 unsigned>;  // machine ID
+  using FreeMachine = std::tuple<unsigned,   // machine ID
+				 long long>; // recently processed job ID
   using BusyMachines = std::priority_queue<BusyMachine,
 					   std::vector<BusyMachine>,
 					   std::greater<BusyMachine> >;
@@ -37,21 +36,19 @@ public:
 
 public:
   Cloud(unsigned machinesNum, unsigned setupTime = 0);
-  virtual ~Cloud();
+  ~Cloud();
 
-  virtual void advance(long long toTimestamp);
-  virtual std::vector<Assignation> simulate(IEstimatorSP estimator,
-					    std::vector<OperationSP> operations) const;
-  virtual std::vector<Assignation> simulateWithFuture(IEstimatorSP estimator,
-						      std::vector<OperationSP> operations) const;
-  virtual void assignQueue(IQueue* queue);
+  void advance(long long toTimestamp) override;
+  std::vector<Assignation> simulate(IEstimatorSP estimator,
+				    std::vector<OperationSP> operations) const override;
+  std::vector<Assignation> simulateWithFuture(IEstimatorSP estimator,
+					      std::vector<OperationSP> operations) const override;
 
 private:
   const unsigned mMachinesNum;
   const unsigned mSetupTime;
 
   long long mTimestamp;
-  IQueue* mQueue;
   FreeMachines mFreeMachines;
   BusyMachines mBusyMachines;
   long long mAssignationsCounter;

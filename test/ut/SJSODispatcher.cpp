@@ -2,6 +2,7 @@
 
 #include "SJSODispatcher.hpp"
 #include "NoEstimator.hpp"
+#include "Cloud.hpp"
 
 TEST(SJSODispatcherTests, OrderCheck) {
   auto job0 = std::make_shared<Job>(0,1,1,std::vector<OperationSP>{

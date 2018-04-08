@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "SODispatcher.hpp"
+#include "Cloud.hpp"
 
 TEST(SODispatcherTests, OrderCheck) {
   auto op1 = std::make_shared<Operation>(1,1,1,1,10,30);

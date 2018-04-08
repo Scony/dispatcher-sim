@@ -9,7 +9,6 @@ Cloud::Cloud(unsigned machinesNum, unsigned setupTime) :
   mMachinesNum(machinesNum),
   mSetupTime(setupTime),
   mTimestamp(0),
-  mQueue(nullptr),
   mBusyMachines(),
   mAssignationsCounter(0)
 {
@@ -157,9 +156,4 @@ std::vector<Assignation> Cloud::simulateWithFuture(IEstimatorSP estimator,
     }
 
   return result;
-}
-
-void Cloud::assignQueue(IQueue* queue)
-{
-  mQueue = queue;
 }

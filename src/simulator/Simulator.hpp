@@ -1,5 +1,7 @@
 #pragma once
 
+#include <deque>
+
 #include "Input.hpp"
 #include "Dispatcher.hpp"
 

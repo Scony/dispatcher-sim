@@ -1,5 +1,7 @@
 #pragma once
 
+#include <queue>
+
 #include "Dispatcher.hpp"
 
 class ELOCmp
@@ -30,7 +32,7 @@ class ELODispatcher : public Dispatcher
 {
 public:
   ELODispatcher(std::shared_ptr<Input> input,
-	       std::shared_ptr<Cloud> cloud,
+	       std::shared_ptr<ICloud> cloud,
 	       std::shared_ptr<IEstimator> estimator);
 
   OperationSP peek() override;

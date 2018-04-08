@@ -4,10 +4,8 @@
 #include "CloudV2.hpp"
 
 CloudV2::CloudV2(const std::vector<MachineSP>& machines, unsigned setupTime) :
-  Cloud(0,0),
   mSetupTime(setupTime),
-  mMachines(machines),
-  mQueue(nullptr)
+  mMachines(machines)
 {
 }
 
@@ -36,9 +34,4 @@ std::vector<Assignation> CloudV2::simulateWithFuture(IEstimatorSP estimator,
   assert(mMachines.size() > 0);
   // ...
   return {};
-}
-
-void CloudV2::assignQueue(IQueue* queue)
-{
-  mQueue = queue;
 }

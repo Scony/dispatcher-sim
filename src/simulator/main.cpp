@@ -6,6 +6,7 @@
 
 #include "Input.hpp"
 #include "InputV2.hpp"
+#include "ICloud.hpp"
 #include "Cloud.hpp"
 #include "CloudV2.hpp"
 #include "Simulator.hpp"
@@ -101,14 +102,13 @@ int main(int argc, char ** argv)
   auto solution = std::make_shared<Solution>();
   std::vector<MachineSP> machines;
 
-  std::shared_ptr<Cloud> cloud;
+  std::shared_ptr<ICloud> cloud;
   switch (instanceVersion)
     {
     case 2:
       {
 	machines = Utility::Machines::readFromStdin();
-	auto cloudV2 = std::make_shared<CloudV2>(machines, setupTime);;
-	cloud = cloudV2;
+	cloud = std::make_shared<CloudV2>(machines, setupTime);;
 	break;
       }
     case 1:

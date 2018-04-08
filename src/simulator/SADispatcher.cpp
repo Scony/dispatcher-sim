@@ -5,7 +5,7 @@
 #include "Algorithm.hpp"
 
 SADispatcher::SADispatcher(std::shared_ptr<Input> input,
-			   std::shared_ptr<Cloud> cloud,
+			   std::shared_ptr<ICloud> cloud,
 			   std::shared_ptr<IEstimator> estimator,
 			   unsigned iterations) :
   RandomDispatcher(input, cloud, estimator),

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <deque>
 
 #include "Dispatcher.hpp"
 
@@ -8,7 +9,7 @@ class VRDispatcher : public Dispatcher
 {
 public:
   VRDispatcher(std::shared_ptr<Input> input,
-	       std::shared_ptr<Cloud> cloud,
+	       std::shared_ptr<ICloud> cloud,
 	       std::shared_ptr<IEstimator> estimator,
 	       bool deterministic);
 

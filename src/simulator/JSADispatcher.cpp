@@ -7,7 +7,7 @@
 #include "Algorithm.hpp"
 
 JSADispatcher::JSADispatcher(std::shared_ptr<Input> input,
-			     std::shared_ptr<Cloud> cloud,
+			     std::shared_ptr<ICloud> cloud,
 			     std::shared_ptr<IEstimator> estimator,
 			     std::string operationLevelAlgorithm,
 			     unsigned iterations) :
