@@ -2,6 +2,7 @@
 
 #include <deque>
 #include <queue>
+#include <map>
 
 #include "ICloud.hpp"
 #include "Machine.hpp"
@@ -11,7 +12,7 @@ class CloudV2 : public ICloud
 public:
   struct FreeMachine
   {
-    FreeMachine(MachineSP aMachine, long long aRecentJobId);
+    FreeMachine(MachineSP aMachine, long long aRecentJobId = -1);
 
     MachineSP machine;
     long long recentJobId;
@@ -32,7 +33,8 @@ public:
     long long finishTimestamp;
     long long logicalClock;
   };
-  using FreeMachines = std::deque<FreeMachine>;
+  using FreeMachines = std::map<long long,
+				std::deque<FreeMachine> >;
   using BusyMachines = std::priority_queue<BusyMachine,
 					   std::vector<BusyMachine>,
 					   std::greater<BusyMachine> >;

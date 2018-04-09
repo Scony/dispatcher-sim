@@ -42,6 +42,34 @@ bool CloudV2::BusyMachine::operator==(const BusyMachine& other) const
     logicalClock == other.logicalClock;
 }
 
+std::vector<Assignation> CloudV2::process(const long long& fromTimestamp,
+					  const long long& toTimestamp,
+					  IEstimatorSP estimator,
+					  IQueue* queue,
+					  FreeMachines& freeMachinesMap,
+					  BusyMachines& busyMachines,
+					  long long& assignationsCounter,
+					  const unsigned& setupTime)
+{
+  // assumption: machines finishing before or at fromTimestamp should be emptied
+  assert(busyMachines.size() == 0 || busyMachines.top().finishTimestamp > fromTimestamp);
+
+  std::vector<Assignation> result;
+  long long timestamp = fromTimestamp;
+
+  // while (true)
+    {
+      // fill algorithm (from lower bound)
+
+      // jump to next finishing machine if any
+      // if no next finishing machine or finishTimestamp over toTimestamp => break
+
+      // free all machines and add to free machines
+    }
+
+  return result;
+}
+
 CloudV2::CloudV2(const std::vector<MachineSP>& machines, unsigned setupTime) :
   mSetupTime(setupTime),
   mMachines(machines)
