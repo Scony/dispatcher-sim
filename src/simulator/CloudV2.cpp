@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include <unordered_set>
 
 #include "CloudV2.hpp"
 
@@ -59,6 +60,45 @@ std::vector<Assignation> CloudV2::process(const long long& fromTimestamp,
 
   while (true)
     {
+      // merge machine pieces
+      using MachineId = long long;
+      std::unordered_set<MachineId> machinesFreeOnce;
+      std::unordered_set<MachineId> machinesFreeMoreThanOnce;
+
+      for (const auto& kv : freeMachinesMap)
+	for (const auto& freeMachine : kv.second)
+	  if (machinesFreeOnce.find(freeMachine.machine->id) == machinesFreeOnce.end())
+	    machinesFreeOnce.insert(freeMachine.machine->id);
+	  else
+	    machinesFreeMoreThanOnce.insert(freeMachine.machine->id);
+
+      for (const auto& machineId : machinesFreeMoreThanOnce)
+	{
+	  long long mergedCapacity = 0;
+	  long long recentJobIdFromBiggestPart = -1;
+	  MachineSP machine(nullptr);
+
+	  for (auto& kv : freeMachinesMap)
+	    {
+	      const auto& capacity = kv.first;
+	      auto& freeMachines = kv.second;
+	      for (auto it = freeMachines.begin(); it != freeMachines.end();)
+		if (it->machine->id == machineId)
+		  {
+		    mergedCapacity += capacity;
+		    recentJobIdFromBiggestPart = it->recentJobId;
+		    machine = it->machine;
+		    it = freeMachines.erase(it);
+		  }
+		else
+		  it++;
+	    }
+
+	  if (freeMachinesMap.find(mergedCapacity) == freeMachinesMap.end())
+	    freeMachinesMap[mergedCapacity] = {};
+	  freeMachinesMap[mergedCapacity].emplace_front(machine, recentJobIdFromBiggestPart);
+	}
+
       // fill free machines
       while (queue->size() > 0)
 	{
@@ -84,6 +124,16 @@ std::vector<Assignation> CloudV2::process(const long long& fromTimestamp,
 				   ++assignationsCounter);
 	      freeMachinesQueue.pop_back();
 	      queue->pop();
+
+	      // remaining capacity reusing
+	      long long remainingCapacity = freeMachine.machine->capacity - operation->capacityReq;
+	      if (remainingCapacity > 0)
+		{
+		  if (freeMachinesMap.find(remainingCapacity) == freeMachinesMap.end())
+		    freeMachinesMap[remainingCapacity] = {};
+		  freeMachinesMap[remainingCapacity].emplace_front(freeMachine.machine,
+								   freeMachine.recentJobId);
+		}
 	    }
 	}
 
@@ -98,7 +148,9 @@ std::vector<Assignation> CloudV2::process(const long long& fromTimestamp,
       while (busyMachines.size() > 0 && busyMachines.top().finishTimestamp == timestamp)
 	{
 	  const auto& releasedBusyMachine = busyMachines.top();
-	  freeMachinesMap[releasedBusyMachine.machine->capacity]
+	  if (freeMachinesMap.find(releasedBusyMachine.operation->capacityReq) == freeMachinesMap.end())
+	    freeMachinesMap[releasedBusyMachine.operation->capacityReq] = {};
+	  freeMachinesMap[releasedBusyMachine.operation->capacityReq]
 	    .emplace_front(releasedBusyMachine.machine,
 			   releasedBusyMachine.operation->parentId);
 	  result.emplace_back(timestamp,
