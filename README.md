@@ -141,5 +141,5 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 ## Examples
 ```
 time cat instances_v1/5596_80.txt | ./bin/simulator sa -m 10 -e no -l max -i 1000 2>/dev/null | ./bin/stat-desc
-time cat instances_v2/10_1.txt machines_v1/1.txt | ./bin/simulator sa -m 10 -e no -l max -i 10 -v2 | ./bin/stat-desc
+time cat instances_v2/10_1.txt machines_v1/2.txt | ./bin/simulator sa -e no -i 10 -v2 | ./bin/stat-desc
 ```
