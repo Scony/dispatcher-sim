@@ -61,5 +61,9 @@ public:
 
 private:
   const unsigned mSetupTime;
-  const std::vector<MachineSP>& mMachines;
+
+  long long mTimestamp;
+  FreeMachines mFreeMachines;
+  BusyMachines mBusyMachines;
+  long long mAssignationsCounter;
 };

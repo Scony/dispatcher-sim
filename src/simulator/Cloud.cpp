@@ -84,6 +84,7 @@ Cloud::~Cloud()
 void Cloud::advance(long long toTimestamp)
 {
   assert(mQueue != nullptr);
+
   static IEstimatorSP noEstimator(new NoEstimator);
 
   for (auto const& assignment : process(mTimestamp,

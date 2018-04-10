@@ -1,8 +1,11 @@
 #include <cassert>
 #include <iostream>
 #include <unordered_set>
+#include <climits>
 
 #include "CloudV2.hpp"
+#include "VectorQueue.hpp"
+#include "NoEstimator.hpp"
 
 CloudV2::FreeMachine::FreeMachine(MachineSP aMachine, long long aRecentJobId) :
   machine(aMachine),
@@ -165,8 +168,17 @@ std::vector<Assignation> CloudV2::process(const long long& fromTimestamp,
 
 CloudV2::CloudV2(const std::vector<MachineSP>& machines, unsigned setupTime) :
   mSetupTime(setupTime),
-  mMachines(machines)
+  mTimestamp(0),
+  mAssignationsCounter(0)
 {
+  assert(machines.size() > 0);
+
+  for (auto& machine : machines)
+    {
+      if (mFreeMachines.find(machine->capacity) == mFreeMachines.end())
+	mFreeMachines[machine->capacity] = {};
+      mFreeMachines[machine->capacity].emplace_front(machine, -1);
+    }
 }
 
 CloudV2::~CloudV2()
@@ -176,22 +188,75 @@ CloudV2::~CloudV2()
 void CloudV2::advance(long long toTimestamp)
 {
   assert(mQueue != nullptr);
-  assert(mMachines.size() > 0);
-  // ...
+
+  static IEstimatorSP noEstimator(new NoEstimator);
+
+  for (auto const& assignment : process(mTimestamp,
+					toTimestamp,
+					noEstimator,
+					mQueue,
+					mFreeMachines,
+					mBusyMachines,
+					mAssignationsCounter,
+					mSetupTime))
+    notify(assignment);
+
+  mTimestamp = toTimestamp;
 }
 
 std::vector<Assignation> CloudV2::simulate(IEstimatorSP estimator,
 					   std::vector<OperationSP> operations) const
 {
-  assert(mMachines.size() > 0);
-  // ...
-  return {};
+  const auto& fromTimestamp = mTimestamp;
+  long long toTimestamp = LLONG_MAX;
+  auto queue = std::make_shared<VectorQueue>(operations);
+  auto freeMachinesCpy = mFreeMachines;
+  auto busyMachinesCpy = mBusyMachines;
+  auto assignationsCounterCpy = mAssignationsCounter;
+
+  return process(fromTimestamp,
+		 toTimestamp,
+		 estimator,
+		 queue.get(),
+		 freeMachinesCpy,
+		 busyMachinesCpy,
+		 assignationsCounterCpy,
+		 mSetupTime);
 }
 
 std::vector<Assignation> CloudV2::simulateWithFuture(IEstimatorSP estimator,
 						     std::vector<OperationSP> operations) const
 {
-  assert(mMachines.size() > 0);
-  // ...
-  return {};
+  if (operations.size() == 0)
+    return {};
+
+  std::vector<Assignation> result;
+  std::vector<OperationSP> queue;
+  auto queueWrapper = std::make_shared<VectorQueue>(queue);
+  auto freeMachinesCpy = mFreeMachines;
+  auto busyMachinesCpy = mBusyMachines;
+  auto assignationsCounterCpy = mAssignationsCounter;
+
+  long long fromTimestamp = operations.back()->arrival;
+  while (operations.size() > 0)
+    {
+      while (operations.size() > 0 && operations.back()->arrival <= fromTimestamp)
+	{
+	  queue.insert(queue.begin(), operations.back());
+	  operations.pop_back();
+	}
+      long long toTimestamp = operations.size() > 0 ? operations.back()->arrival : LLONG_MAX;
+      auto partialResult = process(fromTimestamp,
+				   toTimestamp,
+				   estimator,
+				   queueWrapper.get(),
+				   freeMachinesCpy,
+				   busyMachinesCpy,
+				   assignationsCounterCpy,
+				   mSetupTime);
+      result.insert(result.end(), partialResult.begin(), partialResult.end());
+      fromTimestamp = toTimestamp;
+    }
+
+  return result;
 }
