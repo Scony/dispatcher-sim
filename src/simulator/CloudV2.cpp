@@ -57,14 +57,55 @@ std::vector<Assignation> CloudV2::process(const long long& fromTimestamp,
   std::vector<Assignation> result;
   long long timestamp = fromTimestamp;
 
-  // while (true)
+  while (true)
     {
-      // fill algorithm (from lower bound)
+      // fill free machines
+      while (queue->size() > 0)
+	{
+	  auto operation = queue->peek();
+	  // assumption: no operations from future
+	  assert(operation->arrival <= timestamp);
+	  auto it = freeMachinesMap.lower_bound(operation->capacityReq);
+	  // assumption at least one machine class satisfies capacityReq
+	  assert(it != freeMachinesMap.end());
+	  while (it != freeMachinesMap.end() && it->second.size() == 0)
+	    it++;
+	  if (it == freeMachinesMap.end()) // no free machines given capacityReq
+	    break;
+	  else
+	    {
+	      auto& freeMachinesQueue = it->second;
+	      const auto& freeMachine = freeMachinesQueue.back();
+	      busyMachines.emplace(freeMachine.machine,
+				   operation,
+				   timestamp +
+				   estimator->estimate(operation) +
+				   (freeMachine.recentJobId == operation->parentId ? 0 : setupTime),
+				   ++assignationsCounter);
+	      freeMachinesQueue.pop_back();
+	      queue->pop();
+	    }
+	}
 
-      // jump to next finishing machine if any
-      // if no next finishing machine or finishTimestamp over toTimestamp => break
+      // stop if nothing more to do in this timeframe
+      if (busyMachines.size() == 0 || busyMachines.top().finishTimestamp > toTimestamp)
+	break;
 
-      // free all machines and add to free machines
+      // jump to next finishing machine
+      timestamp = busyMachines.top().finishTimestamp;
+
+      // free all machines at that point
+      while (busyMachines.size() > 0 && busyMachines.top().finishTimestamp == timestamp)
+	{
+	  const auto& releasedBusyMachine = busyMachines.top();
+	  freeMachinesMap[releasedBusyMachine.machine->capacity]
+	    .emplace_front(releasedBusyMachine.machine,
+			   releasedBusyMachine.operation->parentId);
+	  result.emplace_back(timestamp,
+			      releasedBusyMachine.operation,
+			      releasedBusyMachine.machine->id);
+	  busyMachines.pop();
+	}
     }
 
   return result;

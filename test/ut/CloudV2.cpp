@@ -97,33 +97,6 @@ TEST(CloudV2, EmptyQueueOneMachine) {
   EXPECT_EQ(solution, std::vector<Assignation>{});
 }
 
-TEST(CloudV2, SimpleQueueNoMachines) {
-  long long fromTimestamp = 0;
-  long long toTimestamp = 9999;
-  IEstimatorSP noEstimator(new NoEstimator);
-  std::vector<OperationSP> operations = {
-    std::make_shared<Operation>(0,0,0,0,0,1,1),
-    std::make_shared<Operation>(1,0,0,0,0,1,1),
-  };
-  std::shared_ptr<IQueue> queue = std::make_shared<VectorQueue>(operations);
-  CloudV2::FreeMachines freeMachines = {};
-  CloudV2::BusyMachines busyMachines = {};
-  long long assignationsCounter = 0;
-  unsigned setupTime = 0;
-
-  auto solution = CloudV2::process(fromTimestamp,
-				   toTimestamp,
-				   noEstimator,
-				   queue.get(),
-				   freeMachines,
-				   busyMachines,
-				   assignationsCounter,
-				   setupTime);
-
-  EXPECT_EQ(assignationsCounter, 0);
-  EXPECT_EQ(solution, std::vector<Assignation>{});
-}
-
 TEST(CloudV2, SimpleQueueOneMachine1) {
   long long fromTimestamp = 0;
   long long toTimestamp = 9999;
@@ -151,7 +124,43 @@ TEST(CloudV2, SimpleQueueOneMachine1) {
 				   assignationsCounter,
 				   setupTime);
 
-  EXPECT_EQ(assignationsCounter, 0);
+  EXPECT_EQ(assignationsCounter, 2);
+
+  std::vector<Assignation> expectedSolution = {
+    std::make_tuple(1,op0,0),
+    std::make_tuple(2,op1,0),
+  };
+  EXPECT_EQ(solution, expectedSolution);
+}
+
+TEST(CloudV2, SimpleQueueOneMachine2) {
+  long long fromTimestamp = 0;
+  long long toTimestamp = 9999;
+  IEstimatorSP noEstimator(new NoEstimator);
+  auto op0 = std::make_shared<Operation>(0,0,0,0,0,1,4);
+  auto op1 = std::make_shared<Operation>(1,0,0,0,0,1,4);
+  std::vector<OperationSP> operations = {
+    op1,
+    op0
+  };
+  std::shared_ptr<IQueue> queue = std::make_shared<VectorQueue>(operations);
+  CloudV2::FreeMachines freeMachines = {
+    {4, {CloudV2::FreeMachine(std::make_shared<Machine>(0,4))}}
+  };
+  CloudV2::BusyMachines busyMachines = {};
+  long long assignationsCounter = 0;
+  unsigned setupTime = 0;
+
+  auto solution = CloudV2::process(fromTimestamp,
+				   toTimestamp,
+				   noEstimator,
+				   queue.get(),
+				   freeMachines,
+				   busyMachines,
+				   assignationsCounter,
+				   setupTime);
+
+  EXPECT_EQ(assignationsCounter, 2);
 
   std::vector<Assignation> expectedSolution = {
     std::make_tuple(1,op0,0),
