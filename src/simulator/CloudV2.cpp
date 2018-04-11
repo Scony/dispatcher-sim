@@ -117,6 +117,7 @@ std::vector<Assignation> CloudV2::process(const long long& fromTimestamp,
 	    break;
 	  else
 	    {
+	      const auto& capacity = it->first;
 	      auto& freeMachinesQueue = it->second;
 	      const auto& freeMachine = freeMachinesQueue.back();
 	      busyMachines.emplace(freeMachine.machine,
@@ -129,7 +130,7 @@ std::vector<Assignation> CloudV2::process(const long long& fromTimestamp,
 	      queue->pop();
 
 	      // remaining capacity reusing
-	      long long remainingCapacity = freeMachine.machine->capacity - operation->capacityReq;
+	      long long remainingCapacity = capacity - operation->capacityReq;
 	      if (remainingCapacity > 0)
 		{
 		  if (freeMachinesMap.find(remainingCapacity) == freeMachinesMap.end())
