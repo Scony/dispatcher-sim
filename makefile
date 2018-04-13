@@ -16,12 +16,12 @@ tests: ut uat
 build:
 	mkdir -p build && cd build && cmake -DBUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release .. && make -j
 
-halpers:
-	$(MAKE) -C halpers
+hamulator:
+	$(MAKE) -C hamulator
 
 clean:
 	find -name '*~' | xargs rm -f
 	find bin/ -executable -type f ! -name '*.sh' | xargs rm -f
 	rm -rf build
 
-.PHONY: clean ut build benchmarks uat tests halpers
+.PHONY: clean ut build benchmarks uat tests hamulator
