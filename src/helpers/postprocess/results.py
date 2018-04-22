@@ -30,7 +30,8 @@ for feile in files:
     with open('%s/%s' % (directory, feile)) as fh:
         dataLine = fh.read().split('\n')[0].split(' ')[0]
         data = [float(x) for x in dataLine.split()]
-        results[run][algorithm] = data
+        if len(data) > 0:
+            results[run][algorithm] = data
 
 # normalize results per instance
 for run in results:
