@@ -6,13 +6,13 @@
 
 class VectorQueue : public IQueue
 {
-public:
+ public:
   VectorQueue(std::vector<OperationSP>& operations);
 
   OperationSP peek() override;
   OperationSP pop() override;
   size_t size() override;
 
-private:
+ private:
   std::vector<OperationSP>& mOperations;
 };

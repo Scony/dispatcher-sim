@@ -7,7 +7,7 @@
 
 class LJSODispatcher : public SJLODispatcher
 {
-public:
+ public:
   LJSODispatcher(std::shared_ptr<Input> input,
 		 std::shared_ptr<ICloud> cloud,
 		 std::shared_ptr<IEstimator> estimator);

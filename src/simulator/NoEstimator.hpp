@@ -4,7 +4,7 @@
 
 class NoEstimator : public IEstimator
 {
-public:
+ public:
   void handleNotification(const Assignation& notification) override;
 
   long long estimate(OperationSP operation) override;

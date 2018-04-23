@@ -7,7 +7,7 @@
 
 class ICloud : public ExecutionsSubject
 {
-public:
+ public:
   ICloud() : mQueue(nullptr) {}
   virtual ~ICloud() {}
 
@@ -18,6 +18,6 @@ public:
 						      std::vector<OperationSP> operations) const = 0;
   void assignQueue(IQueue* queue) { mQueue = queue; }
 
-protected:
+ protected:
   IQueue* mQueue;
 };

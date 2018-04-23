@@ -6,9 +6,9 @@
 template <class TSchedule>
 class BatchSimulator
 {
-public:
+ public:
   BatchSimulator(std::shared_ptr<Input> input, std::shared_ptr<IScheduler<TSchedule> > scheduler);
 
-private:
+ private:
   std::shared_ptr<TSchedule> mSchedule;
 };

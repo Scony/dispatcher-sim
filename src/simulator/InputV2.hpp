@@ -4,6 +4,6 @@
 
 class InputV2 : public Input
 {
-public:
+ public:
   virtual void readFromStdin() override;
 };

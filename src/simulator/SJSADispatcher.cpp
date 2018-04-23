@@ -8,7 +8,7 @@ SJSADispatcher::SJSADispatcher(std::shared_ptr<Input> input,
 			       std::shared_ptr<IEstimator> estimator,
 			       std::string operationLevelAlgorithm,
 			       unsigned iterations) :
-  SASADispatcher(input, cloud, estimator, operationLevelAlgorithm, iterations)
+    SASADispatcher(input, cloud, estimator, operationLevelAlgorithm, iterations)
 {
 }
 
@@ -37,13 +37,13 @@ void SJSADispatcher::dispatch(std::shared_ptr<Job> job)
 
   std::vector<std::pair<long long, long long> > mWeightsOfJobs;
   for (const auto& jobId : mCurrentSolution)
-    {
-      long long jobWeight = 0;
-      for (const auto& operation : mJobOperations[jobId])
-	jobWeight += mEstimator->estimate(operation);
+  {
+    long long jobWeight = 0;
+    for (const auto& operation : mJobOperations[jobId])
+      jobWeight += mEstimator->estimate(operation);
 
-      mWeightsOfJobs.push_back({jobWeight, jobId});
-    }
+    mWeightsOfJobs.push_back({jobWeight, jobId});
+  }
   std::sort(mWeightsOfJobs.begin(),
 	    mWeightsOfJobs.end(),
 	    std::greater<std::pair<long long, long long> >());

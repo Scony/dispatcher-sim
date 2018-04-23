@@ -3,7 +3,8 @@
 #include "ELODispatcher.hpp"
 #include "Cloud.hpp"
 
-TEST(ELODispatcherTests, OrderCheck) {
+TEST(ELODispatcherTests, OrderCheck)
+{
   auto op1 = std::make_shared<Operation>(1,1,1,1,10,30);
   auto op2 = std::make_shared<Operation>(2,1,1,1,10,35);
   auto op3 = std::make_shared<Operation>(3,1,1,1,5,30);
@@ -12,8 +13,8 @@ TEST(ELODispatcherTests, OrderCheck) {
 
   auto cloud = std::make_shared<Cloud>(1337);
   ELODispatcher dispatcher(std::shared_ptr<Input>(nullptr),
-			  cloud,
-			  std::shared_ptr<IEstimator>(nullptr));
+                           cloud,
+                           std::shared_ptr<IEstimator>(nullptr));
 
   dispatcher.dispatch(job);
 

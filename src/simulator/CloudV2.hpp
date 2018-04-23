@@ -9,7 +9,7 @@
 
 class CloudV2 : public ICloud
 {
-public:
+ public:
   struct FreeMachine
   {
     FreeMachine(MachineSP aMachine, long long aRecentJobId = -1);
@@ -39,7 +39,7 @@ public:
 					   std::vector<BusyMachine>,
 					   std::greater<BusyMachine> >;
 
-public:
+ public:
   static std::vector<Assignation> process(const long long& fromTimestamp,
 					  const long long& toTimestamp,
 					  IEstimatorSP estimator,
@@ -49,7 +49,7 @@ public:
 					  long long& assignationsCounter,
 					  const unsigned& setupTime);
 
-public:
+ public:
   CloudV2(const std::vector<MachineSP>& machines, unsigned setupTime = 0);
   ~CloudV2();
 
@@ -59,7 +59,7 @@ public:
   std::vector<Assignation> simulateWithFuture(IEstimatorSP estimator,
 					      std::vector<OperationSP> operations) const override;
 
-private:
+ private:
   const unsigned mSetupTime;
 
   long long mTimestamp;

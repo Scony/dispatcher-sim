@@ -1,7 +1,7 @@
 #include "VectorQueue.hpp"
 
 VectorQueue::VectorQueue(std::vector<OperationSP>& operations) :
-  mOperations(operations)
+    mOperations(operations)
 {
 }
 

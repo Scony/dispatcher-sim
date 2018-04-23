@@ -7,7 +7,7 @@
 
 class SJLODispatcher : public Dispatcher
 {
-public:
+ public:
   SJLODispatcher(std::shared_ptr<Input> input,
 		 std::shared_ptr<ICloud> cloud,
 		 std::shared_ptr<IEstimator> estimator);
@@ -18,7 +18,7 @@ public:
 
   virtual void dispatch(JobSP job) override;
 
-protected:
+ protected:
   std::map<long long, std::vector<OperationSP> > mJobOperations;
   std::vector<std::pair<long long, long long> > mJobsInOrder;
 };

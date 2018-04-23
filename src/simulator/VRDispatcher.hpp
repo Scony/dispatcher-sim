@@ -7,7 +7,7 @@
 
 class VRDispatcher : public Dispatcher
 {
-public:
+ public:
   VRDispatcher(std::shared_ptr<Input> input,
 	       std::shared_ptr<ICloud> cloud,
 	       std::shared_ptr<IEstimator> estimator,
@@ -19,7 +19,7 @@ public:
 
   void dispatch(std::shared_ptr<Job> job) override;
 
-private:
+ private:
   const bool mDeterministic;
   const unsigned mRules = 4;
 

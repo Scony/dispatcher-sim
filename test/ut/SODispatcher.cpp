@@ -3,7 +3,8 @@
 #include "SODispatcher.hpp"
 #include "Cloud.hpp"
 
-TEST(SODispatcherTests, OrderCheck) {
+TEST(SODispatcherTests, OrderCheck)
+{
   auto op1 = std::make_shared<Operation>(1,1,1,1,10,30);
   auto op2 = std::make_shared<Operation>(2,1,1,1,10,35);
   auto op3 = std::make_shared<Operation>(3,1,1,1,5,30);

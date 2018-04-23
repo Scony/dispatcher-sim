@@ -4,8 +4,8 @@
 #include "Simulator.hpp"
 
 Simulator::Simulator(std::shared_ptr<Input> input, std::shared_ptr<Dispatcher> dispatcher) :
-  mDispatcher(dispatcher),
-  mQueue()
+    mDispatcher(dispatcher),
+    mQueue()
 {
   // copy input to queue
   auto jobs = input->getJobs();
@@ -21,12 +21,12 @@ Simulator::Simulator(std::shared_ptr<Input> input, std::shared_ptr<Dispatcher> d
 void Simulator::run()
 {
   while (mQueue.size() > 0)
-    {
-      auto newestJob = mQueue.back();
-      mDispatcher->advance(newestJob->arrivalTimestamp);
-      mDispatcher->dispatch(newestJob);
-      mQueue.pop_back();
-    }
+  {
+    auto newestJob = mQueue.back();
+    mDispatcher->advance(newestJob->arrivalTimestamp);
+    mDispatcher->dispatch(newestJob);
+    mQueue.pop_back();
+  }
 
   mDispatcher->advance(LLONG_MAX);
 };

@@ -26,9 +26,9 @@
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<ICloud> cloud,
 				     Arguments arguments) :
-  mInput(input),
-  mCloud(cloud),
-  mArguments(arguments)
+    mInput(input),
+    mCloud(cloud),
+    mArguments(arguments)
 {
 }
 

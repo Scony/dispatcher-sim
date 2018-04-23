@@ -10,27 +10,27 @@
 
 class Solution : public IExecutionsListener
 {
-public:
+ public:
   using SolutionVec = std::vector<Assignation>;
   using JobFlowVec = std::vector<std::pair<long long, JobSP> >;
 
-public:
+ public:
   static long long evalTotalFlow(const SolutionVec& solution);
 
-public:
+ public:
   static bool validateOperationEnds(const SolutionVec& solution);
   static bool validateSingularOperationExecutions(const SolutionVec& solution,
 						  const std::vector<JobSP>& jobs);
   static bool validateMachineCapacityUsage(const SolutionVec& solution,
 					   const std::vector<MachineSP>& machines);
 
-public:
+ public:
   void handleNotification(const Assignation& notification) override;
 
   JobFlowVec calculateJobFlowVec(std::vector<JobSP> jobs);
 
   SolutionVec getSolutionVec() { return mSolutionVec; }
 
-private:
+ private:
   SolutionVec mSolutionVec;
 };

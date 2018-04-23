@@ -4,7 +4,8 @@
 
 #include "Fuzzy3.hpp"
 
-TEST(MiscellaneousTests, TestTupleSorting) {
+TEST(MiscellaneousTests, TestTupleSorting)
+{
   std::vector<std::tuple<int, int, int> > vec = {
     {3,3,3},
     {2,3,3},

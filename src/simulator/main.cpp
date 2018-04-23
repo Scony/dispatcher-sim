@@ -27,7 +27,7 @@ int main(int argc, char ** argv)
   args::ValueFlag<unsigned> machinesArg(parser, "number", "Number of machines",
 					{'m', "machines"});
   args::ValueFlag<unsigned> saIterationsArg(parser, "number", "Number of SA iterations",
-					{'i', "iterations"});
+                                            {'i', "iterations"});
   args::ValueFlag<std::string> estimationArg(parser, "method", "Estimation method",
 					     {'e', "estimation"});
   args::ValueFlag<std::string> opAlgortihmArg(parser, "op_algorithm", "Operation-level algorithm",
@@ -37,28 +37,28 @@ int main(int argc, char ** argv)
   args::ValueFlag<unsigned> setupTimeArg(parser, "number", "Operations setup time",
 					 {'s', "setup-time"});
   args::ValueFlag<unsigned> instanceVersionArg(parser, "number", "Instance file version",
-					    {'v', "version"});
+                                               {'v', "version"});
   args::ValueFlag<unsigned> kArg(parser, "number", "K-Recent's window size",
 				 {'k', "window-size"});
 
   args::Positional<std::string> algorithmArg(parser, "algorithm", "Primary algorithm");
 
   try
-    {
-      parser.ParseCLI(argc, argv);
-      if (!algorithmArg)
-	throw args::Help("");
-    }
+  {
+    parser.ParseCLI(argc, argv);
+    if (!algorithmArg)
+      throw args::Help("");
+  }
   catch (args::Help)
-    {
-      std::cout << parser;
-      return 0;
-    }
+  {
+    std::cout << parser;
+    return 0;
+  }
   catch (args::ParseError e)
-    {
-      std::cerr << e.what() << std::endl;
-      return 1;
-    }
+  {
+    std::cerr << e.what() << std::endl;
+    return 1;
+  }
 
   Arguments arguments;
   arguments.primaryAlgorithm = args::get(algorithmArg);
@@ -84,14 +84,14 @@ int main(int argc, char ** argv)
 
   std::shared_ptr<Input> input;
   switch (instanceVersion)
-    {
+  {
     case 2:
       input = std::make_shared<InputV2>();
       break;
     case 1:
     default:
       input = std::make_shared<Input>();
-    };
+  };
 
   std::cerr << "reading instance..." << std::endl;
   input->readFromStdin();
@@ -104,7 +104,7 @@ int main(int argc, char ** argv)
 
   std::shared_ptr<ICloud> cloud;
   switch (instanceVersion)
-    {
+  {
     case 2:
       {
 	machines = Utility::Machines::readFromStdin();
@@ -118,7 +118,7 @@ int main(int argc, char ** argv)
 	assert(machines.size() == arguments.machinesNum);
 	cloud = std::make_shared<Cloud>(arguments.machinesNum, setupTime);
       }
-    };
+  };
   cloud->subscribe(solution);
 
   auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, arguments);
@@ -138,21 +138,21 @@ int main(int argc, char ** argv)
   std::cerr << "running validation done" << std::endl;
 
   if (outputType == "jflows")
+  {
+    auto flowVec = solution->calculateJobFlowVec(jobs);
+    for (const auto& kv : flowVec)
     {
-      auto flowVec = solution->calculateJobFlowVec(jobs);
-      for (const auto& kv : flowVec)
-	{
-	  const auto& flow = kv.first;
-	  std::cout << flow << std::endl;
-	}
+      const auto& flow = kv.first;
+      std::cout << flow << std::endl;
     }
+  }
   else if (outputType == "opfins")
-    {
-      for (const auto& tuple : solution->getSolutionVec())
-	std::cout << std::get<0>(tuple) << " "
-		  << std::get<1>(tuple)->id << " "
-		  << std::get<2>(tuple) << std::endl;
-    }
+  {
+    for (const auto& tuple : solution->getSolutionVec())
+      std::cout << std::get<0>(tuple) << " "
+                << std::get<1>(tuple)->id << " "
+                << std::get<2>(tuple) << std::endl;
+  }
 
   return 0;
 }

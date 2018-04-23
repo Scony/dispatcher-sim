@@ -7,12 +7,12 @@
 
 class Simulator
 {
-public:
+ public:
   Simulator(std::shared_ptr<Input> input, std::shared_ptr<Dispatcher> dispatcher);
 
   void run();
 
-private:
+ private:
   std::shared_ptr<Dispatcher> mDispatcher;
   std::deque<std::shared_ptr<Job> > mQueue;
 };

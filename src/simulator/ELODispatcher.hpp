@@ -6,7 +6,7 @@
 
 class ELOCmp
 {
-public:
+ public:
   ELOCmp(const bool& revparam = false) : mReverse(revparam) {};
 
   bool operator() (const OperationSP& lhs, const OperationSP& rhs) const
@@ -16,7 +16,7 @@ public:
     return lt(rhs, lhs);
   }
 
-private:
+ private:
   bool lt(const OperationSP& lhs, const OperationSP& rhs) const
   {
     if (lhs->arrival == rhs->arrival)
@@ -24,16 +24,16 @@ private:
     return (lhs->arrival < rhs->arrival);
   }
 
-private:
+ private:
   bool mReverse;
 };
 
 class ELODispatcher : public Dispatcher
 {
-public:
+ public:
   ELODispatcher(std::shared_ptr<Input> input,
-	       std::shared_ptr<ICloud> cloud,
-	       std::shared_ptr<IEstimator> estimator);
+                std::shared_ptr<ICloud> cloud,
+                std::shared_ptr<IEstimator> estimator);
 
   OperationSP peek() override;
   OperationSP pop() override;
@@ -41,6 +41,6 @@ public:
 
   virtual void dispatch(JobSP job) override;
 
-protected:
+ protected:
   std::priority_queue<OperationSP, std::vector<OperationSP>, ELOCmp> mOperations;
 };

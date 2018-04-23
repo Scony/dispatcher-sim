@@ -3,6 +3,6 @@
 template <class TSchedule>
 class IScheduler
 {
-public:
+ public:
   virtual ~IScheduler() {};
 };

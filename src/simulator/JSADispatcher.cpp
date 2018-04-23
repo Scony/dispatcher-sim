@@ -11,9 +11,9 @@ JSADispatcher::JSADispatcher(std::shared_ptr<Input> input,
 			     std::shared_ptr<IEstimator> estimator,
 			     std::string operationLevelAlgorithm,
 			     unsigned iterations) :
-  Dispatcher(input, cloud, estimator),
-  mOperationLevelAlgorithm(operationLevelAlgorithm),
-  mIterations(iterations)
+    Dispatcher(input, cloud, estimator),
+    mOperationLevelAlgorithm(operationLevelAlgorithm),
+    mIterations(iterations)
 {
 }
 
@@ -41,20 +41,20 @@ void JSADispatcher::dispatch(std::shared_ptr<Job> job)
   mCurrentSolution.insert(mCurrentSolution.begin(), job->id);
 
   auto costFunction = [&](const std::vector<long long>& solution)
-    {
-      std::vector<OperationSP> opPermutation;
-      for (auto const& jobId : solution)
-	opPermutation.insert(opPermutation.end(),
-			     mJobOperations[jobId].begin(),
-			     mJobOperations[jobId].end());
+      {
+        std::vector<OperationSP> opPermutation;
+        for (auto const& jobId : solution)
+          opPermutation.insert(opPermutation.end(),
+                               mJobOperations[jobId].begin(),
+                               mJobOperations[jobId].end());
 
-      return ::Solution::evalTotalFlow(mCloud->simulate(mEstimator, opPermutation));
-    };
+        return ::Solution::evalTotalFlow(mCloud->simulate(mEstimator, opPermutation));
+      };
   auto neighbouringSolution = [](std::vector<long long>& solution)
-    {
-      std::swap(solution[rand() % solution.size()],
-		solution[rand() % solution.size()]);
-    };
+      {
+        std::swap(solution[rand() % solution.size()],
+                  solution[rand() % solution.size()]);
+      };
 
   mCurrentSolution = Algorithm::sa<std::vector<long long>, long long>(mCurrentSolution,
 								      costFunction,
@@ -79,10 +79,10 @@ OperationSP JSADispatcher::pop()
   mJobOperations[jobId].pop_back();
 
   if (mJobOperations[jobId].size() == 0)
-    {
-      mJobOperations.erase(jobId);
-      mCurrentSolution.pop_back();
-    }
+  {
+    mJobOperations.erase(jobId);
+    mCurrentSolution.pop_back();
+  }
 
   return operation;
 }

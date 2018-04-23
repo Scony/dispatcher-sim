@@ -7,9 +7,9 @@
 
 class JSADispatcher : public Dispatcher
 {
-public:
+ public:
   using Solution = std::vector<long long>;
-public:
+ public:
   JSADispatcher(std::shared_ptr<Input> input,
 		std::shared_ptr<ICloud> cloud,
 		std::shared_ptr<IEstimator> estimator,
@@ -22,11 +22,11 @@ public:
 
   virtual void dispatch(std::shared_ptr<Job> job) override;
 
-protected:
+ protected:
   const std::string mOperationLevelAlgorithm;
   const unsigned mIterations;
 
-protected:
+ protected:
   Solution mCurrentSolution;
   std::map<long long, std::vector<OperationSP> > mJobOperations;
 };

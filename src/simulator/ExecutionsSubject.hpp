@@ -6,12 +6,12 @@
 
 class ExecutionsSubject
 {
-public:
+ public:
   virtual void subscribe(std::shared_ptr<IExecutionsListener> listener);
   virtual void unsubscribe(std::shared_ptr<IExecutionsListener> listener);
 
   virtual void notify(const Assignation& notification);
 
-private:
+ private:
   std::vector<std::shared_ptr<IExecutionsListener> > mSubscribers;
 };

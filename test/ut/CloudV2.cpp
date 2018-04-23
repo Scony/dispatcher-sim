@@ -4,28 +4,32 @@
 #include "NoEstimator.hpp"
 #include "VectorQueue.hpp"
 
-TEST(CloudV2, BusyMachineCmp1) {
+TEST(CloudV2, BusyMachineCmp1)
+{
   auto bm1 = CloudV2::BusyMachine(MachineSP(nullptr), OperationSP(nullptr), 5, 0);
   auto bm2 = CloudV2::BusyMachine(MachineSP(nullptr), OperationSP(nullptr), 6, 0);
   EXPECT_LT(bm1, bm2);
   EXPECT_FALSE(bm2 < bm1);
 }
 
-TEST(CloudV2, BusyMachineCmp2) {
+TEST(CloudV2, BusyMachineCmp2)
+{
   auto bm1 = CloudV2::BusyMachine(MachineSP(nullptr), OperationSP(nullptr), 5, 0);
   auto bm2 = CloudV2::BusyMachine(MachineSP(nullptr), OperationSP(nullptr), 5, 1);
   EXPECT_LT(bm1, bm2);
   EXPECT_FALSE(bm2 < bm1);
 }
 
-TEST(CloudV2, BusyMachineCmp3) {
+TEST(CloudV2, BusyMachineCmp3)
+{
   auto bm1 = CloudV2::BusyMachine(MachineSP(nullptr), std::make_shared<Operation>(1,0,0,0,0,0,0), 5, 0);
   auto bm2 = CloudV2::BusyMachine(MachineSP(nullptr), std::make_shared<Operation>(2,0,0,0,0,0,0), 5, 0);
   EXPECT_LT(bm1, bm2);
   EXPECT_FALSE(bm2 < bm1);
 }
 
-TEST(CloudV2, BusyMachines1) {
+TEST(CloudV2, BusyMachines1)
+{
   auto bm1 = CloudV2::BusyMachine(MachineSP(nullptr), OperationSP(nullptr), 5, 0);
   auto bm2 = CloudV2::BusyMachine(MachineSP(nullptr), OperationSP(nullptr), 6, 0);
   CloudV2::BusyMachines busyMachines;
@@ -36,7 +40,8 @@ TEST(CloudV2, BusyMachines1) {
   EXPECT_EQ(busyMachines.top(), bm2);
 }
 
-TEST(CloudV2, BusyMachines2) {
+TEST(CloudV2, BusyMachines2)
+{
   auto bm1 = CloudV2::BusyMachine(MachineSP(nullptr), OperationSP(nullptr), 5, 0);
   auto bm2 = CloudV2::BusyMachine(MachineSP(nullptr), OperationSP(nullptr), 6, 0);
   CloudV2::BusyMachines busyMachines;
@@ -47,7 +52,8 @@ TEST(CloudV2, BusyMachines2) {
   EXPECT_EQ(busyMachines.top(), bm2);
 }
 
-TEST(CloudV2, EmptyQueueNoMachines) {
+TEST(CloudV2, EmptyQueueNoMachines)
+{
   long long fromTimestamp = 0;
   long long toTimestamp = 9999;
   IEstimatorSP noEstimator(new NoEstimator);
@@ -71,7 +77,8 @@ TEST(CloudV2, EmptyQueueNoMachines) {
   EXPECT_EQ(solution, std::vector<Assignation>{});
 }
 
-TEST(CloudV2, EmptyQueueOneMachine) {
+TEST(CloudV2, EmptyQueueOneMachine)
+{
   long long fromTimestamp = 0;
   long long toTimestamp = 9999;
   IEstimatorSP noEstimator(new NoEstimator);
@@ -97,7 +104,8 @@ TEST(CloudV2, EmptyQueueOneMachine) {
   EXPECT_EQ(solution, std::vector<Assignation>{});
 }
 
-TEST(CloudV2, SimpleQueueOneMachine1) {
+TEST(CloudV2, SimpleQueueOneMachine1)
+{
   long long fromTimestamp = 0;
   long long toTimestamp = 9999;
   IEstimatorSP noEstimator(new NoEstimator);
@@ -133,7 +141,8 @@ TEST(CloudV2, SimpleQueueOneMachine1) {
   EXPECT_EQ(solution, expectedSolution);
 }
 
-TEST(CloudV2, SimpleQueueOneMachine2) {
+TEST(CloudV2, SimpleQueueOneMachine2)
+{
   long long fromTimestamp = 0;
   long long toTimestamp = 9999;
   IEstimatorSP noEstimator(new NoEstimator);
@@ -169,7 +178,8 @@ TEST(CloudV2, SimpleQueueOneMachine2) {
   EXPECT_EQ(solution, expectedSolution);
 }
 
-TEST(CloudV2, SimpleQueueOneBigMachine) {
+TEST(CloudV2, SimpleQueueOneBigMachine)
+{
   long long fromTimestamp = 0;
   long long toTimestamp = 9999;
   IEstimatorSP noEstimator(new NoEstimator);
@@ -205,7 +215,8 @@ TEST(CloudV2, SimpleQueueOneBigMachine) {
   EXPECT_EQ(solution, expectedSolution);
 }
 
-TEST(CloudV2, MixedQueueOneBigMachine) {
+TEST(CloudV2, MixedQueueOneBigMachine)
+{
   long long fromTimestamp = 0;
   long long toTimestamp = 9999;
   IEstimatorSP noEstimator(new NoEstimator);
@@ -245,7 +256,8 @@ TEST(CloudV2, MixedQueueOneBigMachine) {
   EXPECT_EQ(solution, expectedSolution);
 }
 
-TEST(CloudV2, MixedQueueMixedMachines1) {
+TEST(CloudV2, MixedQueueMixedMachines1)
+{
   long long fromTimestamp = 0;
   long long toTimestamp = 9999;
   IEstimatorSP noEstimator(new NoEstimator);
@@ -286,7 +298,8 @@ TEST(CloudV2, MixedQueueMixedMachines1) {
   EXPECT_EQ(solution, expectedSolution);
 }
 
-TEST(CloudV2, MixedQueueMixedMachines2) {
+TEST(CloudV2, MixedQueueMixedMachines2)
+{
   long long fromTimestamp = 0;
   long long toTimestamp = 9999;
   IEstimatorSP noEstimator(new NoEstimator);

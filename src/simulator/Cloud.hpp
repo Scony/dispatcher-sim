@@ -11,7 +11,7 @@
 
 class Cloud : public ICloud
 {
-public:
+ public:
   using BusyMachine = std::tuple<long long,  // timestamp of finish
 				 long long,  // assignationsCounter
 				 OperationSP,
@@ -23,7 +23,7 @@ public:
 					   std::greater<BusyMachine> >;
   using FreeMachines = std::deque<FreeMachine>;
 
-public:
+ public:
   static std::vector<Assignation> process(const long long& fromTimestamp,
 					  const long long& toTimestamp,
 					  const unsigned& machinesNum,
@@ -34,7 +34,7 @@ public:
 					  long long& assignationsCounter,
 					  const unsigned& setupTime = 0);
 
-public:
+ public:
   Cloud(unsigned machinesNum, unsigned setupTime = 0);
   ~Cloud();
 
@@ -44,7 +44,7 @@ public:
   std::vector<Assignation> simulateWithFuture(IEstimatorSP estimator,
 					      std::vector<OperationSP> operations) const override;
 
-private:
+ private:
   const unsigned mMachinesNum;
   const unsigned mSetupTime;
 

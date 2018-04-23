@@ -6,7 +6,7 @@
 SJSODispatcher::SJSODispatcher(std::shared_ptr<Input> input,
 			       std::shared_ptr<ICloud> cloud,
 			       std::shared_ptr<IEstimator> estimator) :
-  SJLODispatcher(input, cloud, estimator)
+    SJLODispatcher(input, cloud, estimator)
 {
 }
 
@@ -23,15 +23,15 @@ void SJSODispatcher::dispatch(JobSP job)
   // update weights of jobs
   mJobsInOrder.clear();
   for (const auto& kv : mJobOperations)
-    {
-      const auto& jobId = kv.first;
-      const auto& remainingJobOperations = kv.second;
+  {
+    const auto& jobId = kv.first;
+    const auto& remainingJobOperations = kv.second;
 
-      long long jobWeight = 0;
-      for (const auto& operation : remainingJobOperations)
-	jobWeight += mEstimator->estimate(operation);
+    long long jobWeight = 0;
+    for (const auto& operation : remainingJobOperations)
+      jobWeight += mEstimator->estimate(operation);
 
-      mJobsInOrder.push_back({jobWeight, jobId});
-    }
+    mJobsInOrder.push_back({jobWeight, jobId});
+  }
   std::sort(mJobsInOrder.begin(), mJobsInOrder.end(), std::greater<std::pair<long long, long long> >());
 }

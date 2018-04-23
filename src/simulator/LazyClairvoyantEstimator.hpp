@@ -6,14 +6,14 @@
 
 class LazyClairvoyantEstimator : public IEstimator
 {
-public:
+ public:
   LazyClairvoyantEstimator();
 
   void handleNotification(const Assignation& notification) override;
 
   long long estimate(OperationSP operation) override;
 
-private:
+ private:
   const long long mDefaultEstimate = 42;
 
   std::set<long long> mKnownOperations;

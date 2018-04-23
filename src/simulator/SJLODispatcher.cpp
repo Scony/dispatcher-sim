@@ -6,9 +6,9 @@
 SJLODispatcher::SJLODispatcher(std::shared_ptr<Input> input,
 			       std::shared_ptr<ICloud> cloud,
 			       std::shared_ptr<IEstimator> estimator) :
-  Dispatcher(input, cloud, estimator),
-  mJobOperations(),
-  mJobsInOrder()
+    Dispatcher(input, cloud, estimator),
+    mJobOperations(),
+    mJobsInOrder()
 {
 }
 
@@ -25,16 +25,16 @@ void SJLODispatcher::dispatch(JobSP job)
   // update weights of jobs
   mJobsInOrder.clear();
   for (const auto& kv : mJobOperations)
-    {
-      const auto& jobId = kv.first;
-      const auto& remainingJobOperations = kv.second;
+  {
+    const auto& jobId = kv.first;
+    const auto& remainingJobOperations = kv.second;
 
-      long long jobWeight = 0;
-      for (const auto& operation : remainingJobOperations)
-	jobWeight += mEstimator->estimate(operation);
+    long long jobWeight = 0;
+    for (const auto& operation : remainingJobOperations)
+      jobWeight += mEstimator->estimate(operation);
 
-      mJobsInOrder.push_back({jobWeight, jobId});
-    }
+    mJobsInOrder.push_back({jobWeight, jobId});
+  }
   std::sort(mJobsInOrder.begin(), mJobsInOrder.end(), std::greater<std::pair<long long, long long> >());
 }
 
@@ -57,10 +57,10 @@ OperationSP SJLODispatcher::pop()
   mJobOperations[jobToPopFrom].pop_back();
 
   if (mJobOperations[jobToPopFrom].size() == 0)
-    {
-      mJobOperations.erase(jobToPopFrom);
-      mJobsInOrder.pop_back();
-    }
+  {
+    mJobOperations.erase(jobToPopFrom);
+    mJobsInOrder.pop_back();
+  }
 
   return operation;
 }

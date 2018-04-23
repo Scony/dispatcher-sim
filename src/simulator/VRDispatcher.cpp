@@ -7,10 +7,10 @@ VRDispatcher::VRDispatcher(std::shared_ptr<Input> input,
 			   std::shared_ptr<ICloud> cloud,
 			   std::shared_ptr<IEstimator> estimator,
 			   bool deterministic) :
-  Dispatcher(input, cloud, estimator),
-  mDeterministic(deterministic),
-  mNextJob(0),
-  mNextRule(0)
+    Dispatcher(input, cloud, estimator),
+    mDeterministic(deterministic),
+    mNextJob(0),
+    mNextRule(0)
 {
 }
 
@@ -30,16 +30,16 @@ void VRDispatcher::dispatch(std::shared_ptr<Job> job)
   // update weights of jobs
   mJobsInOrder.clear();
   for (const auto& kv : mJobOperations)
-    {
-      const auto& jobId = kv.first;
-      const auto& remainingJobOperations = kv.second;
+  {
+    const auto& jobId = kv.first;
+    const auto& remainingJobOperations = kv.second;
 
-      long long jobWeight = 0;
-      for (const auto& operation : remainingJobOperations)
-	jobWeight += mEstimator->estimate(operation);
+    long long jobWeight = 0;
+    for (const auto& operation : remainingJobOperations)
+      jobWeight += mEstimator->estimate(operation);
 
-      mJobsInOrder.push_back({jobWeight, jobId});
-    }
+    mJobsInOrder.push_back({jobWeight, jobId});
+  }
   std::sort(mJobsInOrder.begin(), mJobsInOrder.end(), std::greater<std::pair<long long, long long> >());
 }
 
@@ -56,7 +56,7 @@ OperationSP VRDispatcher::pop()
   nextRule();
 
   switch (mNextRule)
-    {
+  {
     case 0:			// SJLO
       {
 	const auto& jobToPopFrom = mJobsInOrder.back().second;
@@ -65,10 +65,10 @@ OperationSP VRDispatcher::pop()
 	mJobOperations[jobToPopFrom].pop_back();
 
 	if (mJobOperations[jobToPopFrom].size() == 0)
-	  {
-	    mJobOperations.erase(jobToPopFrom);
-	    mJobsInOrder.pop_back();
-	  }
+        {
+          mJobOperations.erase(jobToPopFrom);
+          mJobsInOrder.pop_back();
+        }
 
 	if (mJobOperations.size() == 0)
 	  mNextJob = 0;
@@ -85,10 +85,10 @@ OperationSP VRDispatcher::pop()
 	mJobOperations[jobToPopFrom].pop_front();
 
 	if (mJobOperations[jobToPopFrom].size() == 0)
-	  {
-	    mJobOperations.erase(jobToPopFrom);
-	    mJobsInOrder.pop_back();
-	  }
+        {
+          mJobOperations.erase(jobToPopFrom);
+          mJobsInOrder.pop_back();
+        }
 
 	if (mJobOperations.size() == 0)
 	  mNextJob = 0;
@@ -106,16 +106,16 @@ OperationSP VRDispatcher::pop()
 	jobToPopFrom->second.pop_back();
 
 	if (jobToPopFrom->second.size() == 0)
-	  {
-	    auto jobId = jobToPopFrom->first;
-	    for (auto it = mJobsInOrder.begin(); it != mJobsInOrder.end(); it++)
-	      if (it->second == jobId)
-		{
-		  mJobsInOrder.erase(it);
-		  break;
-		}
-	    mJobOperations.erase(jobToPopFrom);
-	  }
+        {
+          auto jobId = jobToPopFrom->first;
+          for (auto it = mJobsInOrder.begin(); it != mJobsInOrder.end(); it++)
+            if (it->second == jobId)
+            {
+              mJobsInOrder.erase(it);
+              break;
+            }
+          mJobOperations.erase(jobToPopFrom);
+        }
 
 	if (mJobOperations.size() == 0)
 	  mNextJob = 0;
@@ -133,16 +133,16 @@ OperationSP VRDispatcher::pop()
 	jobToPopFrom->second.pop_front();
 
 	if (jobToPopFrom->second.size() == 0)
-	  {
-	    auto jobId = jobToPopFrom->first;
-	    for (auto it = mJobsInOrder.begin(); it != mJobsInOrder.end(); it++)
-	      if (it->second == jobId)
-		{
-		  mJobsInOrder.erase(it);
-		  break;
-		}
-	    mJobOperations.erase(jobToPopFrom);
-	  }
+        {
+          auto jobId = jobToPopFrom->first;
+          for (auto it = mJobsInOrder.begin(); it != mJobsInOrder.end(); it++)
+            if (it->second == jobId)
+            {
+              mJobsInOrder.erase(it);
+              break;
+            }
+          mJobOperations.erase(jobToPopFrom);
+        }
 
 	if (mJobOperations.size() == 0)
 	  mNextJob = 0;
@@ -151,7 +151,7 @@ OperationSP VRDispatcher::pop()
 
 	return operation;
       }
-    }
+  }
 
   assert(false);
   return OperationSP(nullptr);

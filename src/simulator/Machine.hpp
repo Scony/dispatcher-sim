@@ -6,8 +6,8 @@ struct Machine
 {
   Machine(long long aId,
 	  long long aCapacity):
-    id(aId),
-    capacity(aCapacity)
+      id(aId),
+      capacity(aCapacity)
   {
   }
 

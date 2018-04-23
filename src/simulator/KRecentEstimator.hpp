@@ -7,14 +7,14 @@
 
 class KRecentEstimator : public IEstimator
 {
-public:
+ public:
   KRecentEstimator(unsigned k);
 
   void handleNotification(const Assignation& notification) override;
 
   long long estimate(OperationSP operation) override;
 
-private:
+ private:
   const long long mDefaultEstimate = 42;
   const unsigned mK;
 

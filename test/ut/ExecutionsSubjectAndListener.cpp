@@ -7,11 +7,12 @@ using ::testing::_;
 
 class MockExecutionsListener : public IExecutionsListener
 {
-public:
+ public:
   MOCK_METHOD1(handleNotification, void(const Assignation& notification));
 };
 
-TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif1) {
+TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif1)
+{
   auto listener = std::make_shared<MockExecutionsListener>();
   auto subject = ExecutionsSubject();
 
@@ -20,7 +21,8 @@ TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif1) {
   subject.notify({0,OperationSP(),0});
 }
 
-TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif2) {
+TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif2)
+{
   auto listener = std::make_shared<MockExecutionsListener>();
   auto subject = ExecutionsSubject();
 
@@ -31,7 +33,8 @@ TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif2) {
   subject.notify({0,OperationSP(),0});
 }
 
-TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif3) {
+TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif3)
+{
   auto listener = std::make_shared<MockExecutionsListener>();
   auto subject = ExecutionsSubject();
 
@@ -42,17 +45,19 @@ TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif3) {
   subject.notify({0,OperationSP(),0});
 }
 
-TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif4) {
+TEST(ExecutionsSubjectAndListenerTests, SubscribeNotif4)
+{
   auto listener = std::make_shared<MockExecutionsListener>();
   auto subject = ExecutionsSubject();
 
   subject.subscribe(listener);
   EXPECT_CALL(*listener,handleNotification(std::make_tuple(123ll,OperationSP(),234u)))
-    .Times(1);
+      .Times(1);
   subject.notify({123,OperationSP(),234});
 }
 
-TEST(ExecutionsSubjectAndListenerTests, UnsubscribeNotif1) {
+TEST(ExecutionsSubjectAndListenerTests, UnsubscribeNotif1)
+{
   auto listener = std::make_shared<MockExecutionsListener>();
   auto subject = ExecutionsSubject();
 
@@ -62,7 +67,8 @@ TEST(ExecutionsSubjectAndListenerTests, UnsubscribeNotif1) {
   subject.notify({0,OperationSP(),0});
 }
 
-TEST(ExecutionsSubjectAndListenerTests, UnsubscribeNotif2) {
+TEST(ExecutionsSubjectAndListenerTests, UnsubscribeNotif2)
+{
   auto listener = std::make_shared<MockExecutionsListener>();
   auto subject = ExecutionsSubject();
 

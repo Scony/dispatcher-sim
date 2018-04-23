@@ -9,9 +9,9 @@ QOPTDispatcher::QOPTDispatcher(std::shared_ptr<Input> input,
 			       std::shared_ptr<ICloud> cloud,
 			       std::shared_ptr<IEstimator> estimator,
 			       bool calculateSolution) :
-  Dispatcher(input, cloud, estimator),
-  mQueue(),
-  mTime(-1)
+    Dispatcher(input, cloud, estimator),
+    mQueue(),
+    mTime(-1)
 {
   if (!calculateSolution)
     return;
@@ -24,20 +24,20 @@ QOPTDispatcher::QOPTDispatcher(std::shared_ptr<Input> input,
 
   auto bestPermutation = permutation;
   auto bestPermutationCost =
-    Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
-						       permutation));
+      Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
+                                                         permutation));
 
   while (std::next_permutation(permutation.begin(), permutation.end()))
-    {
-      auto permutationCost =
+  {
+    auto permutationCost =
 	Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
 							   permutation));
-      if (permutationCost < bestPermutationCost)
-	{
-	  bestPermutation = permutation;
-	  bestPermutationCost = permutationCost;
-	}
+    if (permutationCost < bestPermutationCost)
+    {
+      bestPermutation = permutation;
+      bestPermutationCost = permutationCost;
     }
+  }
 
   mQueue = bestPermutation;
 }

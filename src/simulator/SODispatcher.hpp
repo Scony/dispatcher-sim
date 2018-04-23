@@ -6,7 +6,7 @@
 
 class SOCmp
 {
-public:
+ public:
   SOCmp(const bool& revparam = false) : mReverse(revparam) {};
 
   bool operator() (const OperationSP& lhs, const OperationSP& rhs) const
@@ -16,7 +16,7 @@ public:
     return lt(rhs, lhs);
   }
 
-private:
+ private:
   bool lt(const OperationSP& lhs, const OperationSP& rhs) const
   {
     if (lhs->duration == rhs->duration)
@@ -24,13 +24,13 @@ private:
     return lhs->duration < rhs->duration;
   }
 
-private:
+ private:
   bool mReverse;
 };
 
 class SODispatcher : public Dispatcher
 {
-public:
+ public:
   SODispatcher(std::shared_ptr<Input> input,
 	       std::shared_ptr<ICloud> cloud,
 	       std::shared_ptr<IEstimator> estimator);
@@ -41,6 +41,6 @@ public:
 
   virtual void dispatch(JobSP job) override;
 
-protected:
+ protected:
   std::priority_queue<OperationSP, std::vector<OperationSP>, SOCmp> mOperations;
 };

@@ -10,10 +10,10 @@ struct Job
       long long aPriority,
       long long aArrivalTimestamp,
       std::vector<OperationSP> aOperations) :
-    id(aId),
-    priority(aPriority),
-    arrivalTimestamp(aArrivalTimestamp),
-    operations(aOperations)
+      id(aId),
+      priority(aPriority),
+      arrivalTimestamp(aArrivalTimestamp),
+      operations(aOperations)
   {
   }
 

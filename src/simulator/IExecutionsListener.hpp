@@ -7,6 +7,6 @@
 
 class IExecutionsListener
 {
-public:
+ public:
   virtual void handleNotification(const Assignation& notification) = 0;
 };

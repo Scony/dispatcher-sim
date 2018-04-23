@@ -18,52 +18,52 @@ void InputV2::readFromStdin()
   unsigned jobsNum;
   std::cin >> jobsNum;
   for (unsigned i = 0; i < jobsNum; i++)
-    {
-      long long jobId;
-      long long jobPriority;
-      long long jobArrivalTimestamp;
-      std::cin >> jobId;
-      std::cin >> jobPriority;
-      std::cin >> jobArrivalTimestamp;
-      jobs.emplace(std::pair<JobID, JobSP>(jobId,
-					   new Job(jobId,
-						   jobPriority,
-						   jobArrivalTimestamp,
-						   {})));
-      jobOperations.emplace(std::pair<JobID, std::vector<OperationSP> >{jobId, {}});
-    }
+  {
+    long long jobId;
+    long long jobPriority;
+    long long jobArrivalTimestamp;
+    std::cin >> jobId;
+    std::cin >> jobPriority;
+    std::cin >> jobArrivalTimestamp;
+    jobs.emplace(std::pair<JobID, JobSP>(jobId,
+                                         new Job(jobId,
+                                                 jobPriority,
+                                                 jobArrivalTimestamp,
+                                                 {})));
+    jobOperations.emplace(std::pair<JobID, std::vector<OperationSP> >{jobId, {}});
+  }
 
   unsigned operationsNum;
   std::cin >> operationsNum;
   for (unsigned i = 0; i < operationsNum; i++)
-    {
-      long long jobId;
-      long long operationId;
-      long long operationName;
-      long long operationResult;
-      long long operationDuration;
-      long long operationCapacityReq;
-      std::cin >> jobId;
-      std::cin >> operationId;
-      std::cin >> operationName;
-      std::cin >> operationResult;
-      std::cin >> operationDuration;
-      std::cin >> operationCapacityReq;
-      jobOperations[jobId].emplace_back(new Operation(operationId,
-						      jobId,
-						      operationName,
-						      operationResult,
-						      jobs[jobId]->arrivalTimestamp,
-						      operationDuration,
-						      operationCapacityReq));
-    }
+  {
+    long long jobId;
+    long long operationId;
+    long long operationName;
+    long long operationResult;
+    long long operationDuration;
+    long long operationCapacityReq;
+    std::cin >> jobId;
+    std::cin >> operationId;
+    std::cin >> operationName;
+    std::cin >> operationResult;
+    std::cin >> operationDuration;
+    std::cin >> operationCapacityReq;
+    jobOperations[jobId].emplace_back(new Operation(operationId,
+                                                    jobId,
+                                                    operationName,
+                                                    operationResult,
+                                                    jobs[jobId]->arrivalTimestamp,
+                                                    operationDuration,
+                                                    operationCapacityReq));
+  }
 
   for (auto const& kv : jobs)
-    {
-      const auto& job = kv.second;
-      mJobs.emplace_back(new Job(job->id,
-				 job->priority,
-				 job->arrivalTimestamp,
-				 jobOperations[job->id]));
-    }
+  {
+    const auto& job = kv.second;
+    mJobs.emplace_back(new Job(job->id,
+                               job->priority,
+                               job->arrivalTimestamp,
+                               jobOperations[job->id]));
+  }
 }

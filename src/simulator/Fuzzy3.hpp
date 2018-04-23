@@ -2,7 +2,7 @@
 
 class Fuzzy3
 {
-public:
+ public:
   Fuzzy3(long long a, long long b, long long c);
   // TODO: disable copying
 
@@ -12,7 +12,7 @@ public:
 
   double dominationOver(Fuzzy3 const& other) const;
 
-private:
+ private:
   static long long nextUuid;
 
   long long mUuid;

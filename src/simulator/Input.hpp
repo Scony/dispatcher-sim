@@ -8,7 +8,7 @@
 
 class Input
 {
-public:
+ public:
   Input();
 
   virtual void readFromStdin();
@@ -17,6 +17,6 @@ public:
   long long getJobsNum();
   long long getOperationsNum();
 
-protected:
+ protected:
   std::vector<std::shared_ptr<Job> > mJobs;
 };

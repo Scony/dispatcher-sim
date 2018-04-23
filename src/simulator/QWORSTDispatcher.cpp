@@ -7,7 +7,7 @@
 QWORSTDispatcher::QWORSTDispatcher(std::shared_ptr<Input> input,
 				   std::shared_ptr<ICloud> cloud,
 				   std::shared_ptr<IEstimator> estimator) :
-  QOPTDispatcher(input, cloud, estimator, false)
+    QOPTDispatcher(input, cloud, estimator, false)
 {
   std::vector<OperationSP> permutation;
   for (auto const& job : input->getJobs())
@@ -17,20 +17,20 @@ QWORSTDispatcher::QWORSTDispatcher(std::shared_ptr<Input> input,
 
   auto worstPermutation = permutation;
   auto worstPermutationCost =
-    Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
-						       permutation));
+      Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
+                                                         permutation));
 
   while (std::next_permutation(permutation.begin(), permutation.end()))
-    {
-      auto permutationCost =
+  {
+    auto permutationCost =
 	Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
 							   permutation));
-      if (permutationCost > worstPermutationCost)
-	{
-	  worstPermutation = permutation;
-	  worstPermutationCost = permutationCost;
-	}
+    if (permutationCost > worstPermutationCost)
+    {
+      worstPermutation = permutation;
+      worstPermutationCost = permutationCost;
     }
+  }
 
   mQueue = worstPermutation;
 }

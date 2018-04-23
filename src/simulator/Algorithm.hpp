@@ -6,53 +6,53 @@
 
 namespace Algorithm
 {
-  template <typename Solution, typename Cost>
-  Solution sa(const Solution& initialSolution,
-	      std::function<Cost(const Solution&)> costFunction,
-	      std::function<void(Solution&)> neighbouringSolution,
-	      unsigned iterations)
+template <typename Solution, typename Cost>
+Solution sa(const Solution& initialSolution,
+            std::function<Cost(const Solution&)> costFunction,
+            std::function<void(Solution&)> neighbouringSolution,
+            unsigned iterations)
+{
+  Solution bestSolution = initialSolution;
+  Cost bestCost = costFunction(bestSolution);
+
+  Solution prevSolution = bestSolution;
+  Cost prevCost = bestCost;
+
+  float T = 1.0f;
+  for (unsigned i = 0; i < iterations; i++)
   {
-    Solution bestSolution = initialSolution;
-    Cost bestCost = costFunction(bestSolution);
+    // calculate temperature
+    T = 1.0f - ((float)i / iterations);
 
-    Solution prevSolution = bestSolution;
-    Cost prevCost = bestCost;
+    // prepare new candidate
+    Solution candidate = prevSolution;
+    neighbouringSolution(candidate);
+    Cost candidateCost = costFunction(candidate);
 
-    float T = 1.0f;
-    for (unsigned i = 0; i < iterations; i++)
+    if (candidateCost < bestCost)
+    {
+      bestSolution = candidate;
+      bestCost = candidateCost;
+      prevSolution = candidate;
+      prevCost = candidateCost;
+    }
+    else if (candidateCost < prevCost)
+    {
+      prevSolution = candidate;
+      prevCost = candidateCost;
+    }
+    else
+    {
+      // calculate acceptance probability
+      float ap = exp((float)(prevCost - candidateCost) / T);
+      if (ap >= ((float)((rand() % 1000) + 1) / 1000))
       {
-	// calculate temperature
-	T = 1.0f - ((float)i / iterations);
-
-	// prepare new candidate
-	Solution candidate = prevSolution;
-	neighbouringSolution(candidate);
-	Cost candidateCost = costFunction(candidate);
-
-	if (candidateCost < bestCost)
-	  {
-	    bestSolution = candidate;
-	    bestCost = candidateCost;
-	    prevSolution = candidate;
-	    prevCost = candidateCost;
-	  }
-	else if (candidateCost < prevCost)
-	  {
-	    prevSolution = candidate;
-	    prevCost = candidateCost;
-	  }
-	else
-	  {
-	    // calculate acceptance probability
-	    float ap = exp((float)(prevCost - candidateCost) / T);
-	    if (ap >= ((float)((rand() % 1000) + 1) / 1000))
-	      {
-		prevSolution = candidate;
-		prevCost = candidateCost;
-	      }
-	  }
+        prevSolution = candidate;
+        prevCost = candidateCost;
       }
-
-    return bestSolution;
+    }
   }
+
+  return bestSolution;
+}
 }

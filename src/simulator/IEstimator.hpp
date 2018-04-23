@@ -5,7 +5,7 @@
 
 class IEstimator : public IExecutionsListener
 {
-public:
+ public:
   virtual long long estimate(OperationSP operation) = 0;
 };
 

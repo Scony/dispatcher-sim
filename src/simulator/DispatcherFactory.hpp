@@ -8,14 +8,14 @@
 
 class DispatcherFactory
 {
-public:
+ public:
   DispatcherFactory(std::shared_ptr<Input> input,
 		    std::shared_ptr<ICloud> cloud,
 		    Arguments arguments);
 
   std::shared_ptr<Dispatcher> getDispatcher();
 
-private:
+ private:
   std::shared_ptr<Input> mInput;
   std::shared_ptr<ICloud> mCloud;
   Arguments mArguments;

@@ -11,13 +11,13 @@ struct Operation
 	    long long aArrival,
 	    long long aDuration,
 	    long long aCapacityReq = 1) :
-    id(aId),
-    parentId(aParentId),
-    name(aName),
-    result(aResult),
-    arrival(aArrival),
-    duration(aDuration),
-    capacityReq(aCapacityReq)
+      id(aId),
+      parentId(aParentId),
+      name(aName),
+      result(aResult),
+      arrival(aArrival),
+      duration(aDuration),
+      capacityReq(aCapacityReq)
   {
   }
 

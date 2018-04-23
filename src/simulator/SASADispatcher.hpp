@@ -4,7 +4,7 @@
 
 class SASADispatcher : public JSADispatcher
 {
-public:
+ public:
   SASADispatcher(std::shared_ptr<Input> input,
 		 std::shared_ptr<ICloud> cloud,
 		 std::shared_ptr<IEstimator> estimator,
@@ -13,6 +13,6 @@ public:
 
   virtual void dispatch(std::shared_ptr<Job> job) override;
 
-protected:
+ protected:
   void operationLevelSA();
 };
