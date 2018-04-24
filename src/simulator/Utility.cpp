@@ -21,6 +21,7 @@ std::vector<MachineSP> readFromStdin()
     long long machineId;
     long long machineCapacity;
     std::cin >> machineId;
+    assert(machineId < machinesNum);
     std::cin >> machineCapacity;
     machines.emplace_back(new Machine(machineId, machineCapacity));
   }
@@ -28,8 +29,9 @@ std::vector<MachineSP> readFromStdin()
   return machines;
 }
 
-std::vector<MachineSP> generate(unsigned firstId, unsigned machinesNum, unsigned capacity)
+std::vector<MachineSP> generate(unsigned machinesNum, unsigned capacity)
 {
+  const unsigned firstId = 0;
   std::vector<MachineSP> machines;
   for (unsigned id = firstId; id < firstId + machinesNum; id++)
     machines.emplace_back(new Machine(id, capacity));
