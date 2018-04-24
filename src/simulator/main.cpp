@@ -40,6 +40,8 @@ int main(int argc, char ** argv)
                                                {'v', "version"});
   args::ValueFlag<unsigned> kArg(parser, "number", "K-Recent's window size",
 				 {'k', "window-size"});
+  args::ValueFlag<std::string> representationArg(parser, "representation", "Internal solution representation",
+                                                 {'r', "representation"});
 
   args::Positional<std::string> algorithmArg(parser, "algorithm", "Primary algorithm");
 
@@ -70,6 +72,7 @@ int main(int argc, char ** argv)
   unsigned setupTime = setupTimeArg ? args::get(setupTimeArg) : 0;
   auto outputType = outputArg ? args::get(outputArg) : "jflows";
   auto instanceVersion = instanceVersionArg ? args::get(instanceVersionArg) : 1;
+  auto representation = representationArg ? args::get(representationArg) : "queue";
 
   std::cerr << "reading arguments..." << std::endl;
   std::cerr << "> algorithm: " << arguments.primaryAlgorithm << std::endl;
@@ -80,6 +83,7 @@ int main(int argc, char ** argv)
   std::cerr << "> iterations: " << arguments.saIterations << std::endl;
   std::cerr << "> setup: " << setupTime << std::endl;
   std::cerr << "> output: " << outputType << std::endl;
+  std::cerr << "> representation: " << representation << std::endl;
   std::cerr << "reading arguments done" << std::endl;
 
   std::shared_ptr<Input> input;
@@ -114,7 +118,7 @@ int main(int argc, char ** argv)
     case 1:
     default:
       {
-	machines = Utility::Machines::generate(0, arguments.machinesNum, 1);
+	machines = Utility::Machines::generate(arguments.machinesNum, 1);
 	assert(machines.size() == arguments.machinesNum);
 	cloud = std::make_shared<Cloud>(arguments.machinesNum, setupTime);
       }
