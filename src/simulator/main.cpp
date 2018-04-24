@@ -14,6 +14,10 @@
 #include "Solution.hpp"
 #include "Arguments.hpp"
 #include "Utility.hpp"
+#include "Scheduler.hpp"
+#include "Schedule.hpp"
+#include "RandomScheduler.hpp"
+#include "BatchSimulator.hpp"
 
 int main(int argc, char ** argv)
 {
@@ -103,47 +107,69 @@ int main(int argc, char ** argv)
   std::cerr << "> operations: " << input->getOperationsNum() << std::endl;
   std::cerr << "reading instance done" << std::endl;
 
-  auto solution = std::make_shared<Solution>();
+  auto solutionGatherer = std::make_shared<Solution>();
+  std::vector<Assignation> solution;
   std::vector<MachineSP> machines;
 
-  std::shared_ptr<ICloud> cloud;
   switch (instanceVersion)
   {
     case 2:
-      {
-	machines = Utility::Machines::readFromStdin();
-	cloud = std::make_shared<CloudV2>(machines, setupTime);;
-	break;
-      }
+      machines = Utility::Machines::readFromStdin();
+      break;
     case 1:
     default:
-      {
-	machines = Utility::Machines::generate(arguments.machinesNum, 1);
-	assert(machines.size() == arguments.machinesNum);
-	cloud = std::make_shared<Cloud>(arguments.machinesNum, setupTime);
-      }
-  };
-  cloud->subscribe(solution);
+      machines = Utility::Machines::generate(arguments.machinesNum, 1);
+      assert(machines.size() == arguments.machinesNum);
+  }
 
-  auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, arguments);
-  auto dispatcher = dispatcherFactory->getDispatcher();
+  if (representation == "queue")
+  {
+    std::shared_ptr<ICloud> cloud;
+    switch (instanceVersion)
+    {
+      case 2:
+        cloud = std::make_shared<CloudV2>(machines, setupTime);;
+        break;
+      case 1:
+      default:
+        cloud = std::make_shared<Cloud>(arguments.machinesNum, setupTime);
+    }
+    cloud->subscribe(solutionGatherer);
 
-  std::cerr << "running simulation..." << std::endl;
-  Simulator simulator(input, dispatcher);
-  simulator.run();
-  std::cerr << "running simulation done" << std::endl;
+    auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, arguments);
+    auto dispatcher = dispatcherFactory->getDispatcher();
+
+    std::cerr << "running simulation..." << std::endl;
+    Simulator simulator(input, dispatcher);
+    simulator.run();
+    std::cerr << "running simulation done" << std::endl;
+
+    solution = solutionGatherer->getSolutionVec();
+  }
+  else
+  {
+    using SchedulerSP = std::shared_ptr<Scheduler<Schedule> >;
+    SchedulerSP scheduler = std::make_shared<RandomScheduler>(input,
+                                                              std::shared_ptr<Machines>(nullptr),
+                                                              std::shared_ptr<IEstimator>(nullptr));
+
+    std::cerr << "running simulation..." << std::endl;
+    BatchSimulator<Schedule> simulator(input, machines, scheduler);
+    solution = simulator.run();
+    std::cerr << "running simulation done" << std::endl;
+  }
 
   auto jobs = input->getJobs();
 
   std::cerr << "running validation..." << std::endl;
-  assert(Solution::validateOperationEnds(solution->getSolutionVec()));
-  assert(Solution::validateSingularOperationExecutions(solution->getSolutionVec(), jobs));
-  assert(Solution::validateMachineCapacityUsage(solution->getSolutionVec(), machines));
+  assert(Solution::validateOperationEnds(solution));
+  assert(Solution::validateSingularOperationExecutions(solution, jobs));
+  assert(Solution::validateMachineCapacityUsage(solution, machines));
   std::cerr << "running validation done" << std::endl;
 
   if (outputType == "jflows")
   {
-    auto flowVec = solution->calculateJobFlowVec(jobs);
+    auto flowVec = Solution::calculateJobFlowVec(solution, jobs);
     for (const auto& kv : flowVec)
     {
       const auto& flow = kv.first;
@@ -152,7 +178,7 @@ int main(int argc, char ** argv)
   }
   else if (outputType == "opfins")
   {
-    for (const auto& tuple : solution->getSolutionVec())
+    for (const auto& tuple : solution)
       std::cout << std::get<0>(tuple) << " "
                 << std::get<1>(tuple)->id << " "
                 << std::get<2>(tuple) << std::endl;

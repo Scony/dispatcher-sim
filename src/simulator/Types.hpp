@@ -1,5 +1,7 @@
 #pragma once
 
-using Assignation = std::tuple<long long, // finish timestamp
+using FinishTimestamp = long long;
+using MachineID = unsigned;
+using Assignation = std::tuple<FinishTimestamp,
 			       OperationSP,
-			       unsigned>; // machine ID
+			       MachineID>;

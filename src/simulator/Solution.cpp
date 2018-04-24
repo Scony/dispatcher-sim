@@ -10,11 +10,12 @@ void Solution::handleNotification(const Assignation& notification)
   mSolutionVec.push_back(notification);
 }
 
-Solution::JobFlowVec Solution::calculateJobFlowVec(std::vector<std::shared_ptr<Job> > jobs)
+Solution::JobFlowVec Solution::calculateJobFlowVec(const SolutionVec& solution,
+                                                   std::vector<std::shared_ptr<Job> > jobs)
 {
   std::map<long long, long long> jobEnds;
 
-  for (const auto& tuple : mSolutionVec)
+  for (const auto& tuple : solution)
   {
     const auto& endTimestamp = std::get<0>(tuple);
     const auto& operation = std::get<1>(tuple);

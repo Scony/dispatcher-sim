@@ -16,8 +16,7 @@ class Solution : public IExecutionsListener
 
  public:
   static long long evalTotalFlow(const SolutionVec& solution);
-
- public:
+  static JobFlowVec calculateJobFlowVec(const SolutionVec& solution, std::vector<JobSP> jobs);
   static bool validateOperationEnds(const SolutionVec& solution);
   static bool validateSingularOperationExecutions(const SolutionVec& solution,
 						  const std::vector<JobSP>& jobs);
@@ -26,8 +25,6 @@ class Solution : public IExecutionsListener
 
  public:
   void handleNotification(const Assignation& notification) override;
-
-  JobFlowVec calculateJobFlowVec(std::vector<JobSP> jobs);
 
   SolutionVec getSolutionVec() { return mSolutionVec; }
 
