@@ -39,12 +39,14 @@ class BatchSimulator
       auto partialSolution = TSchedule::dispatch(mSchedule,
                                                  previousTimestamp,
                                                  newestJob->arrivalTimestamp);
+      solution.insert(solution.end(), partialSolution.begin(), partialSolution.end());
       previousTimestamp = newestJob->arrivalTimestamp;
       mScheduler->schedule(mSchedule, newestJob);
       mQueue.pop_back();
     }
 
     auto partialSolution = TSchedule::dispatch(mSchedule, previousTimestamp, LLONG_MAX);
+    solution.insert(solution.end(), partialSolution.begin(), partialSolution.end());
 
     return solution;
   }

@@ -24,33 +24,37 @@ struct Schedule
     for (unsigned machine = 0; machine < schedule.schedule.size(); machine++)
     {
       long long prevFinishTime = from;
-      // TODO: handle ongoing if present
       if (schedule.ongoings.find(machine) != schedule.ongoings.end())
-	{
-	  long long finishTime = schedule.ongoings[machine].first + schedule.ongoings[machine].second->duration;
-	  if (finishTime <= until)
-	    {
-	      prevFinishTime = finishTime;
-	      schedule.ongoings.erase(machine);
-	      // TODO: append assignation
-	    }
-	  else
-	    continue;
-	}
+      {
+        long long finishTime = schedule.ongoings[machine].first +
+            schedule.ongoings[machine].second->duration;
+        if (finishTime <= until)
+        {
+          prevFinishTime = finishTime;
+          assignations.emplace_back(finishTime, schedule.ongoings[machine].second, machine);
+          schedule.ongoings.erase(machine);
+        }
+        else
+          continue;
+      }
       for (auto it = schedule.schedule[machine].begin(); it != schedule.schedule[machine].end();)
       {
 	if (prevFinishTime == until)
 	  break;
 	long long finishTime = prevFinishTime + (*it)->duration;
 	if (finishTime <= until)
-	  {
-	    // TODO: pop & append assignation
-	  }
+        {
+          prevFinishTime = finishTime;
+          assignations.emplace_back(finishTime, *it, machine);
+          it = schedule.schedule[machine].erase(it);
+        }
 	else
-	  {
-	    // TODO: move to ongoings
-	    break;
-	  }
+        {
+          schedule.ongoings.emplace(machine,
+                                    std::pair<BeginTimestamp, OperationSP>(prevFinishTime, *it));
+          schedule.schedule[machine].erase(it);
+          break;
+        }
       }
     }
 

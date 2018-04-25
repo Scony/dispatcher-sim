@@ -161,6 +161,16 @@ int main(int argc, char ** argv)
 
   auto jobs = input->getJobs();
 
+  if (outputType == "debug")
+  {
+    for (const auto& tuple : solution)
+      std::cout << "#"
+                << std::get<1>(tuple)->id << " ("
+                << (std::get<0>(tuple) - std::get<1>(tuple)->duration) << " ; "
+                << std::get<0>(tuple) << ") @"
+                << std::get<2>(tuple) << std::endl;
+  }
+
   std::cerr << "running validation..." << std::endl;
   assert(Solution::validateOperationEnds(solution));
   assert(Solution::validateSingularOperationExecutions(solution, jobs));
