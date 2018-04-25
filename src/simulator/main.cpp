@@ -17,6 +17,7 @@
 #include "Scheduler.hpp"
 #include "Schedule.hpp"
 #include "RandomScheduler.hpp"
+#include "SAScheduler.hpp"
 #include "BatchSimulator.hpp"
 
 int main(int argc, char ** argv)
@@ -149,9 +150,10 @@ int main(int argc, char ** argv)
   else
   {
     using SchedulerSP = std::shared_ptr<Scheduler<Schedule> >;
-    SchedulerSP scheduler = std::make_shared<RandomScheduler>(input,
-                                                              std::shared_ptr<Machines>(nullptr),
-                                                              std::shared_ptr<IEstimator>(nullptr));
+    SchedulerSP scheduler = std::make_shared<SAScheduler>(input,
+                                                          std::shared_ptr<Machines>(nullptr),
+                                                          std::shared_ptr<IEstimator>(nullptr),
+                                                          arguments.saIterations);
 
     std::cerr << "running simulation..." << std::endl;
     BatchSimulator<Schedule> simulator(input, machines, scheduler);

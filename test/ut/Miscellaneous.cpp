@@ -29,3 +29,19 @@ TEST(MiscellaneousTests, TestTupleSorting)
 
   EXPECT_EQ(vec, expectedVec);
 }
+
+TEST(MiscellaneousTests, TestVectorIterators)
+{
+  std::vector<int> vec = { 1, 2, 3 };
+  EXPECT_EQ(*vec.begin(), 1);
+  EXPECT_EQ(*(vec.begin()+1), 2);
+  EXPECT_EQ(*(vec.begin()+2), 3);
+  EXPECT_EQ(vec.begin()+3, vec.end());
+  EXPECT_NE(vec.begin()+99, vec.end());
+  vec.insert(vec.begin()+3, 4);
+  EXPECT_EQ(vec[3], 4);
+
+  std::vector<int> emptyVec = { };
+  EXPECT_EQ(emptyVec.begin(), emptyVec.end());
+  EXPECT_EQ(emptyVec.begin()+0, emptyVec.end());
+}

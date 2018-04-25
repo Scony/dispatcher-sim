@@ -60,4 +60,29 @@ struct Schedule
 
     return assignations;
   }
+
+  static std::vector<Assignation> simulateDispatch(const Schedule& schedule, long long from)
+  {
+    std::vector<Assignation> assignations;
+
+    for (unsigned machine = 0; machine < schedule.schedule.size(); machine++)
+    {
+      long long prevFinishTime = from;
+      if (schedule.ongoings.find(machine) != schedule.ongoings.end())
+      {
+        long long finishTime = schedule.ongoings.at(machine).first +
+            schedule.ongoings.at(machine).second->duration;
+        prevFinishTime = finishTime;
+        assignations.emplace_back(finishTime, schedule.ongoings.at(machine).second, machine);
+      }
+      for (auto it = schedule.schedule[machine].begin(); it != schedule.schedule[machine].end(); it++)
+      {
+	long long finishTime = prevFinishTime + (*it)->duration;
+        prevFinishTime = finishTime;
+        assignations.emplace_back(finishTime, *it, machine);
+      }
+    }
+
+    return assignations;
+  }
 };
