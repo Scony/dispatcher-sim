@@ -25,9 +25,32 @@ struct Schedule
     {
       long long prevFinishTime = from;
       // TODO: handle ongoing if present
+      if (schedule.ongoings.find(machine) != schedule.ongoings.end())
+	{
+	  long long finishTime = schedule.ongoings[machine].first + schedule.ongoings[machine].second->duration;
+	  if (finishTime <= until)
+	    {
+	      prevFinishTime = finishTime;
+	      schedule.ongoings.erase(machine);
+	      // TODO: append assignation
+	    }
+	  else
+	    continue;
+	}
       for (auto it = schedule.schedule[machine].begin(); it != schedule.schedule[machine].end();)
       {
-        // TODO: pop, move to ongoings or break
+	if (prevFinishTime == until)
+	  break;
+	long long finishTime = prevFinishTime + (*it)->duration;
+	if (finishTime <= until)
+	  {
+	    // TODO: pop & append assignation
+	  }
+	else
+	  {
+	    // TODO: move to ongoings
+	    break;
+	  }
       }
     }
 
