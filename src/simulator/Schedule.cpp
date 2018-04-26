@@ -146,7 +146,7 @@ Schedule::MachineCache Schedule::simulateDispatchMachine(long long from, Machine
     long long finishTime = ongoings.at(machine).first +
         ongoings.at(machine).second->duration;
     prevFinishTime = finishTime;
-    auto operation = ongoings.at(machine).second;
+    auto& operation = ongoings.at(machine).second;
     auto it = cache.find(operation->parentId);
     if (it == cache.end())
       cache.emplace(operation->parentId, finishTime);
