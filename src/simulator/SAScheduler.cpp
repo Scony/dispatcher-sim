@@ -29,7 +29,9 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
   bool swap;
   std::tuple<unsigned, unsigned, unsigned, unsigned> prevMove;
   bool cacheInitialized = false;
-  std::unordered_map<MachineID, Schedule::MachineCache> machineCaches;
+  std::unordered_map<MachineID, Schedule::MachineCache> machineCaches; // TODO: vector
+  Schedule::MachineCache oldSrcMachineCache;
+  Schedule::MachineCache oldDstMachineCache;
   auto costFunction = [&](const Schedule& solution)
       {
         if (!cacheInitialized)
@@ -38,7 +40,7 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
             machineCaches[machine] = solution.simulateDispatchMachine(job->arrivalTimestamp, machine);
           cacheInitialized = true;
         }
-        return Schedule::calculateFlowFromCache(machineCaches, mInput);
+        return Schedule::calculateFlowFromCache(machineCaches, mInput); // TODO: recalculate only if new
       };
   auto invertSolution = [&](Schedule& solution)
       {
@@ -57,6 +59,8 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
         unsigned& dstMachine = std::get<1>(prevMove);
         if (srcMachine != dstMachine)
         {
+          oldSrcMachineCache = machineCaches[srcMachine];
+          oldDstMachineCache = machineCaches[dstMachine];
           machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
                                                                        srcMachine);
           machineCaches[dstMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
@@ -64,6 +68,7 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
         }
         else
         {
+          oldSrcMachineCache = machineCaches[srcMachine];
           machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
                                                                        srcMachine);
         }
@@ -79,17 +84,16 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
         else
           solution.deterministic_move(srcMachine, dstMachine, srcMachineOffset, dstMachineOffset);
 
+        unsigned& oldSrcMachine = std::get<0>(prevMove);
+        unsigned& oldDstMachine = std::get<1>(prevMove);
         if (srcMachine != dstMachine)
         {
-          machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
-                                                                       srcMachine);
-          machineCaches[dstMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
-                                                                       dstMachine);
+          machineCaches[oldSrcMachine] = oldSrcMachineCache;
+          machineCaches[oldDstMachine] = oldDstMachineCache;
         }
         else
         {
-          machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
-                                                                       srcMachine);
+          machineCaches[oldSrcMachine] = oldSrcMachineCache;
         }
       };
 
