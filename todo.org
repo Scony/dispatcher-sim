@@ -1,8 +1,12 @@
 * short term
-** TODO Solution refa
+** TODO cache to reverts
+** TODO New classes refa + UT
+** TODO SAScheduler starting from ~ SJLO
+** TODO Estimator in SAScheduler helpers
+** TODO bring SAScheduler UT back
+** TODO main refa
+** TODO New algorithms factory
 ** DONE Capacity Cloud
-** TODO multiQ Cloud (with packing algs)
-** TODO multiQ constructive
 ** DONE UAT
 ** DONE Cloud refa
 ** DONE Benchmark setup
@@ -15,5 +19,6 @@
 ** DONE RVR
 ** DONE DVR
 * long term
+** TODO Solution refa
 ** TODO QWORST fix
 ** TODO fuzzy SA
