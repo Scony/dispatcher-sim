@@ -34,40 +34,37 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
       {
         if (rand() % 2 > 0)  // swap
         {
-          // TODO: progress in circle till valid machines found
-          unsigned sourceMachine = rand() % solution.schedule.size();
-          unsigned destinationMachine = rand() % solution.schedule.size();
-          if (solution.schedule[sourceMachine].size() > 0 and
-              solution.schedule[destinationMachine].size() > 0)
-          {
-            unsigned sourceMachineOffset = rand() % solution.schedule[sourceMachine].size();
-            unsigned destinationMachineOffset = rand() % solution.schedule[destinationMachine].size();
-            std::swap(solution.schedule[sourceMachine][sourceMachineOffset],
-                      solution.schedule[destinationMachine][destinationMachineOffset]);
-          }
+          unsigned srcMachine = rand() % solution.schedule.size();
+          while (solution.schedule[srcMachine].size() <= 0)
+            srcMachine = (srcMachine + 1) % solution.schedule.size();
+          unsigned dstMachine = rand() % solution.schedule.size();
+          while (solution.schedule[dstMachine].size() <= 0)
+            dstMachine = (dstMachine + 1) % solution.schedule.size();
+
+          unsigned srcMachineOffset = rand() % solution.schedule[srcMachine].size();
+          unsigned dstMachineOffset = rand() % solution.schedule[dstMachine].size();
+
+          std::swap(solution.schedule[srcMachine][srcMachineOffset],
+                    solution.schedule[dstMachine][dstMachineOffset]);
         }
         else  // move
         {
-          // TODO: progress in circle till valid machines found
-          unsigned sourceMachine = rand() % solution.schedule.size();
-          if (solution.schedule[sourceMachine].size() > 0)
-          {
-            unsigned destinationMachine = rand() % solution.schedule.size();
-            if (destinationMachine == sourceMachine)  // TODO: force
-              return;
-            unsigned sourceMachineOffset = rand() % solution.schedule[sourceMachine].size();
-            unsigned destinationMachineOffset;
-            if (solution.schedule[destinationMachine].size() == 0)
-              destinationMachineOffset = 0;
-            else
-              destinationMachineOffset = rand() % (solution.schedule[destinationMachine].size() + 1);
-            solution.schedule[destinationMachine].insert(
-                solution.schedule[destinationMachine].begin() + destinationMachineOffset,
-                solution.schedule[sourceMachine][sourceMachineOffset]
-                                                         );
-            solution.schedule[sourceMachine].erase(solution.schedule[sourceMachine].begin() +
-                                                   sourceMachineOffset);
-          }
+          unsigned srcMachine = rand() % solution.schedule.size();
+          while (solution.schedule[srcMachine].size() <= 0)
+            srcMachine = (srcMachine + 1) % solution.schedule.size();
+          unsigned dstMachine = rand() % solution.schedule.size();
+          if (dstMachine == srcMachine)
+            dstMachine = (dstMachine + 1) % solution.schedule.size();
+
+          unsigned srcMachineOffset = rand() % solution.schedule[srcMachine].size();
+          unsigned dstMachineOffset = rand() % (solution.schedule[dstMachine].size() + 1);
+
+          solution.schedule[dstMachine].insert(
+              solution.schedule[dstMachine].begin() + dstMachineOffset,
+              solution.schedule[srcMachine][srcMachineOffset]
+                                               );
+          solution.schedule[srcMachine].erase(solution.schedule[srcMachine].begin() +
+                                              srcMachineOffset);
         }
       };
 
