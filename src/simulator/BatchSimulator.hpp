@@ -14,7 +14,8 @@ class BatchSimulator
                  const std::vector<MachineSP>& machines,
                  std::shared_ptr<Scheduler<TSchedule> > scheduler) :
       mMachines(machines),
-      mScheduler(scheduler)
+      mScheduler(scheduler),
+      mSchedule(mMachines.size())
   {
     // copy input to queue
     auto jobs = input->getJobs();
@@ -30,22 +31,19 @@ class BatchSimulator
   std::vector<Assignation> run()
   {
     std::vector<Assignation> solution;
-    TSchedule::init(mSchedule, mMachines.size());
     long long previousTimestamp = 0;
 
     while (mQueue.size() > 0)
     {
       auto newestJob = mQueue.back();
-      auto partialSolution = TSchedule::dispatch(mSchedule,
-                                                 previousTimestamp,
-                                                 newestJob->arrivalTimestamp);
+      auto partialSolution = mSchedule.dispatch(previousTimestamp, newestJob->arrivalTimestamp);
       solution.insert(solution.end(), partialSolution.begin(), partialSolution.end());
       previousTimestamp = newestJob->arrivalTimestamp;
       mScheduler->schedule(mSchedule, newestJob);
       mQueue.pop_back();
     }
 
-    auto partialSolution = TSchedule::dispatch(mSchedule, previousTimestamp, LLONG_MAX);
+    auto partialSolution = mSchedule.dispatch(previousTimestamp, LLONG_MAX);
     solution.insert(solution.end(), partialSolution.begin(), partialSolution.end());
 
     return solution;

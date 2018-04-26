@@ -28,49 +28,39 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
 
   auto costFunction = [&](const Schedule& solution)
       {
-        return Solution::evalTotalFlow(Schedule::simulateDispatch(solution, job->arrivalTimestamp));
+        return Solution::evalTotalFlow(solution.simulateDispatch(job->arrivalTimestamp));
       };
-  auto neighbouringSolution = [](Schedule& solution)
+
+  bool swap;
+  std::tuple<unsigned, unsigned, unsigned, unsigned> prevMove;
+  auto invertSolution = [&](Schedule& solution)
       {
-        if (rand() % 2 > 0)  // swap
+        if (rand() % 2 > 0)
         {
-          unsigned srcMachine = rand() % solution.schedule.size();
-          while (solution.schedule[srcMachine].size() <= 0)
-            srcMachine = (srcMachine + 1) % solution.schedule.size();
-          unsigned dstMachine = rand() % solution.schedule.size();
-          while (solution.schedule[dstMachine].size() <= 0)
-            dstMachine = (dstMachine + 1) % solution.schedule.size();
-
-          unsigned srcMachineOffset = rand() % solution.schedule[srcMachine].size();
-          unsigned dstMachineOffset = rand() % solution.schedule[dstMachine].size();
-
-          std::swap(solution.schedule[srcMachine][srcMachineOffset],
-                    solution.schedule[dstMachine][dstMachineOffset]);
+          swap = true;
+          prevMove = solution.random_swap();
         }
-        else  // move
+        else
         {
-          unsigned srcMachine = rand() % solution.schedule.size();
-          while (solution.schedule[srcMachine].size() <= 0)
-            srcMachine = (srcMachine + 1) % solution.schedule.size();
-          unsigned dstMachine = rand() % solution.schedule.size();
-          if (dstMachine == srcMachine)
-            dstMachine = (dstMachine + 1) % solution.schedule.size();
-
-          unsigned srcMachineOffset = rand() % solution.schedule[srcMachine].size();
-          unsigned dstMachineOffset = rand() % (solution.schedule[dstMachine].size() + 1);
-
-          solution.schedule[dstMachine].insert(
-              solution.schedule[dstMachine].begin() + dstMachineOffset,
-              solution.schedule[srcMachine][srcMachineOffset]
-                                               );
-          solution.schedule[srcMachine].erase(solution.schedule[srcMachine].begin() +
-                                              srcMachineOffset);
+          swap = false;
+          prevMove = solution.random_move();
         }
       };
+  auto revertSolution = [&](Schedule& solution)
+      {
+        unsigned& srcMachine = std::get<1>(prevMove);
+        unsigned& dstMachine = std::get<0>(prevMove);
+        unsigned& srcMachineOffset = std::get<3>(prevMove);
+        unsigned& dstMachineOffset = std::get<2>(prevMove);
+        if (swap)
+          solution.deterministic_swap(srcMachine, dstMachine, srcMachineOffset, dstMachineOffset);
+        else
+          solution.deterministic_move(srcMachine, dstMachine, srcMachineOffset, dstMachineOffset);
+      };
 
-  Schedule result = Algorithm::sa<Schedule, long long>(schedule,
-                                                       costFunction,
-                                                       neighbouringSolution,
-                                                       mIterations);
-  schedule = result;
+  Algorithm::sa_inplace<Schedule, long long>(schedule,
+                                             costFunction,
+                                             invertSolution,
+                                             revertSolution,
+                                             mIterations);
 }

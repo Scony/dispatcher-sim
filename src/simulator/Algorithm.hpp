@@ -55,4 +55,52 @@ Solution sa(const Solution& initialSolution,
 
   return bestSolution;
 }
+
+template <typename Solution, typename Cost>
+void sa_inplace(Solution& initialSolution,
+                std::function<Cost(const Solution&)> costFunction,
+                std::function<void(Solution&)> invertSolution,
+                std::function<void(Solution&)> revertSolution,
+                unsigned iterations)
+{
+  Solution bestSolution = initialSolution;
+  Cost bestCost = costFunction(bestSolution);
+
+  Solution prevSolution = bestSolution;
+  Cost prevCost = bestCost;
+
+  float T = 1.0f;
+  for (unsigned i = 0; i < iterations; i++)
+  {
+    // calculate temperature
+    T = 1.0f - ((float)i / iterations);
+
+    // prepare new candidate
+    Solution& candidate = prevSolution;
+    invertSolution(candidate);
+    Cost candidateCost = costFunction(candidate);
+
+    if (candidateCost < bestCost)
+    {
+      bestSolution = candidate;
+      bestCost = candidateCost;
+      prevCost = candidateCost;
+    }
+    else if (candidateCost < prevCost)
+    {
+      prevCost = candidateCost;
+    }
+    else
+    {
+      // calculate acceptance probability
+      float ap = exp((float)(prevCost - candidateCost) / T);
+      if (ap >= ((float)((rand() % 1000) + 1) / 1000))
+        prevCost = candidateCost;
+      else
+        revertSolution(candidate);
+    }
+  }
+
+  initialSolution = bestSolution;
+}
 }

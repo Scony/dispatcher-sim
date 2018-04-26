@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "RandomScheduler.hpp"
+#include "SAScheduler.hpp"
 
-TEST(RandomSchedulerTests, CheckCompleteness)
+TEST(SASchedulerTests, CheckCompleteness)
 {
   Schedule schedule(3);
   auto op1 = std::make_shared<Operation>(1,1,1,1,10,30);
@@ -11,9 +11,10 @@ TEST(RandomSchedulerTests, CheckCompleteness)
   std::vector<OperationSP> operations = {op1, op2, op3};
   auto job = std::make_shared<Job>(1,1,1,operations);
 
-  RandomScheduler scheduler(std::shared_ptr<Input>(nullptr),
-                            std::shared_ptr<Machines>(nullptr),
-                            std::shared_ptr<IEstimator>(nullptr));
+  SAScheduler scheduler(std::shared_ptr<Input>(nullptr),
+                        std::shared_ptr<Machines>(nullptr),
+                        std::shared_ptr<IEstimator>(nullptr),
+                        100);
   scheduler.schedule(schedule, job);
 
   std::set<OperationSP> scheduledOperations;
