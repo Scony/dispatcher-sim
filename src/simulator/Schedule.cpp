@@ -147,20 +147,22 @@ Schedule::MachineCache Schedule::simulateDispatchMachine(long long from, Machine
         ongoings.at(machine).second->duration;
     prevFinishTime = finishTime;
     auto operation = ongoings.at(machine).second;
-    if (cache.find(operation->parentId) == cache.end())
-      cache[operation->parentId] = finishTime;
+    auto it = cache.find(operation->parentId);
+    if (it == cache.end())
+      cache.emplace(operation->parentId, finishTime);
     else
-      cache[operation->parentId] = std::max(cache[operation->parentId], finishTime);
+      it->second = std::max(it->second, finishTime);
   }
   for (auto it = schedule[machine].begin(); it != schedule[machine].end(); it++)
   {
-    auto operation = *it;
+    auto& operation = *it;
     long long finishTime = prevFinishTime + operation->duration;
     prevFinishTime = finishTime;
-    if (cache.find(operation->parentId) == cache.end())
-      cache[operation->parentId] = finishTime;
+    auto it2 = cache.find(operation->parentId);
+    if (it2 == cache.end())
+      cache.emplace(operation->parentId, finishTime);
     else
-      cache[operation->parentId] = std::max(cache[operation->parentId], finishTime);
+      it2->second = std::max(it2->second, finishTime);
   }
 
   return cache;
@@ -177,10 +179,11 @@ long long Schedule::calculateFlowFromCache(const Cache& machineCaches, std::shar
     {
       const auto& jobId = kv2.first;
       const auto& jobFinish = kv2.second;
-      if (finalJobFinishes.find(jobId) == finalJobFinishes.end())
-        finalJobFinishes[jobId] = jobFinish;
+      auto it = finalJobFinishes.find(jobId);
+      if (it == finalJobFinishes.end())
+        finalJobFinishes.emplace(jobId, jobFinish);
       else
-        finalJobFinishes[jobId] = std::max(finalJobFinishes[jobId], jobFinish);
+        it->second = std::max(it->second, jobFinish);
     }
   }
 
