@@ -26,13 +26,20 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
     machineId = (machineId + 1) % machinesNum;
   }
 
-  auto costFunction = [&](const Schedule& solution)
-      {
-        return Solution::evalTotalFlow(solution.simulateDispatch(job->arrivalTimestamp));
-      };
-
   bool swap;
   std::tuple<unsigned, unsigned, unsigned, unsigned> prevMove;
+  bool cacheInitialized = false;
+  std::unordered_map<MachineID, Schedule::MachineCache> machineCaches;
+  auto costFunction = [&](const Schedule& solution)
+      {
+        if (!cacheInitialized)
+        {
+          for (unsigned machine = 0; machine < machinesNum; machine++)
+            machineCaches[machine] = solution.simulateDispatchMachine(job->arrivalTimestamp, machine);
+          cacheInitialized = true;
+        }
+        return Schedule::calculateFlowFromCache(machineCaches, mInput);
+      };
   auto invertSolution = [&](Schedule& solution)
       {
         if (rand() % 2 > 0)
@@ -45,6 +52,21 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
           swap = false;
           prevMove = solution.random_move();
         }
+
+        unsigned& srcMachine = std::get<0>(prevMove);
+        unsigned& dstMachine = std::get<1>(prevMove);
+        if (srcMachine != dstMachine)
+        {
+          machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
+                                                                       srcMachine);
+          machineCaches[dstMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
+                                                                       dstMachine);
+        }
+        else
+        {
+          machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
+                                                                       srcMachine);
+        }
       };
   auto revertSolution = [&](Schedule& solution)
       {
@@ -56,6 +78,19 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
           solution.deterministic_swap(srcMachine, dstMachine, srcMachineOffset, dstMachineOffset);
         else
           solution.deterministic_move(srcMachine, dstMachine, srcMachineOffset, dstMachineOffset);
+
+        if (srcMachine != dstMachine)
+        {
+          machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
+                                                                       srcMachine);
+          machineCaches[dstMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
+                                                                       dstMachine);
+        }
+        else
+        {
+          machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
+                                                                       srcMachine);
+        }
       };
 
   Algorithm::sa_inplace<Schedule, long long>(schedule,

@@ -6,6 +6,7 @@
 
 #include "Operation.hpp"
 #include "Types.hpp"
+#include "Input.hpp"
 
 struct Schedule
 {
@@ -13,6 +14,12 @@ struct Schedule
 
   std::vector<Assignation> dispatch(long long from, long long until);
   std::vector<Assignation> simulateDispatch(long long from) const;
+
+  using JobFinish = long long;
+  using MachineCache = std::unordered_map<JobID, JobFinish>;
+  MachineCache simulateDispatchMachine(long long from, MachineID machine) const;
+  using Cache = std::unordered_map<MachineID, Schedule::MachineCache>;
+  static long long calculateFlowFromCache(const Cache& machineCaches, std::shared_ptr<Input> input);
 
   using SrcMachine = unsigned;
   using DstMachine = unsigned;

@@ -66,7 +66,7 @@ void sa_inplace(Solution& initialSolution,
   Solution bestSolution = initialSolution;
   Cost bestCost = costFunction(bestSolution);
 
-  Solution prevSolution = bestSolution;
+  Solution& prevSolution = initialSolution;
   Cost prevCost = bestCost;
 
   float T = 1.0f;

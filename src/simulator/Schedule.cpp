@@ -135,3 +135,63 @@ void Schedule::deterministic_move(SrcMachine& srcMachine,
                               schedule[srcMachine][srcMachineOffset]);
   schedule[srcMachine].erase(schedule[srcMachine].begin() + srcMachineOffset);
 }
+
+Schedule::MachineCache Schedule::simulateDispatchMachine(long long from, MachineID machine) const
+{
+  MachineCache cache;
+
+  long long prevFinishTime = from;
+  if (ongoings.find(machine) != ongoings.end())
+  {
+    long long finishTime = ongoings.at(machine).first +
+        ongoings.at(machine).second->duration;
+    prevFinishTime = finishTime;
+    auto operation = ongoings.at(machine).second;
+    if (cache.find(operation->parentId) == cache.end())
+      cache[operation->parentId] = finishTime;
+    else
+      cache[operation->parentId] = std::max(cache[operation->parentId], finishTime);
+  }
+  for (auto it = schedule[machine].begin(); it != schedule[machine].end(); it++)
+  {
+    auto operation = *it;
+    long long finishTime = prevFinishTime + operation->duration;
+    prevFinishTime = finishTime;
+    if (cache.find(operation->parentId) == cache.end())
+      cache[operation->parentId] = finishTime;
+    else
+      cache[operation->parentId] = std::max(cache[operation->parentId], finishTime);
+  }
+
+  return cache;
+}
+
+long long Schedule::calculateFlowFromCache(const Cache& machineCaches, std::shared_ptr<Input> input)
+{
+  std::unordered_map<JobID, JobFinish> finalJobFinishes;
+
+  for (const auto& kv : machineCaches)
+  {
+    const auto& machineCache = kv.second;
+    for (const auto& kv2 : machineCache)
+    {
+      const auto& jobId = kv2.first;
+      const auto& jobFinish = kv2.second;
+      if (finalJobFinishes.find(jobId) == finalJobFinishes.end())
+        finalJobFinishes[jobId] = jobFinish;
+      else
+        finalJobFinishes[jobId] = std::max(finalJobFinishes[jobId], jobFinish);
+    }
+  }
+
+  long long totalFlow = 0;
+  for (const auto& kv : finalJobFinishes)
+  {
+    const auto& jobId = kv.first;
+    const auto& jobFinish = kv.second;
+    long long jobFlow = jobFinish - input->getJob(jobId)->arrivalTimestamp;
+    totalFlow += jobFlow;
+  }
+
+  return totalFlow;
+}

@@ -3,7 +3,8 @@
 #include "Input.hpp"
 
 Input::Input() :
-    mJobs()
+    mJobs(),
+    mJobsMap()
 {
 }
 
@@ -66,5 +67,11 @@ void Input::readFromStdin()
 
     auto job = std::make_shared<Job>(jobId, jobPriority, jobArrivalTimestamp, operations);
     mJobs.push_back(job);
+    mJobsMap.emplace(job->id, job);
   }
+}
+
+JobSP Input::getJob(JobID jobId)
+{
+  return mJobsMap[jobId];
 }
