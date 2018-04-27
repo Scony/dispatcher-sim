@@ -4,6 +4,7 @@
 #include "SAScheduler.hpp"
 #include "Algorithm.hpp"
 #include "Solution.hpp"
+#include "ScheduleAlgorithms.hpp"
 
 SAScheduler::SAScheduler(std::shared_ptr<Input> input,
                          std::shared_ptr<Machines> machines,
@@ -19,12 +20,8 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
   const unsigned machinesNum = schedule.schedule.size();
   assert(machinesNum > 0);
 
-  unsigned machineId = 0;
-  for (auto& operation : job->operations)
-  {
-    schedule.schedule[machineId].push_back(operation);
-    machineId = (machineId + 1) % machinesNum;
-  }
+  // ScheduleAlgorithms::fifo(schedule, job);
+  ScheduleAlgorithms::shortest_job(schedule, job);
 
   bool swap;
   std::tuple<unsigned, unsigned, unsigned, unsigned> prevMove;
