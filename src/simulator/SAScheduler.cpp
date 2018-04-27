@@ -21,7 +21,8 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
   assert(machinesNum > 0);
 
   // ScheduleAlgorithms::fifo(schedule, job);
-  ScheduleAlgorithms::shortest_job(schedule, job);
+  // ScheduleAlgorithms::shortest_job(schedule, job);
+  ScheduleAlgorithms::shortest_job_longest_operation(schedule, job);
 
   bool swap;
   std::tuple<unsigned, unsigned, unsigned, unsigned> prevMove;

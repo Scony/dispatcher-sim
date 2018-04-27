@@ -1,6 +1,6 @@
 * short term
 ** DONE cache to reverts
-** TODO SAScheduler starting from ~ SJLO
+** DONE SAScheduler starting from ~ SJLO
 ** TODO Estimator in SAScheduler helpers
 ** TODO bring SAScheduler UT back
 ** TODO New classes refa + UT
