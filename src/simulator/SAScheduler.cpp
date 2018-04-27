@@ -29,9 +29,11 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
   bool swap;
   std::tuple<unsigned, unsigned, unsigned, unsigned> prevMove;
   bool cacheInitialized = false;
-  std::unordered_map<MachineID, Schedule::MachineCache> machineCaches; // TODO: vector
+  std::vector<Schedule::MachineCache> machineCaches(machinesNum);
   Schedule::MachineCache oldSrcMachineCache;
   Schedule::MachineCache oldDstMachineCache;
+  long long prevFlow;
+  long long flow;
   auto costFunction = [&](const Schedule& solution)
       {
         if (!cacheInitialized)
@@ -39,8 +41,9 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
           for (unsigned machine = 0; machine < machinesNum; machine++)
             machineCaches[machine] = solution.simulateDispatchMachine(job->arrivalTimestamp, machine);
           cacheInitialized = true;
+          flow = Schedule::calculateFlowFromCache(machineCaches, mInput);
         }
-        return Schedule::calculateFlowFromCache(machineCaches, mInput); // TODO: recalculate only if new
+        return flow;
       };
   auto invertSolution = [&](Schedule& solution)
       {
@@ -72,6 +75,9 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
           machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
                                                                        srcMachine);
         }
+
+        prevFlow = flow;
+        flow = Schedule::calculateFlowFromCache(machineCaches, mInput);
       };
   auto revertSolution = [&](Schedule& solution)
       {
@@ -95,6 +101,7 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
         {
           machineCaches[oldSrcMachine] = oldSrcMachineCache;
         }
+        flow = prevFlow;
       };
 
   Algorithm::sa_inplace<Schedule, long long>(schedule,

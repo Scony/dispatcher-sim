@@ -1,9 +1,9 @@
 * short term
-** TODO cache to reverts
-** TODO New classes refa + UT
+** DONE cache to reverts
 ** TODO SAScheduler starting from ~ SJLO
 ** TODO Estimator in SAScheduler helpers
 ** TODO bring SAScheduler UT back
+** TODO New classes refa + UT
 ** TODO main refa
 ** TODO New algorithms factory
 ** DONE Capacity Cloud

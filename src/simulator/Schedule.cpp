@@ -172,9 +172,7 @@ long long Schedule::calculateFlowFromCache(const Cache& machineCaches, std::shar
 {
   std::unordered_map<JobID, JobFinish> finalJobFinishes;
 
-  for (const auto& kv : machineCaches)
-  {
-    const auto& machineCache = kv.second;
+  for (const auto& machineCache : machineCaches)
     for (const auto& kv2 : machineCache)
     {
       const auto& jobId = kv2.first;
@@ -185,7 +183,6 @@ long long Schedule::calculateFlowFromCache(const Cache& machineCaches, std::shar
       else
         it->second = std::max(it->second, jobFinish);
     }
-  }
 
   long long totalFlow = 0;
   for (const auto& kv : finalJobFinishes)

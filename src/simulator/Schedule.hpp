@@ -18,7 +18,7 @@ struct Schedule
   using JobFinish = long long;
   using MachineCache = std::unordered_map<JobID, JobFinish>;
   MachineCache simulateDispatchMachine(long long from, MachineID machine) const;
-  using Cache = std::unordered_map<MachineID, Schedule::MachineCache>;
+  using Cache = std::vector<Schedule::MachineCache>;
   static long long calculateFlowFromCache(const Cache& machineCaches, std::shared_ptr<Input> input);
 
   using SrcMachine = unsigned;
