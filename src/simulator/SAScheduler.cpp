@@ -21,8 +21,8 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
   assert(machinesNum > 0);
 
   // ScheduleAlgorithms::fifo(schedule, job);
-  // ScheduleAlgorithms::shortest_job(schedule, job);
-  ScheduleAlgorithms::shortest_job_longest_operation(schedule, job);
+  // ScheduleAlgorithms::shortestJob(schedule, job, mEstimator);
+  ScheduleAlgorithms::shortestJobLongestOperation(schedule, job, mEstimator);
 
   bool swap;
   std::tuple<unsigned, unsigned, unsigned, unsigned> prevMove;
@@ -37,7 +37,9 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
         if (!cacheInitialized)
         {
           for (unsigned machine = 0; machine < machinesNum; machine++)
-            machineCaches[machine] = solution.simulateDispatchMachine(job->arrivalTimestamp, machine);
+            machineCaches[machine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
+                                                                      machine,
+                                                                      mEstimator);
           cacheInitialized = true;
           flow = Schedule::calculateFlowFromCache(machineCaches, mInput);
         }
@@ -63,15 +65,18 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
           oldSrcMachineCache = machineCaches[srcMachine];
           oldDstMachineCache = machineCaches[dstMachine];
           machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
-                                                                       srcMachine);
+                                                                       srcMachine,
+                                                                       mEstimator);
           machineCaches[dstMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
-                                                                       dstMachine);
+                                                                       dstMachine,
+                                                                       mEstimator);
         }
         else
         {
           oldSrcMachineCache = machineCaches[srcMachine];
           machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
-                                                                       srcMachine);
+                                                                       srcMachine,
+                                                                       mEstimator);
         }
 
         prevFlow = flow;

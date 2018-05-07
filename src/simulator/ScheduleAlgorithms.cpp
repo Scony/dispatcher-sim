@@ -17,7 +17,7 @@ void ScheduleAlgorithms::fifo(Schedule & schedule, JobSP job)
   }
 }
 
-void ScheduleAlgorithms::shortest_job(Schedule & schedule, JobSP job) // TODO: estimator
+void ScheduleAlgorithms::shortestJob(Schedule & schedule, JobSP job, IEstimatorSP estimator)
 {
   fifo(schedule, job);
 
@@ -29,7 +29,7 @@ void ScheduleAlgorithms::shortest_job(Schedule & schedule, JobSP job) // TODO: e
     {
       if (jobWeights.find(operation->parentId) == jobWeights.end())
         jobWeights[operation->parentId] = 0;
-      jobWeights[operation->parentId] += operation->duration;
+      jobWeights[operation->parentId] += estimator->estimate(operation);
     }
 
   for (auto& vec : schedule.schedule)
@@ -38,8 +38,10 @@ void ScheduleAlgorithms::shortest_job(Schedule & schedule, JobSP job) // TODO: e
       });
 }
 
-void ScheduleAlgorithms::shortest_job_longest_operation(Schedule & schedule, JobSP job)
-{  // TODO: estimator
+void ScheduleAlgorithms::shortestJobLongestOperation(Schedule & schedule,
+                                                     JobSP job,
+                                                     IEstimatorSP estimator)
+{
   const unsigned machinesNum = schedule.schedule.size();
 
   fifo(schedule, job);
@@ -52,7 +54,7 @@ void ScheduleAlgorithms::shortest_job_longest_operation(Schedule & schedule, Job
     {
       if (jobWeights.find(operation->parentId) == jobWeights.end())
         jobWeights[operation->parentId] = 0;
-      jobWeights[operation->parentId] += operation->duration;
+      jobWeights[operation->parentId] += estimator->estimate(operation);
     }
 
   std::vector<OperationSP> operations;
@@ -65,7 +67,7 @@ void ScheduleAlgorithms::shortest_job_longest_operation(Schedule & schedule, Job
       if (a->parentId != b->parentId)
         return jobWeights[a->parentId] > jobWeights[b->parentId];  // SJ
       else
-        return a->duration < b->duration;  // LO
+        return estimator->estimate(a) < estimator->estimate(b);  // LO
     });
 
   using ReadyTime = long long;
@@ -79,7 +81,7 @@ void ScheduleAlgorithms::shortest_job_longest_operation(Schedule & schedule, Job
     else
     {
       long long ongoingFinish = schedule.ongoings[machine].first +
-          schedule.ongoings[machine].second->duration;
+          estimator->estimate(schedule.ongoings[machine].second);
       leastBusyMachines.push({ongoingFinish - job->arrivalTimestamp, machine});
     }
   }
@@ -90,7 +92,8 @@ void ScheduleAlgorithms::shortest_job_longest_operation(Schedule & schedule, Job
     MachineID leastBusyMachine = leastBusyMachines.top().second;
     leastBusyMachines.pop();
     schedule.schedule[leastBusyMachine].push_back(operations.back());
-    leastBusyMachines.push({leastBusyMachineReadyTime + operations.back()->duration, leastBusyMachine});
+    leastBusyMachines.push({leastBusyMachineReadyTime + estimator->estimate(operations.back()),
+            leastBusyMachine});
     operations.pop_back();
   }
 }

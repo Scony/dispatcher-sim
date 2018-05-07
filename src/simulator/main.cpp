@@ -19,6 +19,9 @@
 #include "RandomScheduler.hpp"
 #include "SAScheduler.hpp"
 #include "BatchSimulator.hpp"
+#include "NoEstimator.hpp"
+#include "LazyClairvoyantEstimator.hpp"
+#include "KRecentEstimator.hpp"
 
 int main(int argc, char ** argv)
 {
@@ -144,23 +147,32 @@ int main(int argc, char ** argv)
     Simulator simulator(input, dispatcher);
     simulator.run();
     std::cerr << "running simulation done" << std::endl;
-
-    solution = solutionGatherer->getSolutionVec();
   }
   else
   {
+    std::shared_ptr<IEstimator> estimator;
+    if (arguments.estimationMethod == "no")
+      estimator.reset((new NoEstimator()));
+    if (arguments.estimationMethod == "lclv")
+      estimator.reset((new LazyClairvoyantEstimator()));
+    if (arguments.estimationMethod == "krec")
+      estimator.reset((new KRecentEstimator(arguments.k)));
+    assert(estimator != nullptr);
     using SchedulerSP = std::shared_ptr<Scheduler<Schedule> >;
     SchedulerSP scheduler = std::make_shared<SAScheduler>(input,
                                                           std::shared_ptr<Machines>(nullptr),
-                                                          std::shared_ptr<IEstimator>(nullptr),
+                                                          estimator,
                                                           arguments.saIterations);
 
     std::cerr << "running simulation..." << std::endl;
     BatchSimulator<Schedule> simulator(input, machines, scheduler);
-    solution = simulator.run();
+    simulator.subscribe(estimator);
+    simulator.subscribe(solutionGatherer);
+    simulator.run();
     std::cerr << "running simulation done" << std::endl;
   }
 
+  solution = solutionGatherer->getSolutionVec();
   auto jobs = input->getJobs();
 
   if (outputType == "debug")

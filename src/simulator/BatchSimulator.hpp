@@ -5,9 +5,10 @@
 #include "Input.hpp"
 #include "Scheduler.hpp"
 #include "Types.hpp"
+#include "ExecutionsSubject.hpp"
 
 template <class TSchedule>
-class BatchSimulator
+class BatchSimulator : public ExecutionsSubject
 {
  public:
   BatchSimulator(std::shared_ptr<Input> input,
@@ -28,25 +29,24 @@ class BatchSimulator
       });
   }
 
-  std::vector<Assignation> run()
+  void run()
   {
-    std::vector<Assignation> solution;
     long long previousTimestamp = 0;
 
     while (mQueue.size() > 0)
     {
       auto newestJob = mQueue.back();
       auto partialSolution = mSchedule.dispatch(previousTimestamp, newestJob->arrivalTimestamp);
-      solution.insert(solution.end(), partialSolution.begin(), partialSolution.end());
+      for (const auto& assignation : partialSolution)
+        notify(assignation);
       previousTimestamp = newestJob->arrivalTimestamp;
       mScheduler->schedule(mSchedule, newestJob);
       mQueue.pop_back();
     }
 
     auto partialSolution = mSchedule.dispatch(previousTimestamp, LLONG_MAX);
-    solution.insert(solution.end(), partialSolution.begin(), partialSolution.end());
-
-    return solution;
+    for (const auto& assignation : partialSolution)
+      notify(assignation);
   }
 
  private:

@@ -49,7 +49,7 @@ std::vector<Assignation> Schedule::dispatch(long long from, long long until)
   return assignations;
 }
 
-std::vector<Assignation> Schedule::simulateDispatch(long long from) const
+std::vector<Assignation> Schedule::simulateDispatch(long long from, IEstimatorSP estimator) const
 {
   std::vector<Assignation> assignations;
 
@@ -59,13 +59,13 @@ std::vector<Assignation> Schedule::simulateDispatch(long long from) const
     if (ongoings.find(machine) != ongoings.end())
     {
       long long finishTime = ongoings.at(machine).first +
-          ongoings.at(machine).second->duration;
+          estimator->estimate(ongoings.at(machine).second);
       prevFinishTime = finishTime;
       assignations.emplace_back(finishTime, ongoings.at(machine).second, machine);
     }
     for (auto it = schedule[machine].begin(); it != schedule[machine].end(); it++)
     {
-      long long finishTime = prevFinishTime + (*it)->duration;
+      long long finishTime = prevFinishTime + estimator->estimate(*it);
       prevFinishTime = finishTime;
       assignations.emplace_back(finishTime, *it, machine);
     }
@@ -136,7 +136,9 @@ void Schedule::deterministic_move(SrcMachine& srcMachine,
   schedule[srcMachine].erase(schedule[srcMachine].begin() + srcMachineOffset);
 }
 
-Schedule::MachineCache Schedule::simulateDispatchMachine(long long from, MachineID machine) const
+Schedule::MachineCache Schedule::simulateDispatchMachine(long long from,
+                                                         MachineID machine,
+                                                         IEstimatorSP estimator) const
 {
   MachineCache cache;
 
@@ -144,7 +146,7 @@ Schedule::MachineCache Schedule::simulateDispatchMachine(long long from, Machine
   if (ongoings.find(machine) != ongoings.end())
   {
     long long finishTime = ongoings.at(machine).first +
-        ongoings.at(machine).second->duration;
+        estimator->estimate(ongoings.at(machine).second);
     prevFinishTime = finishTime;
     auto& operation = ongoings.at(machine).second;
     auto it = cache.find(operation->parentId);
@@ -156,7 +158,7 @@ Schedule::MachineCache Schedule::simulateDispatchMachine(long long from, Machine
   for (auto it = schedule[machine].begin(); it != schedule[machine].end(); it++)
   {
     auto& operation = *it;
-    long long finishTime = prevFinishTime + operation->duration;
+    long long finishTime = prevFinishTime + estimator->estimate(operation);
     prevFinishTime = finishTime;
     auto it2 = cache.find(operation->parentId);
     if (it2 == cache.end())
