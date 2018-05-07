@@ -22,6 +22,7 @@
 #include "NoEstimator.hpp"
 #include "LazyClairvoyantEstimator.hpp"
 #include "KRecentEstimator.hpp"
+#include "SJLOScheduler.hpp"
 
 int main(int argc, char ** argv)
 {
@@ -158,11 +159,19 @@ int main(int argc, char ** argv)
     if (arguments.estimationMethod == "krec")
       estimator.reset((new KRecentEstimator(arguments.k)));
     assert(estimator != nullptr);
+
     using SchedulerSP = std::shared_ptr<Scheduler<Schedule> >;
-    SchedulerSP scheduler = std::make_shared<SAScheduler>(input,
-                                                          std::shared_ptr<Machines>(nullptr),
-                                                          estimator,
-                                                          arguments.saIterations);
+    SchedulerSP scheduler;
+    if (arguments.primaryAlgorithm == "sa")
+      scheduler = std::make_shared<SAScheduler>(input,
+                                                std::shared_ptr<Machines>(nullptr),
+                                                estimator,
+                                                arguments.saIterations);
+    if (arguments.primaryAlgorithm == "sjlo")
+      scheduler = std::make_shared<SJLOScheduler>(input,
+                                                  std::shared_ptr<Machines>(nullptr),
+                                                  estimator);
+    assert(scheduler != nullptr);
 
     std::cerr << "running simulation..." << std::endl;
     BatchSimulator<Schedule> simulator(input, machines, scheduler);
