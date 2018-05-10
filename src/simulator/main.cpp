@@ -216,6 +216,15 @@ int main(int argc, char ** argv)
                 << std::get<1>(tuple)->id << " "
                 << std::get<2>(tuple) << std::endl;
   }
+  else if (outputType == "jstretches")
+  {
+    auto stretchVec = Solution::calculateJobStretchVec(solution, jobs);
+    for (const auto& kv : stretchVec)
+    {
+      const auto& stretch = kv.first;
+      std::cout << std::fixed << stretch << std::endl;
+    }
+  }
 
   return 0;
 }

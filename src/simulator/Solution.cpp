@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <cassert>
 #include <algorithm>
+#include <numeric>
 
 #include "Solution.hpp"
 
@@ -32,6 +33,28 @@ Solution::JobFlowVec Solution::calculateJobFlowVec(const SolutionVec& solution,
     jobFlows.push_back({jobEnds[job->id] - job->arrivalTimestamp, job});
 
   return jobFlows;
+}
+
+Solution::JobStretchVec Solution::calculateJobStretchVec(const SolutionVec& solution,
+                                                         std::vector<JobSP> jobs)
+{
+  JobStretchVec result;
+
+  auto flowVec = Solution::calculateJobFlowVec(solution, jobs);
+  for (const auto& kv : flowVec)
+  {
+    const auto& flow = kv.first;
+    const auto& job = kv.second;
+    double jobDuration = std::accumulate(job->operations.begin(),
+                                         job->operations.end(),
+                                         0.0d,
+                                         [](double acc, OperationSP op) {
+                                           return acc + op->duration;
+                                         });
+    result.emplace_back((double)flow / jobDuration, job);
+  }
+
+  return result;
 }
 
 long long Solution::evalTotalFlow(const SolutionVec& solution)
