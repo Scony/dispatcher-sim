@@ -2,8 +2,6 @@
 #include <vector>
 #include <cassert>
 
-#include "args.hpp"
-
 #include "Input.hpp"
 #include "InputV2.hpp"
 #include "ICloud.hpp"
@@ -23,80 +21,27 @@
 #include "LazyClairvoyantEstimator.hpp"
 #include "KRecentEstimator.hpp"
 #include "SJLOScheduler.hpp"
+#include "TimedScope.hpp"
 
 int main(int argc, char ** argv)
 {
   srand(time(0));
 
-  args::ArgumentParser parser("Test workload dispatcher simulator");
+  Arguments arguments(argc, argv);
 
-  args::HelpFlag help(parser, "help", "Display this help and exit",
-		      {'h', "help"});
-
-  args::ValueFlag<unsigned> machinesArg(parser, "number", "Number of machines",
-					{'m', "machines"});
-  args::ValueFlag<unsigned> saIterationsArg(parser, "number", "Number of SA iterations",
-                                            {'i', "iterations"});
-  args::ValueFlag<std::string> estimationArg(parser, "method", "Estimation method",
-					     {'e', "estimation"});
-  args::ValueFlag<std::string> opAlgortihmArg(parser, "op_algorithm", "Operation-level algorithm",
-					      {'l', "operation-level-algorithm"});
-  args::ValueFlag<std::string> outputArg(parser, "type", "Output type",
-					 {'o', "output-type"});
-  args::ValueFlag<unsigned> setupTimeArg(parser, "number", "Operations setup time",
-					 {'s', "setup-time"});
-  args::ValueFlag<unsigned> instanceVersionArg(parser, "number", "Instance file version",
-                                               {'v', "version"});
-  args::ValueFlag<unsigned> kArg(parser, "number", "K-Recent's window size",
-				 {'k', "window-size"});
-  args::ValueFlag<std::string> representationArg(parser, "representation", "Internal solution representation",
-                                                 {'r', "representation"});
-
-  args::Positional<std::string> algorithmArg(parser, "algorithm", "Primary algorithm");
-
-  try
-  {
-    parser.ParseCLI(argc, argv);
-    if (!algorithmArg)
-      throw args::Help("");
-  }
-  catch (args::Help)
-  {
-    std::cout << parser;
-    return 0;
-  }
-  catch (args::ParseError e)
-  {
-    std::cerr << e.what() << std::endl;
-    return 1;
-  }
-
-  Arguments arguments;
-  arguments.primaryAlgorithm = args::get(algorithmArg);
-  arguments.machinesNum = machinesArg ? args::get(machinesArg) : 1;
-  arguments.estimationMethod = estimationArg ? args::get(estimationArg) : "no";
-  arguments.operationLevelAlgorithm = opAlgortihmArg ? args::get(opAlgortihmArg) : "random";
-  arguments.saIterations = saIterationsArg ? args::get(saIterationsArg) : 1;
-  arguments.k = kArg ? args::get(kArg) : 3;
-  unsigned setupTime = setupTimeArg ? args::get(setupTimeArg) : 0;
-  auto outputType = outputArg ? args::get(outputArg) : "jflows";
-  auto instanceVersion = instanceVersionArg ? args::get(instanceVersionArg) : 1;
-  auto representation = representationArg ? args::get(representationArg) : "queue";
-
-  std::cerr << "reading arguments..." << std::endl;
+  std::cerr << "Arguments:" << std::endl;
   std::cerr << "> algorithm: " << arguments.primaryAlgorithm << std::endl;
   std::cerr << "> machines: " << arguments.machinesNum << std::endl;
   std::cerr << "> estimation: " << arguments.estimationMethod << std::endl;
   std::cerr << "> k: " << arguments.k << std::endl;
   std::cerr << "> o-l-algorithm: " << arguments.operationLevelAlgorithm << std::endl;
   std::cerr << "> iterations: " << arguments.saIterations << std::endl;
-  std::cerr << "> setup: " << setupTime << std::endl;
-  std::cerr << "> output: " << outputType << std::endl;
-  std::cerr << "> representation: " << representation << std::endl;
-  std::cerr << "reading arguments done" << std::endl;
+  std::cerr << "> setup: " << arguments.setupTime << std::endl;
+  std::cerr << "> output: " << arguments.outputType << std::endl;
+  std::cerr << "> representation: " << arguments.representation << std::endl;
 
   std::shared_ptr<Input> input;
-  switch (instanceVersion)
+  switch (arguments.instanceVersion)
   {
     case 2:
       input = std::make_shared<InputV2>();
@@ -106,17 +51,18 @@ int main(int argc, char ** argv)
       input = std::make_shared<Input>();
   };
 
-  std::cerr << "reading instance..." << std::endl;
-  input->readFromStdin();
-  std::cerr << "> jobs: " << input->getJobsNum() << std::endl;
-  std::cerr << "> operations: " << input->getOperationsNum() << std::endl;
-  std::cerr << "reading instance done" << std::endl;
+  {
+    TimedScope ts("reading instance");
+    input->readFromStdin();
+    std::cerr << "> jobs: " << input->getJobsNum() << std::endl;
+    std::cerr << "> operations: " << input->getOperationsNum() << std::endl;
+  }
 
   auto solutionGatherer = std::make_shared<Solution>();
   std::vector<Assignation> solution;
   std::vector<MachineSP> machines;
 
-  switch (instanceVersion)
+  switch (arguments.instanceVersion)
   {
     case 2:
       machines = Utility::Machines::readFromStdin();
@@ -127,29 +73,30 @@ int main(int argc, char ** argv)
       assert(machines.size() == arguments.machinesNum);
   }
 
-  if (representation == "queue")
+  if (arguments.representation == "queue")
   {
     std::shared_ptr<ICloud> cloud;
-    switch (instanceVersion)
+    switch (arguments.instanceVersion)
     {
       case 2:
-        cloud = std::make_shared<CloudV2>(machines, setupTime);;
+        cloud = std::make_shared<CloudV2>(machines, arguments.setupTime);;
         break;
       case 1:
       default:
-        cloud = std::make_shared<Cloud>(arguments.machinesNum, setupTime);
+        cloud = std::make_shared<Cloud>(arguments.machinesNum, arguments.setupTime);
     }
     cloud->subscribe(solutionGatherer);
 
     auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, arguments);
     auto dispatcher = dispatcherFactory->getDispatcher();
 
-    std::cerr << "running simulation..." << std::endl;
     Simulator simulator(input, dispatcher);
-    simulator.run();
-    std::cerr << "running simulation done" << std::endl;
+    {
+      TimedScope ts("running simulation");
+      simulator.run();
+    }
   }
-  else
+  else if (arguments.representation == "schedule")
   {
     std::shared_ptr<IEstimator> estimator;
     if (arguments.estimationMethod == "no")
@@ -173,18 +120,23 @@ int main(int argc, char ** argv)
                                                   estimator);
     assert(scheduler != nullptr);
 
-    std::cerr << "running simulation..." << std::endl;
     BatchSimulator<Schedule> simulator(input, machines, scheduler);
     simulator.subscribe(estimator);
     simulator.subscribe(solutionGatherer);
-    simulator.run();
-    std::cerr << "running simulation done" << std::endl;
+    {
+      TimedScope ts("running simulation");
+      simulator.run();
+    }
+  }
+  else
+  {
+    throw std::runtime_error("Unrecognized representation");
   }
 
   solution = solutionGatherer->getSolutionVec();
   auto jobs = input->getJobs();
 
-  if (outputType == "debug")
+  if (arguments.outputType == "debug")
   {
     for (const auto& tuple : solution)
       std::cout << "#"
@@ -194,13 +146,14 @@ int main(int argc, char ** argv)
                 << std::get<2>(tuple) << std::endl;
   }
 
-  std::cerr << "running validation..." << std::endl;
-  assert(Solution::validateOperationEnds(solution));
-  assert(Solution::validateSingularOperationExecutions(solution, jobs));
-  assert(Solution::validateMachineCapacityUsage(solution, machines));
-  std::cerr << "running validation done" << std::endl;
+  {
+    TimedScope ts("running validation");
+    assert(Solution::validateOperationEnds(solution));
+    assert(Solution::validateSingularOperationExecutions(solution, jobs));
+    assert(Solution::validateMachineCapacityUsage(solution, machines));
+  }
 
-  if (outputType == "jflows")
+  if (arguments.outputType == "jflows")
   {
     auto flowVec = Solution::calculateJobFlowVec(solution, jobs);
     for (const auto& kv : flowVec)
@@ -209,14 +162,14 @@ int main(int argc, char ** argv)
       std::cout << flow << std::endl;
     }
   }
-  else if (outputType == "opfins")
+  else if (arguments.outputType == "opfins")
   {
     for (const auto& tuple : solution)
       std::cout << std::get<0>(tuple) << " "
                 << std::get<1>(tuple)->id << " "
                 << std::get<2>(tuple) << std::endl;
   }
-  else if (outputType == "jstretches")
+  else if (arguments.outputType == "jstretches")
   {
     auto stretchVec = Solution::calculateJobStretchVec(solution, jobs);
     for (const auto& kv : stretchVec)
@@ -224,6 +177,13 @@ int main(int argc, char ** argv)
       const auto& stretch = kv.first;
       std::cout << std::fixed << stretch << std::endl;
     }
+  }
+  else if (arguments.outputType == "nothing")
+  {
+  }
+  else
+  {
+    throw std::runtime_error("Unrecognized output type");
   }
 
   return 0;

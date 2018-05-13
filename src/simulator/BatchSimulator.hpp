@@ -1,6 +1,7 @@
 #pragma once
 
 #include <deque>
+#include <algorithm>
 
 #include "Input.hpp"
 #include "Scheduler.hpp"
