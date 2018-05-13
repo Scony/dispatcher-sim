@@ -2,7 +2,7 @@
 ** DONE cache to reverts
 ** DONE SAScheduler starting from ~ SJLO
 ** DONE Estimator in SAScheduler helpers
-** TODO bring SAScheduler UT back
+** DONE bring SAScheduler UT back
 ** TODO New classes refa + UT
 ** TODO main refa
 ** TODO New algorithms factory

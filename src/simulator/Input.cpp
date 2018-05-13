@@ -8,6 +8,13 @@ Input::Input() :
 {
 }
 
+Input::Input(std::vector<std::shared_ptr<Job> > jobs) :
+    mJobs(jobs)
+{
+  for (const auto& job : jobs)
+    mJobsMap.emplace(job->id, job);
+}
+
 std::vector<std::shared_ptr<Job> > Input::getJobs()
 {
   return mJobs;

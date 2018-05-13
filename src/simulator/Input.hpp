@@ -11,6 +11,7 @@ class Input
 {
  public:
   Input();
+  Input(std::vector<std::shared_ptr<Job> > jobs);
 
   virtual void readFromStdin();
 
