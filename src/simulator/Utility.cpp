@@ -4,25 +4,25 @@ namespace Utility
 {
 namespace Machines
 {
-std::vector<MachineSP> readFromStdin()
+std::vector<MachineSP> readFromStream(std::istream& inputStream)
 {
   std::vector<MachineSP> machines;
 
   unsigned version;
-  std::cin >> version;
+  inputStream >> version;
   assert(version == 1);
 
   unsigned machinesNum;
-  std::cin >> machinesNum;
+  inputStream >> machinesNum;
   assert(machinesNum > 0);
 
   for (unsigned i = 0; i < machinesNum; i++)
   {
     long long machineId;
     long long machineCapacity;
-    std::cin >> machineId;
+    inputStream >> machineId;
     assert(machineId < machinesNum);
-    std::cin >> machineCapacity;
+    inputStream >> machineCapacity;
     machines.emplace_back(new Machine(machineId, machineCapacity));
   }
 

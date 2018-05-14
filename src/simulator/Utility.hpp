@@ -10,7 +10,7 @@ namespace Utility
 {
 namespace Machines
 {
-std::vector<MachineSP> readFromStdin();
+std::vector<MachineSP> readFromStream(std::istream& inputStream);
 std::vector<MachineSP> generate(unsigned machinesNum, unsigned capacity);
 }
 }

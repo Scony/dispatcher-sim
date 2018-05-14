@@ -11,7 +11,7 @@
 #include "DispatcherFactory.hpp"
 #include "Solution.hpp"
 #include "Arguments.hpp"
-#include "Utility.hpp"
+#include "Machines.hpp"
 #include "Scheduler.hpp"
 #include "Schedule.hpp"
 #include "RandomScheduler.hpp"
@@ -60,17 +60,17 @@ int main(int argc, char ** argv)
 
   auto solutionGatherer = std::make_shared<Solution>();
   std::vector<Assignation> solution;
-  std::vector<MachineSP> machines;
+  std::shared_ptr<Machines> machines;
 
   switch (arguments.instanceVersion)
   {
     case 2:
-      machines = Utility::Machines::readFromStdin();
+      machines = std::make_shared<Machines>(std::cin);
       break;
     case 1:
     default:
-      machines = Utility::Machines::generate(arguments.machinesNum, 1);
-      assert(machines.size() == arguments.machinesNum);
+      machines = std::make_shared<Machines>(arguments.machinesNum, 1);
+      assert(machines->size() == arguments.machinesNum);
   }
 
   if (arguments.representation == "queue")
@@ -79,11 +79,11 @@ int main(int argc, char ** argv)
     switch (arguments.instanceVersion)
     {
       case 2:
-        cloud = std::make_shared<CloudV2>(machines, arguments.setupTime);;
+        cloud = std::make_shared<CloudV2>(machines->fetch(), arguments.setupTime);;
         break;
       case 1:
       default:
-        cloud = std::make_shared<Cloud>(arguments.machinesNum, arguments.setupTime);
+        cloud = std::make_shared<Cloud>(machines->size(), arguments.setupTime);
     }
     cloud->subscribe(solutionGatherer);
 
@@ -111,12 +111,12 @@ int main(int argc, char ** argv)
     SchedulerSP scheduler;
     if (arguments.primaryAlgorithm == "sa")
       scheduler = std::make_shared<SAScheduler>(input,
-                                                std::shared_ptr<Machines>(nullptr),
+                                                machines,
                                                 estimator,
                                                 arguments.saIterations);
     if (arguments.primaryAlgorithm == "sjlo")
       scheduler = std::make_shared<SJLOScheduler>(input,
-                                                  std::shared_ptr<Machines>(nullptr),
+                                                  machines,
                                                   estimator);
     assert(scheduler != nullptr);
 
@@ -150,7 +150,7 @@ int main(int argc, char ** argv)
     TimedScope ts("running validation");
     assert(Solution::validateOperationEnds(solution));
     assert(Solution::validateSingularOperationExecutions(solution, jobs));
-    assert(Solution::validateMachineCapacityUsage(solution, machines));
+    assert(Solution::validateMachineCapacityUsage(solution, machines->fetch()));
   }
 
   if (arguments.outputType == "jflows")

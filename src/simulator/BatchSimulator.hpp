@@ -7,17 +7,18 @@
 #include "Scheduler.hpp"
 #include "Types.hpp"
 #include "ExecutionsSubject.hpp"
+#include "Machines.hpp"
 
 template <class TSchedule>
 class BatchSimulator : public ExecutionsSubject
 {
  public:
   BatchSimulator(std::shared_ptr<Input> input,
-                 const std::vector<MachineSP>& machines,
+                 std::shared_ptr<Machines> machines,
                  std::shared_ptr<Scheduler<TSchedule> > scheduler) :
       mMachines(machines),
       mScheduler(scheduler),
-      mSchedule(mMachines.size())
+      mSchedule(mMachines)
   {
     // copy input to queue
     auto jobs = input->getJobs();
@@ -51,7 +52,7 @@ class BatchSimulator : public ExecutionsSubject
   }
 
  private:
-  const std::vector<MachineSP>& mMachines;
+  std::shared_ptr<Machines> mMachines;
 
   std::shared_ptr<Scheduler<TSchedule> > mScheduler;
   std::deque<std::shared_ptr<Job> > mQueue;

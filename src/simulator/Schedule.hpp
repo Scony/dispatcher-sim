@@ -8,10 +8,11 @@
 #include "Types.hpp"
 #include "Input.hpp"
 #include "IEstimator.hpp"
+#include "Machines.hpp"
 
 struct Schedule
 {
-  Schedule(unsigned machinesNum);
+  Schedule(std::shared_ptr<Machines> machines);
 
   std::vector<Assignation> dispatch(long long from, long long until);
   std::vector<Assignation> simulateDispatch(long long from, IEstimatorSP estimator) const;

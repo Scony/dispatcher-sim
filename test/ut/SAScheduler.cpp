@@ -5,7 +5,8 @@
 
 TEST(SASchedulerTests, CheckCompleteness)
 {
-  Schedule schedule(3);
+  auto machines = std::make_shared<Machines>(3, 1);
+  Schedule schedule(machines);
   auto op1 = std::make_shared<Operation>(1,1,1,1,10,30);
   auto op2 = std::make_shared<Operation>(2,1,1,1,10,35);
   auto op3 = std::make_shared<Operation>(3,1,1,1,5,30);
