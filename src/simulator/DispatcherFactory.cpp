@@ -46,6 +46,7 @@ std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
     estimator.reset((new KRecentEstimator(mArguments.k)));
 
   assert(estimator != nullptr);
+  mCloud->subscribe(estimator);
 
   // dispatcher
 

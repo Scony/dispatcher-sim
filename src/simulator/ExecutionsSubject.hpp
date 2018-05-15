@@ -9,6 +9,7 @@ class ExecutionsSubject
  public:
   virtual void subscribe(std::shared_ptr<IExecutionsListener> listener);
   virtual void unsubscribe(std::shared_ptr<IExecutionsListener> listener);
+  virtual size_t numberOfSubscriptions();
 
   virtual void notify(const Assignation& notification);
 

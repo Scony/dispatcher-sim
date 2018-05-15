@@ -178,7 +178,7 @@ int main(int argc, char ** argv)
       std::cout << std::fixed << stretch << std::endl;
     }
   }
-  else if (arguments.outputType == "nothing")
+  else if (arguments.outputType == "nothing" or arguments.outputType == "debug")
   {
   }
   else

@@ -11,11 +11,16 @@ void ExecutionsSubject::subscribe(std::shared_ptr<IExecutionsListener> listener)
 void ExecutionsSubject::unsubscribe(std::shared_ptr<IExecutionsListener> listener)
 {
   mSubscribers.erase(std::remove_if(mSubscribers.begin(),
-				    mSubscribers.end(),
-				    [](std::shared_ptr<IExecutionsListener> subscriber) {
-				      return subscriber;
-				    }),
-		     mSubscribers.end());
+                                    mSubscribers.end(),
+                                    [&listener](std::shared_ptr<IExecutionsListener> subscriber) {
+                                      return subscriber == listener;
+                                    }),
+                     mSubscribers.end());
+}
+
+size_t ExecutionsSubject::numberOfSubscriptions()
+{
+  return mSubscribers.size();
 }
 
 void ExecutionsSubject::notify(const Assignation& notification)

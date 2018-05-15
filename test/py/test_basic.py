@@ -1,20 +1,15 @@
 import os
 import subprocess
 
-# TODO: fixture
+from fixtures import *
+from helpers import execute_process, sorted_opfins
 
 
-def test_binaries_in_place():
-    my_dir = os.path.dirname(__file__)
-    bin_dir = os.path.abspath('%s/../../bin' % my_dir)
-    simulator_path = '%s/simulator' % bin_dir
+def test_binaries_in_place(simulator_path):
     assert os.path.isfile(simulator_path)
 
 
-def test_simulator1():
-    my_dir = os.path.dirname(__file__)
-    bin_dir = os.path.abspath('%s/../../bin' % my_dir)
-    simulator_path = '%s/simulator' % bin_dir
+def test_qopt(simulator_path):
     input = b"""
     5
 
@@ -45,21 +40,18 @@ def test_simulator1():
 1
 1
 """
-    completed_process = subprocess.run([simulator_path,
-                                        'qopt',
-                                        '-m1',
-                                        '-eno'],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       input=input)
-    process_stdout = completed_process.stdout.decode('utf-8')
-    assert process_stdout.startswith(expected_output)
+    retcode, stdout, _ = execute_process(simulator_path,
+                                         [
+                                             'qopt',
+                                             '-m1',
+                                             '-eno',
+                                         ],
+                                         input)
+    assert retcode == 0
+    assert stdout.startswith(expected_output)
 
 
-def test_simulator2():
-    my_dir = os.path.dirname(__file__)
-    bin_dir = os.path.abspath('%s/../../bin' % my_dir)
-    simulator_path = '%s/simulator' % bin_dir
+def test_fifo(simulator_path):
     input = b"""
     5
 
@@ -90,12 +82,92 @@ def test_simulator2():
 100
 100
 """
-    completed_process = subprocess.run([simulator_path,
-                                        'fifo',
-                                        '-m1',
-                                        '-eno'],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       input=input)
-    process_stdout = completed_process.stdout.decode('utf-8')
-    assert process_stdout.startswith(expected_output)
+    retcode, stdout, _ = execute_process(simulator_path,
+                                         [
+                                             'fifo',
+                                             '-m1',
+                                             '-eno',
+                                         ],
+                                         input)
+    assert retcode == 0
+    assert stdout.startswith(expected_output)
+
+
+def test_no_estimation(simulator_path):
+    input = b"""
+    3
+
+    0 0 0
+    3
+    0 0 0 1000
+    1 0 0 2000
+    2 0 0 3000
+
+    1 0 6000
+    1
+    3 1 0 10
+
+    2 0 6001
+    2
+    4 0 0 1
+    5 3 0 2
+    """
+    expected_opfins = [
+        (3000, 2, 0),
+        (5000, 1, 0),
+        (6000, 0, 0),
+        (6010, 3, 0),
+        (6012, 5, 0),
+        (6013, 4, 0),
+    ]
+    retcode, stdout, _ = execute_process(simulator_path,
+                                         [
+                                             'max',
+                                             '-m1',
+                                             '-eno',
+                                             '-oopfins',
+                                         ],
+                                         input)
+    assert retcode == 0
+    assert expected_opfins == sorted_opfins(stdout)
+
+
+
+def test_estimation(simulator_path):
+    input = b"""
+    3
+
+    0 0 0
+    3
+    0 0 0 1000
+    1 0 0 2000
+    2 0 0 3000
+
+    1 0 6000
+    1
+    3 1 0 10
+
+    2 0 6001
+    2
+    4 0 0 1
+    5 3 0 2
+    """
+    expected_opfins = [
+        (3000, 2, 0),
+        (5000, 1, 0),
+        (6000, 0, 0),
+        (6010, 3, 0),
+        (6011, 4, 0),
+        (6013, 5, 0),
+    ]
+    retcode, stdout, _ = execute_process(simulator_path,
+                                         [
+                                             'max',
+                                             '-m1',
+                                             '-ekrec',
+                                             '-k3',
+                                             '-oopfins',
+                                         ],
+                                         input)
+    assert retcode == 0
+    assert expected_opfins == sorted_opfins(stdout)
