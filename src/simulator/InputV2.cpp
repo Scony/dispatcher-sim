@@ -26,10 +26,10 @@ void InputV2::readFromStdin()
     std::cin >> jobPriority;
     std::cin >> jobArrivalTimestamp;
     jobs.emplace(std::pair<JobID, JobSP>(jobId,
-                                         new Job(jobId,
-                                                 jobPriority,
-                                                 jobArrivalTimestamp,
-                                                 {})));
+                                         std::make_shared<Job>(jobId,
+                                                               jobPriority,
+                                                               jobArrivalTimestamp,
+                                                               std::vector<OperationSP>{})));
     jobOperations.emplace(std::pair<JobID, std::vector<OperationSP> >{jobId, {}});
   }
 
