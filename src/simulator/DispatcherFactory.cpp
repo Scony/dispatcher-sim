@@ -4,12 +4,10 @@
 #include "RandomDispatcher.hpp"
 #include "MaxDispatcher.hpp"
 #include "MinDispatcher.hpp"
-#include "NoEstimator.hpp"
 #include "SJLODispatcher.hpp"
 #include "FIFODispatcher.hpp"
 #include "SJSODispatcher.hpp"
 #include "LJSODispatcher.hpp"
-#include "LazyClairvoyantEstimator.hpp"
 #include "LODispatcher.hpp"
 #include "SODispatcher.hpp"
 #include "ELODispatcher.hpp"
@@ -21,90 +19,76 @@
 #include "SJSADispatcher.hpp"
 #include "SADispatcher.hpp"
 #include "VRDispatcher.hpp"
-#include "KRecentEstimator.hpp"
+
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<ICloud> cloud,
+                                     std::shared_ptr<IEstimator> estimator,
 				     Arguments arguments) :
     mInput(input),
     mCloud(cloud),
+    mEstimator(estimator),
     mArguments(arguments)
 {
 }
 
-std::shared_ptr<Dispatcher> DispatcherFactory::getDispatcher()
+std::shared_ptr<Dispatcher> DispatcherFactory::create()
 {
-  // estimator
-
-  std::shared_ptr<IEstimator> estimator;
-
-  if (mArguments.estimationMethod == "no")
-    estimator.reset((new NoEstimator()));
-  if (mArguments.estimationMethod == "lclv")
-    estimator.reset((new LazyClairvoyantEstimator()));
-  if (mArguments.estimationMethod == "krec")
-    estimator.reset((new KRecentEstimator(mArguments.k)));
-
-  assert(estimator != nullptr);
-  mCloud->subscribe(estimator);
-
-  // dispatcher
-
   std::shared_ptr<Dispatcher> dispatcher;
 
   if (mArguments.primaryAlgorithm == "random")
-    dispatcher.reset((new RandomDispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<RandomDispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "max")
-    dispatcher.reset((new MaxDispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<MaxDispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "min")
-    dispatcher.reset((new MinDispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<MinDispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "sjlo")
-    dispatcher.reset((new SJLODispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<SJLODispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "fifo")
-    dispatcher.reset((new FIFODispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<FIFODispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "sjso")
-    dispatcher.reset((new SJSODispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<SJSODispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "ljso")
-    dispatcher.reset((new LJSODispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<LJSODispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "lo")
-    dispatcher.reset((new LODispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<LODispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "elo")
-    dispatcher.reset((new ELODispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<ELODispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "so")
-    dispatcher.reset((new SODispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<SODispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "jsa")
-    dispatcher.reset((new JSADispatcher(mInput,
-					mCloud,
-					estimator,
-					mArguments.operationLevelAlgorithm,
-					mArguments.saIterations)));
+    dispatcher = std::make_shared<JSADispatcher>(mInput,
+                                                 mCloud,
+                                                 mEstimator,
+                                                 mArguments.operationLevelAlgorithm,
+                                                 mArguments.saIterations);
   if (mArguments.primaryAlgorithm == "qopt")
-    dispatcher.reset((new QOPTDispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<QOPTDispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "qworst")
-    dispatcher.reset((new QWORSTDispatcher(mInput, mCloud, estimator)));
+    dispatcher = std::make_shared<QWORSTDispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "jopt")
-    dispatcher.reset((new JOPTDispatcher(mInput,
-					 mCloud,
-					 estimator,
-					 mArguments.operationLevelAlgorithm)));
+    dispatcher = std::make_shared<JOPTDispatcher>(mInput,
+                                                  mCloud,
+                                                  mEstimator,
+                                                  mArguments.operationLevelAlgorithm);
   if (mArguments.primaryAlgorithm == "sasa")
-    dispatcher.reset((new SASADispatcher(mInput,
-					 mCloud,
-					 estimator,
-					 mArguments.operationLevelAlgorithm,
-					 mArguments.saIterations)));
+    dispatcher = std::make_shared<SASADispatcher>(mInput,
+                                                  mCloud,
+                                                  mEstimator,
+                                                  mArguments.operationLevelAlgorithm,
+                                                  mArguments.saIterations);
   if (mArguments.primaryAlgorithm == "sjsa")
-    dispatcher.reset((new SJSADispatcher(mInput,
-					 mCloud,
-					 estimator,
-					 mArguments.operationLevelAlgorithm,
-					 mArguments.saIterations)));
+    dispatcher = std::make_shared<SJSADispatcher>(mInput,
+                                                  mCloud,
+                                                  mEstimator,
+                                                  mArguments.operationLevelAlgorithm,
+                                                  mArguments.saIterations);
   if (mArguments.primaryAlgorithm == "sa")
-    dispatcher.reset((new SADispatcher(mInput, mCloud, estimator, mArguments.saIterations)));
+    dispatcher = std::make_shared<SADispatcher>(mInput, mCloud, mEstimator, mArguments.saIterations);
   if (mArguments.primaryAlgorithm == "rvr")
-    dispatcher.reset((new VRDispatcher(mInput, mCloud, estimator, false)));
+    dispatcher = std::make_shared<VRDispatcher>(mInput, mCloud, mEstimator, false);
   if (mArguments.primaryAlgorithm == "dvr")
-    dispatcher.reset((new VRDispatcher(mInput, mCloud, estimator, true)));
+    dispatcher = std::make_shared<VRDispatcher>(mInput, mCloud, mEstimator, true);
 
   assert(dispatcher != nullptr);
 

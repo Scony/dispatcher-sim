@@ -8,6 +8,7 @@
 #include "Cloud.hpp"
 #include "CloudV2.hpp"
 #include "Simulator.hpp"
+#include "EstimatorFactory.hpp"
 #include "DispatcherFactory.hpp"
 #include "Solution.hpp"
 #include "Arguments.hpp"
@@ -17,9 +18,6 @@
 #include "RandomScheduler.hpp"
 #include "SAScheduler.hpp"
 #include "BatchSimulator.hpp"
-#include "NoEstimator.hpp"
-#include "LazyClairvoyantEstimator.hpp"
-#include "KRecentEstimator.hpp"
 #include "SJLOScheduler.hpp"
 #include "TimedScope.hpp"
 
@@ -52,7 +50,7 @@ int main(int argc, char ** argv)
   };
 
   {
-    TimedScope ts("reading instance");
+    TimedScope("reading instance");
     input->readFromStdin();
     std::cerr << "> jobs: " << input->getJobsNum() << std::endl;
     std::cerr << "> operations: " << input->getOperationsNum() << std::endl;
@@ -73,6 +71,8 @@ int main(int argc, char ** argv)
       assert(machines->size() == arguments.machinesNum);
   }
 
+  auto estimatorFactory = std::make_shared<EstimatorFactory>(arguments);
+  auto estimator = estimatorFactory->create();
   if (arguments.representation == "queue")
   {
     std::shared_ptr<ICloud> cloud;
@@ -86,27 +86,19 @@ int main(int argc, char ** argv)
         cloud = std::make_shared<Cloud>(machines->size(), arguments.setupTime);
     }
     cloud->subscribe(solutionGatherer);
+    cloud->subscribe(estimator);
 
-    auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, arguments);
-    auto dispatcher = dispatcherFactory->getDispatcher();
+    auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, estimator, arguments);
+    auto dispatcher = dispatcherFactory->create();
 
     Simulator simulator(input, dispatcher);
     {
-      TimedScope ts("running simulation");
+      TimedScope("running simulation");
       simulator.run();
     }
   }
   else if (arguments.representation == "schedule")
   {
-    std::shared_ptr<IEstimator> estimator;
-    if (arguments.estimationMethod == "no")
-      estimator.reset((new NoEstimator()));
-    if (arguments.estimationMethod == "lclv")
-      estimator.reset((new LazyClairvoyantEstimator()));
-    if (arguments.estimationMethod == "krec")
-      estimator.reset((new KRecentEstimator(arguments.k)));
-    assert(estimator != nullptr);
-
     using SchedulerSP = std::shared_ptr<Scheduler<Schedule> >;
     SchedulerSP scheduler;
     if (arguments.primaryAlgorithm == "sa")
@@ -124,7 +116,7 @@ int main(int argc, char ** argv)
     simulator.subscribe(estimator);
     simulator.subscribe(solutionGatherer);
     {
-      TimedScope ts("running simulation");
+      TimedScope("running simulation");
       simulator.run();
     }
   }
@@ -147,7 +139,7 @@ int main(int argc, char ** argv)
   }
 
   {
-    TimedScope ts("running validation");
+    TimedScope("running validation");
     assert(Solution::validateOperationEnds(solution));
     assert(Solution::validateSingularOperationExecutions(solution, jobs));
     assert(Solution::validateMachineCapacityUsage(solution, machines->fetch()));
