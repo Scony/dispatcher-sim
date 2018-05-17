@@ -1,4 +1,4 @@
-# dispatcher-sim
+# dispatcher-sim [![Build Status](https://travis-ci.org/Scony/dispatcher-sim.svg?branch=master)](https://travis-ci.org/Scony/dispatcher-sim)
 Testing workload dispatcher simulator.
 
 ## Buidilng
