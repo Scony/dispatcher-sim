@@ -70,7 +70,7 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 |---|---|
 | no | no estimation (clairvoyant) |
 | lclv | lazy clairvoyant (clairvoyant once known) |
-| lclv | semi-clairvoyant (approximated clairvoyance) - use with `-k [N]` |
+| krec | semi-clairvoyant (approximated clairvoyance) - use with `-k [N]` |
 
 ### Supported operation-level algorithms `-l`
 
