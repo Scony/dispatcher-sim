@@ -65,6 +65,25 @@ std::shared_ptr<ICloud> createCloud(const Arguments& arguments, std::shared_ptr<
   return cloud;
 }
 
+template <class TSchedule>
+void createSchedulerAndRunSimulation(std::shared_ptr<Input> input,
+                                     std::shared_ptr<Machines> machines,
+                                     std::shared_ptr<IEstimator> estimator,
+                                     const Arguments& arguments,
+                                     std::shared_ptr<Solution> solutionGatherer)
+{
+  auto schedulerFactory =
+      std::make_shared<SchedulerFactory<TSchedule> >(input, machines, estimator, arguments);
+  auto scheduler = schedulerFactory->create();
+  BatchSimulator<TSchedule> simulator(input, machines, scheduler);
+  simulator.subscribe(estimator);
+  simulator.subscribe(solutionGatherer);
+  {
+    TimedScope ts("running simulation");
+    simulator.run();
+  }
+}
+
 int main(int argc, char ** argv)
 {
   srand(time(0));
@@ -115,28 +134,18 @@ int main(int argc, char ** argv)
   {
     if (arguments.instanceVersion == 1)
     {
-      auto schedulerFactory =
-          std::make_shared<SchedulerFactory<Schedule> >(input, machines, estimator, arguments);
-      auto scheduler = schedulerFactory->create();
-      BatchSimulator<Schedule> simulator(input, machines, scheduler);
-      simulator.subscribe(estimator);
-      simulator.subscribe(solutionGatherer);
-      {
-        TimedScope ts("running simulation");
-        simulator.run();
-      }
+      createSchedulerAndRunSimulation<Schedule>(input,
+                                                machines,
+                                                estimator,
+                                                arguments,
+                                                solutionGatherer);
     } else
     {
-      auto schedulerFactory =
-          std::make_shared<SchedulerFactory<CapacitySchedule> >(input, machines, estimator, arguments);
-      auto scheduler = schedulerFactory->create();
-      BatchSimulator<CapacitySchedule> simulator(input, machines, scheduler);
-      simulator.subscribe(estimator);
-      simulator.subscribe(solutionGatherer);
-      {
-        TimedScope ts("running simulation");
-        simulator.run();
-      }
+      createSchedulerAndRunSimulation<CapacitySchedule>(input,
+                                                        machines,
+                                                        estimator,
+                                                        arguments,
+                                                        solutionGatherer);
     }
   }
   else
