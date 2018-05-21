@@ -4,8 +4,8 @@
 ** DONE Estimator in SAScheduler helpers
 ** DONE bring SAScheduler UT back
 ** TODO New classes refa + UT
-** TODO main refa
-** TODO New algorithms factory
+** DONE main refa
+** DONE New algorithms factory
 ** DONE Capacity Cloud
 ** DONE UAT
 ** DONE Cloud refa

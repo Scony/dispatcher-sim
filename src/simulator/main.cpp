@@ -10,16 +10,60 @@
 #include "Simulator.hpp"
 #include "EstimatorFactory.hpp"
 #include "DispatcherFactory.hpp"
+#include "SchedulerFactory.hpp"
 #include "Solution.hpp"
 #include "Arguments.hpp"
 #include "Machines.hpp"
 #include "Scheduler.hpp"
 #include "Schedule.hpp"
-#include "RandomScheduler.hpp"
-#include "SAScheduler.hpp"
 #include "BatchSimulator.hpp"
-#include "SJLOScheduler.hpp"
 #include "TimedScope.hpp"
+
+std::shared_ptr<Input> createInput(const Arguments& arguments)
+{
+  std::shared_ptr<Input> input;
+  switch (arguments.instanceVersion)
+  {
+    case 2:
+      input = std::make_shared<InputV2>();
+      break;
+    case 1:
+    default:
+      input = std::make_shared<Input>();
+  };
+  return input;
+}
+
+std::shared_ptr<Machines> createMachines(const Arguments& arguments)
+{
+  std::shared_ptr<Machines> machines;
+  switch (arguments.instanceVersion)
+  {
+    case 2:
+      machines = std::make_shared<Machines>(std::cin);
+      break;
+    case 1:
+    default:
+      machines = std::make_shared<Machines>(arguments.machinesNum, 1);
+  }
+  assert(machines->size() == arguments.machinesNum);
+  return machines;
+}
+
+std::shared_ptr<ICloud> createCloud(const Arguments& arguments, std::shared_ptr<Machines> machines)
+{
+  std::shared_ptr<ICloud> cloud;
+  switch (arguments.instanceVersion)
+  {
+    case 2:
+      cloud = std::make_shared<CloudV2>(machines->fetch(), arguments.setupTime);;
+      break;
+    case 1:
+    default:
+      cloud = std::make_shared<Cloud>(machines->size(), arguments.setupTime);
+  }
+  return cloud;
+}
 
 int main(int argc, char ** argv)
 {
@@ -38,17 +82,7 @@ int main(int argc, char ** argv)
   std::cerr << "> output: " << arguments.outputType << std::endl;
   std::cerr << "> representation: " << arguments.representation << std::endl;
 
-  std::shared_ptr<Input> input;
-  switch (arguments.instanceVersion)
-  {
-    case 2:
-      input = std::make_shared<InputV2>();
-      break;
-    case 1:
-    default:
-      input = std::make_shared<Input>();
-  };
-
+  std::shared_ptr<Input> input = createInput(arguments);
   {
     TimedScope("reading instance");
     input->readFromStdin();
@@ -58,33 +92,13 @@ int main(int argc, char ** argv)
 
   auto solutionGatherer = std::make_shared<Solution>();
   std::vector<Assignation> solution;
-  std::shared_ptr<Machines> machines;
-
-  switch (arguments.instanceVersion)
-  {
-    case 2:
-      machines = std::make_shared<Machines>(std::cin);
-      break;
-    case 1:
-    default:
-      machines = std::make_shared<Machines>(arguments.machinesNum, 1);
-      assert(machines->size() == arguments.machinesNum);
-  }
-
+  auto machines = createMachines(arguments);
   auto estimatorFactory = std::make_shared<EstimatorFactory>(arguments);
   auto estimator = estimatorFactory->create();
+
   if (arguments.representation == "queue")
   {
-    std::shared_ptr<ICloud> cloud;
-    switch (arguments.instanceVersion)
-    {
-      case 2:
-        cloud = std::make_shared<CloudV2>(machines->fetch(), arguments.setupTime);;
-        break;
-      case 1:
-      default:
-        cloud = std::make_shared<Cloud>(machines->size(), arguments.setupTime);
-    }
+    std::shared_ptr<ICloud> cloud = createCloud(arguments, machines);
     cloud->subscribe(solutionGatherer);
     cloud->subscribe(estimator);
 
@@ -99,19 +113,9 @@ int main(int argc, char ** argv)
   }
   else if (arguments.representation == "schedule")
   {
-    using SchedulerSP = std::shared_ptr<Scheduler<Schedule> >;
-    SchedulerSP scheduler;
-    if (arguments.primaryAlgorithm == "sa")
-      scheduler = std::make_shared<SAScheduler>(input,
-                                                machines,
-                                                estimator,
-                                                arguments.saIterations);
-    if (arguments.primaryAlgorithm == "sjlo")
-      scheduler = std::make_shared<SJLOScheduler>(input,
-                                                  machines,
-                                                  estimator);
-    assert(scheduler != nullptr);
-
+    auto schedulerFactory =
+        std::make_shared<SchedulerFactory<Schedule> >(input, machines, estimator, arguments);
+    auto scheduler = schedulerFactory->create();
     BatchSimulator<Schedule> simulator(input, machines, scheduler);
     simulator.subscribe(estimator);
     simulator.subscribe(solutionGatherer);
