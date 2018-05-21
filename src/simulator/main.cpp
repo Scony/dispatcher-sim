@@ -84,7 +84,7 @@ int main(int argc, char ** argv)
 
   std::shared_ptr<Input> input = createInput(arguments);
   {
-    TimedScope("reading instance");
+    TimedScope ts("reading instance");
     input->readFromStdin();
     std::cerr << "> jobs: " << input->getJobsNum() << std::endl;
     std::cerr << "> operations: " << input->getOperationsNum() << std::endl;
@@ -107,7 +107,7 @@ int main(int argc, char ** argv)
 
     Simulator simulator(input, dispatcher);
     {
-      TimedScope("running simulation");
+      TimedScope ts("running simulation");
       simulator.run();
     }
   }
@@ -122,7 +122,7 @@ int main(int argc, char ** argv)
       simulator.subscribe(estimator);
       simulator.subscribe(solutionGatherer);
       {
-        TimedScope("running simulation");
+        TimedScope ts("running simulation");
         simulator.run();
       }
     } else
@@ -134,7 +134,7 @@ int main(int argc, char ** argv)
       simulator.subscribe(estimator);
       simulator.subscribe(solutionGatherer);
       {
-        TimedScope("running simulation");
+        TimedScope ts("running simulation");
         simulator.run();
       }
     }
@@ -158,7 +158,7 @@ int main(int argc, char ** argv)
   }
 
   {
-    TimedScope("running validation");
+    TimedScope ts("running validation");
     assert(Solution::validateOperationEnds(solution));
     assert(Solution::validateSingularOperationExecutions(solution, jobs));
     assert(Solution::validateMachineCapacityUsage(solution, machines->fetch()));
