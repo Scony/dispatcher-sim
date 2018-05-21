@@ -85,6 +85,7 @@ def test_algorithm_representation_v1_combinations(simulator_path, algorithm, rep
     ('sa', 'queue'),
     # ('rvr', 'queue'),           # crashing
     # ('dvr', 'queue'),           # crashing
+    # ('random', 'schedule'),     # TODO: implement & enable
 ])
 def test_algorithm_representation_v2_combinations(simulator_path, algorithm, representation):
     input = b"""

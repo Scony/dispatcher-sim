@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <climits>
 #include <unordered_map>
 
 #include "Operation.hpp"

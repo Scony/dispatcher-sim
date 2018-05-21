@@ -2,6 +2,7 @@
 
 #include <deque>
 #include <algorithm>
+#include <climits>
 
 #include "Input.hpp"
 #include "Scheduler.hpp"

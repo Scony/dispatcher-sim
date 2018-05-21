@@ -13,6 +13,9 @@
 #include "SAScheduler.hpp"
 #include "SJLOScheduler.hpp"
 
+#include "CapacitySchedule.hpp"
+#include "RandomCapacityScheduler.hpp"
+
 template <class TSchedule>
 class SchedulerFactory
 {
@@ -53,6 +56,18 @@ std::shared_ptr<Scheduler<Schedule> > SchedulerFactory<Schedule>::create()
     scheduler = std::make_shared<SJLOScheduler>(mInput,
                                                 mMachines,
                                                 mEstimator);
+  assert(scheduler != nullptr && "Cannot create such algorithm for this representation");
+  return scheduler;
+}
+
+template <>
+std::shared_ptr<Scheduler<CapacitySchedule> > SchedulerFactory<CapacitySchedule>::create()
+{
+  std::shared_ptr<Scheduler<CapacitySchedule> > scheduler;
+  if (mArguments.primaryAlgorithm == "random")
+    scheduler = std::make_shared<RandomCapacityScheduler>(mInput,
+                                                          mMachines,
+                                                          mEstimator);
   assert(scheduler != nullptr && "Cannot create such algorithm for this representation");
   return scheduler;
 }

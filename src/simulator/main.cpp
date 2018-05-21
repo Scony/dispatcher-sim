@@ -16,6 +16,7 @@
 #include "Machines.hpp"
 #include "Scheduler.hpp"
 #include "Schedule.hpp"
+#include "CapacitySchedule.hpp"
 #include "BatchSimulator.hpp"
 #include "TimedScope.hpp"
 
@@ -112,15 +113,30 @@ int main(int argc, char ** argv)
   }
   else if (arguments.representation == "schedule")
   {
-    auto schedulerFactory =
-        std::make_shared<SchedulerFactory<Schedule> >(input, machines, estimator, arguments);
-    auto scheduler = schedulerFactory->create();
-    BatchSimulator<Schedule> simulator(input, machines, scheduler);
-    simulator.subscribe(estimator);
-    simulator.subscribe(solutionGatherer);
+    if (arguments.instanceVersion == 1)
     {
-      TimedScope("running simulation");
-      simulator.run();
+      auto schedulerFactory =
+          std::make_shared<SchedulerFactory<Schedule> >(input, machines, estimator, arguments);
+      auto scheduler = schedulerFactory->create();
+      BatchSimulator<Schedule> simulator(input, machines, scheduler);
+      simulator.subscribe(estimator);
+      simulator.subscribe(solutionGatherer);
+      {
+        TimedScope("running simulation");
+        simulator.run();
+      }
+    } else
+    {
+      auto schedulerFactory =
+          std::make_shared<SchedulerFactory<CapacitySchedule> >(input, machines, estimator, arguments);
+      auto scheduler = schedulerFactory->create();
+      BatchSimulator<CapacitySchedule> simulator(input, machines, scheduler);
+      simulator.subscribe(estimator);
+      simulator.subscribe(solutionGatherer);
+      {
+        TimedScope("running simulation");
+        simulator.run();
+      }
     }
   }
   else
