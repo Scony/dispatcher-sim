@@ -46,7 +46,6 @@ std::shared_ptr<Machines> createMachines(const Arguments& arguments)
     default:
       machines = std::make_shared<Machines>(arguments.machinesNum, 1);
   }
-  assert(machines->size() == arguments.machinesNum);
   return machines;
 }
 
