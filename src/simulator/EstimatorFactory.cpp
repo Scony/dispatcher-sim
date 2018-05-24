@@ -4,6 +4,7 @@
 #include "NoEstimator.hpp"
 #include "LazyClairvoyantEstimator.hpp"
 #include "KRecentEstimator.hpp"
+#include "AverageEstimator.hpp"
 
 EstimatorFactory::EstimatorFactory(Arguments arguments) :
     mArguments(arguments)
@@ -20,6 +21,8 @@ IEstimatorSP EstimatorFactory::create()
     estimator = std::make_shared<LazyClairvoyantEstimator>();
   if (mArguments.estimationMethod == "krec")
     estimator = std::make_shared<KRecentEstimator>(mArguments.k);
+  if (mArguments.estimationMethod == "avg")
+    estimator = std::make_shared<AverageEstimator>();
 
   assert(estimator != nullptr);
 

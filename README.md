@@ -70,7 +70,8 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 |---|---|
 | no | no estimation (clairvoyant) |
 | lclv | lazy clairvoyant (clairvoyant once known) |
-| krec | semi-clairvoyant (approximated clairvoyance) - use with `-k [N]` |
+| krec | average of k-recent operations of the same type (semi-clairvoyant) - use with `-k [N]` |
+| avg | average over all operations (semi-clairvoyant) |
 
 ### Supported operation-level algorithms `-l`
 
