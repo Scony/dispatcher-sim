@@ -87,6 +87,8 @@ void createSchedulerAndRunSimulation(std::shared_ptr<Input> input,
 int main(int argc, char ** argv)
 {
   srand(time(0));
+  std::ios_base::sync_with_stdio(0);
+  std::cin.tie(0);
 
   Arguments arguments(argc, argv);
 
