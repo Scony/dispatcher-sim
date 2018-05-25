@@ -16,4 +16,5 @@ struct Arguments
   std::string outputType;
   unsigned instanceVersion;
   std::string representation;
+  bool preload;
 };

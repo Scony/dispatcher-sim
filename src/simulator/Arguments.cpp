@@ -29,6 +29,8 @@ Arguments::Arguments(int argc, char ** argv)
 				 {'k', "window-size"});
   args::ValueFlag<std::string> representationArg(parser, "representation", "Internal solution representation",
                                                  {'r', "representation"});
+  args::Flag preloadArg(parser, "preload", "Read additional instance to fill estimator",
+                        {'p', "preload"});
 
   args::Positional<std::string> algorithmArg(parser, "algorithm", "Primary algorithm");
 
@@ -59,4 +61,5 @@ Arguments::Arguments(int argc, char ** argv)
   outputType = outputArg ? args::get(outputArg) : "jflows";
   instanceVersion = instanceVersionArg ? args::get(instanceVersionArg) : 1;
   representation = representationArg ? args::get(representationArg) : "queue";
+  preload = preloadArg;
 }

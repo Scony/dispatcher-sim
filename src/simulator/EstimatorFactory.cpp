@@ -5,6 +5,8 @@
 #include "LazyClairvoyantEstimator.hpp"
 #include "KRecentEstimator.hpp"
 #include "AverageEstimator.hpp"
+#include "ConstEstimator.hpp"
+#include "KAverageEstimator.hpp"
 
 EstimatorFactory::EstimatorFactory(Arguments arguments) :
     mArguments(arguments)
@@ -23,6 +25,10 @@ IEstimatorSP EstimatorFactory::create()
     estimator = std::make_shared<KRecentEstimator>(mArguments.k);
   if (mArguments.estimationMethod == "avg")
     estimator = std::make_shared<AverageEstimator>();
+  if (mArguments.estimationMethod == "const")
+    estimator = std::make_shared<ConstEstimator>();
+  if (mArguments.estimationMethod == "kavg")
+    estimator = std::make_shared<KAverageEstimator>(mArguments.k);
 
   assert(estimator != nullptr);
 

@@ -103,6 +103,46 @@ int main(int argc, char ** argv)
   std::cerr << "> output: " << arguments.outputType << std::endl;
   std::cerr << "> representation: " << arguments.representation << std::endl;
 
+  auto estimatorFactory = std::make_shared<EstimatorFactory>(arguments);
+  auto estimator = estimatorFactory->create();
+
+  if (arguments.preload)
+  {
+    TimedScope ts("preloading estimator");
+    int jobsNum;
+    std::cin >> jobsNum;
+    for (int i = 0; i < jobsNum; i++)
+    {
+      long long jobId;
+      long long jobPriority;
+      long long jobArrivalTimestamp;
+      int jobOperationsNum;
+      std::cin >> jobId;
+      std::cin >> jobPriority;
+      std::cin >> jobArrivalTimestamp;
+      std::cin >> jobOperationsNum;
+
+      for (int j = 0; j < jobOperationsNum; j++)
+      {
+        long long operationId;
+        long long operationName;
+        long long operationResult;
+        long long operationDuration;
+        std::cin >> operationId;
+        std::cin >> operationName;
+        std::cin >> operationResult;
+        std::cin >> operationDuration;
+        auto operation = std::make_shared<Operation>(operationId,
+                                                     jobId,
+                                                     operationName,
+                                                     operationResult,
+                                                     jobArrivalTimestamp,
+                                                     operationDuration);
+        estimator->handleNotification(std::make_tuple(0, operation, 0));
+      }
+    }
+  }
+
   std::shared_ptr<Input> input = createInput(arguments);
   {
     TimedScope ts("reading instance");
@@ -114,8 +154,6 @@ int main(int argc, char ** argv)
   auto solutionGatherer = std::make_shared<Solution>();
   std::vector<Assignation> solution;
   auto machines = createMachines(arguments);
-  auto estimatorFactory = std::make_shared<EstimatorFactory>(arguments);
-  auto estimator = estimatorFactory->create();
 
   if (arguments.representation == "queue")
   {

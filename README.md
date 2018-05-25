@@ -72,6 +72,8 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 | lclv | lazy clairvoyant (clairvoyant once known) |
 | krec | average of k-recent operations of the same type (semi-clairvoyant) - use with `-k [N]` |
 | avg | average over all operations (semi-clairvoyant) |
+| kavg | k-recent over all operations (semi-clairvoyant) - use with `-k [N]` |
+| const | all durations set to 1 |
 
 ### Supported operation-level algorithms `-l`
 
