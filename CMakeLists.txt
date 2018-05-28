@@ -1,5 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
+set(BOOST_INCLUDEDIR "/usr/include/")
+find_package(Boost REQUIRED)
+
 project(simulator)
 
 if(NOT CMAKE_BUILD_TYPE)
