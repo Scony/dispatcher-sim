@@ -11,6 +11,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.9
+            - libboost-all-dev
       env:
          - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 
@@ -21,6 +22,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
+            - libboost-all-dev
       env:
          - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 
@@ -31,6 +33,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
+            - libboost-all-dev
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
@@ -41,6 +44,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-7
+            - libboost-all-dev
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
@@ -51,6 +55,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-8
+            - libboost-all-dev
       env:
          - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
