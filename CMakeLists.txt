@@ -2,6 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 set(BOOST_INCLUDEDIR "/usr/include/")
 find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
 
 project(simulator)
 

@@ -4,6 +4,8 @@
 #include <deque>
 #include <queue>
 
+#include <boost/heap/skew_heap.hpp>
+
 #include "Operation.hpp"
 #include "IQueue.hpp"
 #include "ICloud.hpp"
@@ -18,9 +20,8 @@ class Cloud : public ICloud
 				 unsigned>;  // machine ID
   using FreeMachine = std::tuple<unsigned,   // machine ID
 				 long long>; // recently processed job ID
-  using BusyMachines = std::priority_queue<BusyMachine,
-					   std::vector<BusyMachine>,
-					   std::greater<BusyMachine> >;
+  using BusyMachines = boost::heap::skew_heap<BusyMachine,
+                                              boost::heap::compare<std::greater<BusyMachine> > >;
   using FreeMachines = std::deque<FreeMachine>;
 
  public:

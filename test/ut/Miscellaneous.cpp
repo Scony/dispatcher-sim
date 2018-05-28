@@ -2,6 +2,8 @@
 #include <queue>
 
 #include <gtest/gtest.h>
+#include <boost/heap/fibonacci_heap.hpp>
+#include <boost/heap/skew_heap.hpp>
 
 #include "Fuzzy3.hpp"
 
@@ -60,4 +62,38 @@ TEST(MiscellaneousTests, TestPriorityQueueOrdering)
   EXPECT_EQ(pq.top(), Pair(2, 1));
   pq.pop();
   EXPECT_EQ(pq.top(), Pair(2, 2));
+}
+
+TEST(MiscellaneousTests, TestFibonacciHeapOrdering)
+{
+  using Element = std::tuple<long long, long long>;
+  boost::heap::fibonacci_heap<Element, boost::heap::compare<std::greater<Element> > > heap;
+  heap.emplace(1,1);
+  heap.emplace(1,2);
+  heap.emplace(2,1);
+  heap.emplace(2,2);
+  EXPECT_EQ(heap.top(), std::make_tuple(1,1));
+  heap.pop();
+  EXPECT_EQ(heap.top(), std::make_tuple(1,2));
+  heap.pop();
+  EXPECT_EQ(heap.top(), std::make_tuple(2,1));
+  heap.pop();
+  EXPECT_EQ(heap.top(), std::make_tuple(2,2));
+}
+
+TEST(MiscellaneousTests, TestSkewHeapOrdering)
+{
+  using Element = std::tuple<long long, long long>;
+  boost::heap::skew_heap<Element, boost::heap::compare<std::greater<Element> > > heap;
+  heap.emplace(1,1);
+  heap.emplace(1,2);
+  heap.emplace(2,1);
+  heap.emplace(2,2);
+  EXPECT_EQ(heap.top(), std::make_tuple(1,1));
+  heap.pop();
+  EXPECT_EQ(heap.top(), std::make_tuple(1,2));
+  heap.pop();
+  EXPECT_EQ(heap.top(), std::make_tuple(2,1));
+  heap.pop();
+  EXPECT_EQ(heap.top(), std::make_tuple(2,2));
 }
