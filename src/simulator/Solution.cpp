@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <numeric>
 
+#include <boost/icl/split_interval_map.hpp>
+
 #include "Solution.hpp"
 
 void Solution::handleNotification(const Assignation& notification)
@@ -121,40 +123,35 @@ bool Solution::validateSingularOperationExecutions(const SolutionVec& solution,
 bool Solution::validateMachineCapacityUsage(const SolutionVec& solution,
 					    const std::vector<MachineSP>& machines)
 {
-  // FIXME: impl based on interval tree
-
-  using MachineID = long long;
-  using Timestamp = long long;
-  using CapacityUsage = long long;
-  std::map<MachineID, std::map<Timestamp, CapacityUsage> > usages;
-  std::map<MachineID, MachineSP> machinesMap;
-
+  std::unordered_map<MachineID, MachineSP> machinesMap;
   for (auto const& machine : machines)
-  {
-    usages.emplace(machine->id, std::map<Timestamp, CapacityUsage>{});
     machinesMap.emplace(machine->id, machine);
-  }
 
+  using Timestamp = long long;
+  using Capacity = long long;
+  std::unordered_map<MachineID, boost::icl::interval_map<Timestamp, Capacity> > intervalTrees;
   for (const auto& tuple : solution)
   {
     const auto& endTimestamp = std::get<0>(tuple);
     const auto& operation = std::get<1>(tuple);
     const auto& machineId = std::get<2>(tuple);
 
-    if (usages.find(machineId) == usages.end())
+    if (machinesMap.find(machineId) == machinesMap.end())
       return false;
+    if (intervalTrees.find(machineId) == intervalTrees.end())
+      intervalTrees.emplace(machineId, boost::icl::interval_map<Timestamp, Capacity>{});
 
     auto beginTimestamp = endTimestamp - operation->duration;
-    for (auto timestamp = beginTimestamp; timestamp < endTimestamp; timestamp++)
+    auto interval = boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp, endTimestamp);
+    intervalTrees[machineId] += std::make_pair(interval, operation->capacityReq);
+  }
+  for (auto const& machine : machines)
+  {
+    for (auto it = intervalTrees[machine->id].begin(); it != intervalTrees[machine->id].end(); it++)
     {
-      if (usages[machineId].find(timestamp) == usages[machineId].end())
-        usages[machineId][timestamp] = 0;
-      if (usages[machineId][timestamp] + operation->capacityReq
-          >
-          machinesMap[machineId]->capacity)
+      const auto& capacityUsed = it->second;
+      if (capacityUsed > machine->capacity)
         return false;
-      else
-        usages[machineId][timestamp] += operation->capacityReq;
     }
   }
 

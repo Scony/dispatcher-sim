@@ -94,6 +94,15 @@ TEST(SolutionTests, ValidateMachineCapacityUsageNotExhausted)
   EXPECT_EQ(Solution::validateMachineCapacityUsage(assignations, machines), true);
 }
 
+TEST(SolutionTests, ValidateMachineCapacityUsageNotExhausted2)
+{
+  auto op1 = std::make_shared<Operation>(1,1,1,1,0,5,1);
+  auto op2 = std::make_shared<Operation>(1,1,1,1,0,5,1);
+  std::vector<Assignation> assignations = { std::make_tuple(5, op1, 1), std::make_tuple(10, op2, 1) };
+  std::vector<MachineSP> machines = { std::make_shared<Machine>(1,1) };
+  EXPECT_EQ(Solution::validateMachineCapacityUsage(assignations, machines), true);
+}
+
 TEST(SolutionTests, ValidateMachineCapacityUsageExhausted)
 {
   auto op1 = std::make_shared<Operation>(1,1,1,1,0,5,1);
