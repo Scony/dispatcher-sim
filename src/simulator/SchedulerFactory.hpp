@@ -15,6 +15,7 @@
 
 #include "CapacitySchedule.hpp"
 #include "RandomCapacityScheduler.hpp"
+#include "FIFOCapacityScheduler.hpp"
 
 template <class TSchedule>
 class SchedulerFactory
@@ -68,6 +69,10 @@ std::shared_ptr<Scheduler<CapacitySchedule> > SchedulerFactory<CapacitySchedule>
     scheduler = std::make_shared<RandomCapacityScheduler>(mInput,
                                                           mMachines,
                                                           mEstimator);
+  if (mArguments.primaryAlgorithm == "fifo")
+    scheduler = std::make_shared<FIFOCapacityScheduler>(mInput,
+                                                        mMachines,
+                                                        mEstimator);
   assert(scheduler != nullptr && "Cannot create such algorithm for this representation");
   return scheduler;
 }
