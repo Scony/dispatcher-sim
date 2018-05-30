@@ -12,7 +12,6 @@ CapacitySchedule::CapacitySchedule(std::shared_ptr<Machines> machines)
 std::vector<Assignation> CapacitySchedule::dispatch(long long from, long long until)
 {
   std::vector<Assignation> assignations;
-  using OperationID = long long;
 
   for (unsigned machine = 0; machine < machines->size(); machine++)
   {

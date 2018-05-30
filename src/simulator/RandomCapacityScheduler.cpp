@@ -3,13 +3,6 @@
 
 #include "RandomCapacityScheduler.hpp"
 
-RandomCapacityScheduler::RandomCapacityScheduler(std::shared_ptr<Input> input,
-                                                 std::shared_ptr<Machines> machines,
-                                                 std::shared_ptr<IEstimator> estimator) :
-    Scheduler(input, machines, estimator)
-{
-}
-
 void RandomCapacityScheduler::schedule(CapacitySchedule & schedule, JobSP job)
 {
   const unsigned machinesNum = schedule.schedule.size();
