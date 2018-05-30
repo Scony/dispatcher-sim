@@ -2,16 +2,18 @@
 
 #include <memory>
 
+#include "Types.hpp"
+
 struct Machine
 {
-  Machine(long long aId,
+  Machine(MachineID aId,
 	  long long aCapacity):
       id(aId),
       capacity(aCapacity)
   {
   }
 
-  const long long id;
+  const MachineID id;
   const long long capacity;
 };
 

@@ -199,11 +199,13 @@ int main(int argc, char ** argv)
   if (arguments.outputType == "debug")
   {
     for (const auto& tuple : solution)
-      std::cout << "#"
-                << std::get<1>(tuple)->id << " ("
+      std::cout << "#" << std::get<1>(tuple)->id << "[" << std::get<1>(tuple)->capacityReq
+                << "] ("
                 << (std::get<0>(tuple) - std::get<1>(tuple)->duration) << " ; "
                 << std::get<0>(tuple) << ") @"
-                << std::get<2>(tuple) << std::endl;
+                << std::get<2>(tuple) << "["
+                << machines->getMachine(std::get<2>(tuple))->capacity << "]"
+                << std::endl;
   }
 
   {

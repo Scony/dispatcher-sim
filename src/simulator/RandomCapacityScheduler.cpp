@@ -18,6 +18,8 @@ void RandomCapacityScheduler::schedule(CapacitySchedule & schedule, JobSP job)
   for (auto& operation : job->operations)
   {
     int machineId = rand() % machinesNum;
+    while (operation->capacityReq > mMachines->getMachine(machineId)->capacity)
+      machineId = rand() % machinesNum;
     schedule.schedule[machineId].push_back(operation);
   }
 

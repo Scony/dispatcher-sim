@@ -1,8 +1,8 @@
 #include "Schedule.hpp"
 
 Schedule::Schedule(std::shared_ptr<Machines> machines)
+    : schedule{machines->size()}
 {
-  schedule.resize(machines->size());
 }
 
 std::vector<Assignation> Schedule::dispatch(long long from, long long until)
