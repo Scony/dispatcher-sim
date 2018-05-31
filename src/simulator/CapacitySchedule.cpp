@@ -134,7 +134,54 @@ CapacitySchedule::MachineCache CapacitySchedule::simulateDispatchMachine(long lo
                                                                          MachineID machine,
                                                                          IEstimatorSP estimator) const
 {
-  return {};
+  MachineCache cache;
+
+  using Timestamp = long long;
+  using Capacity = long long;
+  boost::icl::interval_map<Timestamp, Capacity> intervalCapacityUsages;
+
+  for (auto it = ongoings[machine].begin(); it != ongoings[machine].end(); it++)
+  {
+    auto& beginTimestamp = it->first;
+    auto& operation = it->second;
+    auto endTimestamp = std::max(from, beginTimestamp + estimator->estimate(operation));
+
+    auto interval = boost::icl::discrete_interval<Timestamp>::right_open(from, endTimestamp);
+    intervalCapacityUsages += std::make_pair(interval, operation->capacityReq);
+  }
+
+  for (auto it = schedule[machine].begin(); it != schedule[machine].end(); it++)
+  {
+    auto& operation = *it;
+    auto beginTimestamp = from;
+
+    for (auto it = intervalCapacityUsages.begin(); it != intervalCapacityUsages.end(); it++)
+    {
+      const auto& interval = it->first;
+      const auto& capacityUsed = it->second;
+      if (capacityUsed + operation->capacityReq <= machines->getMachine(machine)->capacity)
+      {
+        if (beginTimestamp + estimator->estimate(operation) <= interval.upper())
+          break;
+        else
+          continue;
+      }
+      else
+        beginTimestamp = interval.upper();
+    }
+
+    auto endTimestamp = beginTimestamp + estimator->estimate(operation);
+    auto interval = boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp,
+                                                                         endTimestamp);
+    intervalCapacityUsages += std::make_pair(interval, operation->capacityReq);
+    auto it2 = cache.find(operation->parentId);
+    if (it2 == cache.end())
+      cache.emplace(operation->parentId, endTimestamp);
+    else
+      it2->second = std::max(it2->second, endTimestamp);
+  }
+
+  return cache;
 }
 
 long long CapacitySchedule::calculateFlowFromCache(const Cache& machineCaches,

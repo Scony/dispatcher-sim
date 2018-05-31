@@ -65,5 +65,6 @@ void InputV2::readFromStdin()
                                job->priority,
                                job->arrivalTimestamp,
                                jobOperations[job->id]));
+    mJobsMap.emplace(job->id, job);
   }
 }

@@ -21,14 +21,21 @@ void SACapacityScheduler::schedule(CapacitySchedule & schedule, JobSP job)
   bool swap;
   std::tuple<unsigned, unsigned, unsigned, unsigned> prevMove;
   bool initialized = false;
+  std::vector<CapacitySchedule::MachineCache> machineCaches(mMachines->size());
+  CapacitySchedule::MachineCache oldSrcMachineCache;
+  CapacitySchedule::MachineCache oldDstMachineCache;
   long long prevFlow;
   long long flow;
 
   auto costFunction = [&](const CapacitySchedule& solution) {
     if (!initialized)
     {
-      flow = Solution::evalTotalFlow(solution.simulateDispatch(job->arrivalTimestamp, mEstimator));
+      for (unsigned machine = 0; machine < mMachines->size(); machine++)
+        machineCaches[machine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
+                                                                  machine,
+                                                                  mEstimator);
       initialized = true;
+      flow = CapacitySchedule::calculateFlowFromCache(machineCaches, mInput);
     }
     return flow;
   };
@@ -43,8 +50,30 @@ void SACapacityScheduler::schedule(CapacitySchedule & schedule, JobSP job)
       swap = false;
       prevMove = utility::algorithm::random_move(solution.schedule);
     }
+
+    unsigned& srcMachine = std::get<0>(prevMove);
+    unsigned& dstMachine = std::get<1>(prevMove);
+    if (srcMachine != dstMachine)
+    {
+      oldSrcMachineCache = machineCaches[srcMachine];
+      oldDstMachineCache = machineCaches[dstMachine];
+      machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
+                                                                   srcMachine,
+                                                                   mEstimator);
+      machineCaches[dstMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
+                                                                   dstMachine,
+                                                                   mEstimator);
+    }
+    else
+    {
+      oldSrcMachineCache = machineCaches[srcMachine];
+      machineCaches[srcMachine] = solution.simulateDispatchMachine(job->arrivalTimestamp,
+                                                                   srcMachine,
+                                                                   mEstimator);
+    }
+
     prevFlow = flow;
-    flow = Solution::evalTotalFlow(solution.simulateDispatch(job->arrivalTimestamp, mEstimator));
+    flow = CapacitySchedule::calculateFlowFromCache(machineCaches, mInput);
   };
   auto revertSolution = [&](CapacitySchedule& solution) {
     unsigned& srcMachine = std::get<1>(prevMove);
@@ -63,6 +92,18 @@ void SACapacityScheduler::schedule(CapacitySchedule & schedule, JobSP job)
                                              dstMachine,
                                              srcMachineOffset,
                                              dstMachineOffset);
+
+    unsigned& oldSrcMachine = std::get<0>(prevMove);
+    unsigned& oldDstMachine = std::get<1>(prevMove);
+    if (srcMachine != dstMachine)
+    {
+      machineCaches[oldSrcMachine] = oldSrcMachineCache;
+      machineCaches[oldDstMachine] = oldDstMachineCache;
+    }
+    else
+    {
+      machineCaches[oldSrcMachine] = oldSrcMachineCache;
+    }
     flow = prevFlow;
   };
 
