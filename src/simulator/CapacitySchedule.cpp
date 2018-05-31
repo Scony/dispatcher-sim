@@ -81,5 +81,51 @@ std::vector<Assignation> CapacitySchedule::dispatch(long long from, long long un
 std::vector<Assignation> CapacitySchedule::simulateDispatch(long long from,
                                                             IEstimatorSP estimator) const
 {
-  assert(false);
+  std::vector<Assignation> assignations;
+
+  for (unsigned machine = 0; machine < machines->size(); machine++)
+  {
+    using Timestamp = long long;
+    using Capacity = long long;
+    boost::icl::interval_map<Timestamp, Capacity> intervalCapacityUsages;
+
+    for (auto it = ongoings[machine].begin(); it != ongoings[machine].end(); it++)
+    {
+      auto& beginTimestamp = it->first;
+      auto& operation = it->second;
+      auto endTimestamp = std::max(from, beginTimestamp + estimator->estimate(operation));
+
+      auto interval = boost::icl::discrete_interval<Timestamp>::right_open(from, endTimestamp);
+      intervalCapacityUsages += std::make_pair(interval, operation->capacityReq);
+    }
+
+    for (auto it = schedule[machine].begin(); it != schedule[machine].end(); it++)
+    {
+      auto& operation = *it;
+      auto beginTimestamp = from;
+
+      for (auto it = intervalCapacityUsages.begin(); it != intervalCapacityUsages.end(); it++)
+      {
+        const auto& interval = it->first;
+        const auto& capacityUsed = it->second;
+        if (capacityUsed + operation->capacityReq <= machines->getMachine(machine)->capacity)
+        {
+          if (beginTimestamp + estimator->estimate(operation) <= interval.upper())
+            break;
+          else
+            continue;
+        }
+        else
+          beginTimestamp = interval.upper();
+      }
+
+      auto endTimestamp = beginTimestamp + estimator->estimate(operation);
+      auto interval = boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp,
+                                                                           endTimestamp);
+      intervalCapacityUsages += std::make_pair(interval, operation->capacityReq);
+      assignations.emplace_back(endTimestamp, operation, machine);
+    }
+  }
+
+  return assignations;
 }
