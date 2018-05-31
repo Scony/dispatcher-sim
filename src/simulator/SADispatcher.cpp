@@ -27,7 +27,7 @@ void SADispatcher::dispatch(JobSP job)
                   solution[rand() % solution.size()]);
       };
 
-  mQueue = Algorithm::sa<std::vector<OperationSP>, long long>(mQueue,
+  mQueue = algorithm::sa<std::vector<OperationSP>, long long>(mQueue,
 							      costFunction,
 							      neighbouringSolution,
 							      mIterations);

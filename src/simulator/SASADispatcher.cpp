@@ -38,7 +38,7 @@ void SASADispatcher::operationLevelSA()
                   solution[jobId][rand() % solution[jobId].size()]);
       };
 
-  mJobOperations = Algorithm::sa<std::map<long long, std::vector<OperationSP> >,
+  mJobOperations = algorithm::sa<std::map<long long, std::vector<OperationSP> >,
 				 long long>(mJobOperations,
 					    costFunction,
 					    neighbouringSolution,

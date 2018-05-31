@@ -4,13 +4,13 @@
 #include "Utility.hpp"
 
 Machines::Machines(std::istream& inputStream)
-    : mMachines(Utility::Machines::readFromStream(inputStream))
+    : mMachines(utility::machines::readFromStream(inputStream))
 {
   sortMachinesById();
 }
 
 Machines::Machines(unsigned machinesNum, unsigned capacity)
-    : mMachines(Utility::Machines::generate(machinesNum, capacity))
+    : mMachines(utility::machines::generate(machinesNum, capacity))
 {
   sortMachinesById();
 }

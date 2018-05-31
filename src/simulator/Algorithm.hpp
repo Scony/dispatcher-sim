@@ -4,7 +4,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-namespace Algorithm
+namespace algorithm
 {
 template <typename Solution, typename Cost>
 Solution sa(const Solution& initialSolution,

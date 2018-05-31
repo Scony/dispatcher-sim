@@ -4,9 +4,12 @@
 #include "Schedule.hpp"
 #include "IEstimator.hpp"
 
-namespace ScheduleAlgorithms
+namespace schedule
+{
+namespace algorithm
 {
 void fifo(Schedule & schedule, JobSP job);
 void shortestJob(Schedule & schedule, JobSP job, IEstimatorSP estimator);
 void shortestJobLongestOperation(Schedule & schedule, JobSP job, IEstimatorSP estimator);
+}
 }

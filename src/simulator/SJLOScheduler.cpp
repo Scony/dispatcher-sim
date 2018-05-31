@@ -10,5 +10,5 @@ SJLOScheduler::SJLOScheduler(std::shared_ptr<Input> input,
 
 void SJLOScheduler::schedule(Schedule & schedule, JobSP job)
 {
-  ScheduleAlgorithms::shortestJobLongestOperation(schedule, job, mEstimator);
+  schedule::algorithm::shortestJobLongestOperation(schedule, job, mEstimator);
 }

@@ -17,7 +17,7 @@ TEST(AlgorithmTests, SA1)
         std::swap(solution[rand() % solution.size()], solution[rand() % solution.size()]);
       };
 
-  auto saSolution = Algorithm::sa<std::vector<int>, int>(initialSolution,
+  auto saSolution = algorithm::sa<std::vector<int>, int>(initialSolution,
 							 costFunction,
 							 neighbouringSolution,
 							 1000);

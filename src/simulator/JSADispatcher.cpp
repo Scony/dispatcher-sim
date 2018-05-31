@@ -56,7 +56,7 @@ void JSADispatcher::dispatch(std::shared_ptr<Job> job)
                   solution[rand() % solution.size()]);
       };
 
-  mCurrentSolution = Algorithm::sa<std::vector<long long>, long long>(mCurrentSolution,
+  mCurrentSolution = algorithm::sa<std::vector<long long>, long long>(mCurrentSolution,
 								      costFunction,
 								      neighbouringSolution,
 								      mIterations);

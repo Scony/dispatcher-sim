@@ -4,7 +4,7 @@
 
 #include "ScheduleAlgorithms.hpp"
 
-void ScheduleAlgorithms::fifo(Schedule & schedule, JobSP job)
+void schedule::algorithm::fifo(Schedule & schedule, JobSP job)
 {
   const unsigned machinesNum = schedule.schedule.size();
   assert(machinesNum > 0);
@@ -17,7 +17,7 @@ void ScheduleAlgorithms::fifo(Schedule & schedule, JobSP job)
   }
 }
 
-void ScheduleAlgorithms::shortestJob(Schedule & schedule, JobSP job, IEstimatorSP estimator)
+void schedule::algorithm::shortestJob(Schedule & schedule, JobSP job, IEstimatorSP estimator)
 {
   fifo(schedule, job);
 
@@ -38,9 +38,9 @@ void ScheduleAlgorithms::shortestJob(Schedule & schedule, JobSP job, IEstimatorS
       });
 }
 
-void ScheduleAlgorithms::shortestJobLongestOperation(Schedule & schedule,
-                                                     JobSP job,
-                                                     IEstimatorSP estimator)
+void schedule::algorithm::shortestJobLongestOperation(Schedule & schedule,
+                                                      JobSP job,
+                                                      IEstimatorSP estimator)
 {
   const unsigned machinesNum = schedule.schedule.size();
 

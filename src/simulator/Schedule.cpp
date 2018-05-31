@@ -74,68 +74,6 @@ std::vector<Assignation> Schedule::simulateDispatch(long long from, IEstimatorSP
   return assignations;
 }
 
-std::tuple<Schedule::SrcMachine,
-           Schedule::DstMachine,
-           Schedule::SrcMachineOffset,
-           Schedule::DstMachineOffset> Schedule::random_swap()
-{
-  unsigned srcMachine = rand() % schedule.size();
-  while (schedule[srcMachine].size() <= 0)
-    srcMachine = (srcMachine + 1) % schedule.size();
-  unsigned dstMachine = rand() % schedule.size();
-  while (schedule[dstMachine].size() <= 0)
-    dstMachine = (dstMachine + 1) % schedule.size();
-
-  unsigned srcMachineOffset = rand() % schedule[srcMachine].size();
-  unsigned dstMachineOffset = rand() % schedule[dstMachine].size();
-
-  deterministic_swap(srcMachine, dstMachine, srcMachineOffset, dstMachineOffset);
-
-  return std::make_tuple(srcMachine, dstMachine, srcMachineOffset, dstMachineOffset);
-}
-
-void Schedule::deterministic_swap(SrcMachine& srcMachine,
-                                  DstMachine& dstMachine,
-                                  SrcMachineOffset& srcMachineOffset,
-                                  DstMachineOffset& dstMachineOffset)
-{
-  std::swap(schedule[srcMachine][srcMachineOffset],
-            schedule[dstMachine][dstMachineOffset]);
-}
-
-std::tuple<Schedule::SrcMachine,
-           Schedule::DstMachine,
-           Schedule::SrcMachineOffset,
-           Schedule::DstMachineOffset> Schedule::random_move()
-{
-  unsigned srcMachine = rand() % schedule.size();
-  while (schedule[srcMachine].size() <= 0)
-    srcMachine = (srcMachine + 1) % schedule.size();
-  unsigned dstMachine = rand() % schedule.size();
-  if (dstMachine == srcMachine)
-    dstMachine = (dstMachine + 1) % schedule.size();
-
-  unsigned srcMachineOffset = rand() % schedule[srcMachine].size();
-  unsigned dstMachineOffset = rand() % (schedule[dstMachine].size() + 1);
-
-  deterministic_move(srcMachine, dstMachine, srcMachineOffset, dstMachineOffset);
-
-  return std::make_tuple(srcMachine, dstMachine, srcMachineOffset, dstMachineOffset);
-}
-
-void Schedule::deterministic_move(SrcMachine& srcMachine,
-                                  DstMachine& dstMachine,
-                                  SrcMachineOffset& srcMachineOffset,
-                                  DstMachineOffset& dstMachineOffset)
-{
-  if(srcMachine == dstMachine)
-    return;
-
-  schedule[dstMachine].insert(schedule[dstMachine].begin() + dstMachineOffset,
-                              schedule[srcMachine][srcMachineOffset]);
-  schedule[srcMachine].erase(schedule[srcMachine].begin() + srcMachineOffset);
-}
-
 Schedule::MachineCache Schedule::simulateDispatchMachine(long long from,
                                                          MachineID machine,
                                                          IEstimatorSP estimator) const

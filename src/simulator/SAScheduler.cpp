@@ -5,6 +5,7 @@
 #include "Algorithm.hpp"
 #include "Solution.hpp"
 #include "ScheduleAlgorithms.hpp"
+#include "Utility.hpp"
 
 SAScheduler::SAScheduler(std::shared_ptr<Input> input,
                          std::shared_ptr<Machines> machines,
@@ -20,9 +21,7 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
   const unsigned machinesNum = schedule.schedule.size();
   assert(machinesNum > 0);
 
-  // ScheduleAlgorithms::fifo(schedule, job);
-  // ScheduleAlgorithms::shortestJob(schedule, job, mEstimator);
-  ScheduleAlgorithms::shortestJobLongestOperation(schedule, job, mEstimator);
+  schedule::algorithm::shortestJobLongestOperation(schedule, job, mEstimator);
 
   bool swap;
   std::tuple<unsigned, unsigned, unsigned, unsigned> prevMove;
@@ -50,12 +49,12 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
         if (rand() % 2 > 0)
         {
           swap = true;
-          prevMove = solution.random_swap();
+          prevMove = utility::algorithm::random_swap(solution.schedule);
         }
         else
         {
           swap = false;
-          prevMove = solution.random_move();
+          prevMove = utility::algorithm::random_move(solution.schedule);
         }
 
         unsigned& srcMachine = std::get<0>(prevMove);
@@ -89,9 +88,17 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
         unsigned& srcMachineOffset = std::get<3>(prevMove);
         unsigned& dstMachineOffset = std::get<2>(prevMove);
         if (swap)
-          solution.deterministic_swap(srcMachine, dstMachine, srcMachineOffset, dstMachineOffset);
-        else
-          solution.deterministic_move(srcMachine, dstMachine, srcMachineOffset, dstMachineOffset);
+          utility::algorithm::deterministic_swap(solution.schedule,
+                                                 srcMachine,
+                                                 dstMachine,
+                                                 srcMachineOffset,
+                                                 dstMachineOffset);
+          else
+            utility::algorithm::deterministic_move(solution.schedule,
+                                                   srcMachine,
+                                                   dstMachine,
+                                                   srcMachineOffset,
+                                                   dstMachineOffset);
 
         unsigned& oldSrcMachine = std::get<0>(prevMove);
         unsigned& oldDstMachine = std::get<1>(prevMove);
@@ -107,7 +114,7 @@ void SAScheduler::schedule(Schedule & schedule, JobSP job)
         flow = prevFlow;
       };
 
-  Algorithm::sa_inplace<Schedule, long long>(schedule,
+  algorithm::sa_inplace<Schedule, long long>(schedule,
                                              costFunction,
                                              invertSolution,
                                              revertSolution,

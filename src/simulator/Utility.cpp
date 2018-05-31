@@ -1,8 +1,8 @@
 #include "Utility.hpp"
 
-namespace Utility
+namespace utility
 {
-namespace Machines
+namespace machines
 {
 std::vector<MachineSP> readFromStream(std::istream& inputStream)
 {
