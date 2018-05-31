@@ -39,16 +39,66 @@ void SACapacityScheduler::schedule(CapacitySchedule & schedule, JobSP job)
     }
     return flow;
   };
+  auto changeIsValid = [&](CapacitySchedule& solution) {
+    unsigned& srcMachine = std::get<0>(prevMove);
+    unsigned& dstMachine = std::get<1>(prevMove);
+    unsigned& srcMachineOffset = std::get<2>(prevMove);
+    unsigned& dstMachineOffset = std::get<3>(prevMove);
+    if (swap)
+    {
+      if (mMachines->getMachine(srcMachine)->capacity <
+          solution.schedule[srcMachine][srcMachineOffset]->capacityReq)
+        return false;
+      if (mMachines->getMachine(dstMachine)->capacity <
+          solution.schedule[dstMachine][dstMachineOffset]->capacityReq)
+        return false;
+    }
+    else
+    {
+      if (mMachines->getMachine(dstMachine)->capacity <
+          solution.schedule[dstMachine][dstMachineOffset]->capacityReq)
+        return false;
+    }
+    return true;
+  };
+  auto revertMove = [&](CapacitySchedule& solution) {
+    unsigned& srcMachine = std::get<1>(prevMove);
+    unsigned& dstMachine = std::get<0>(prevMove);
+    unsigned& srcMachineOffset = std::get<3>(prevMove);
+    unsigned& dstMachineOffset = std::get<2>(prevMove);
+    if (swap)
+      utility::algorithm::deterministic_swap(solution.schedule,
+                                             srcMachine,
+                                             dstMachine,
+                                             srcMachineOffset,
+                                             dstMachineOffset);
+    else
+      utility::algorithm::deterministic_move(solution.schedule,
+                                             srcMachine,
+                                             dstMachine,
+                                             srcMachineOffset,
+                                             dstMachineOffset);
+  };
   auto invertSolution = [&](CapacitySchedule& solution) {
     if (rand() % 2 > 0)
     {
       swap = true;
       prevMove = utility::algorithm::random_swap(solution.schedule);
+      while (!changeIsValid(solution))
+      {
+        revertMove(solution);
+        prevMove = utility::algorithm::random_swap(solution.schedule);
+      }
     }
     else
     {
       swap = false;
       prevMove = utility::algorithm::random_move(solution.schedule);
+      while (!changeIsValid(solution))
+      {
+        revertMove(solution);
+        prevMove = utility::algorithm::random_move(solution.schedule);
+      }
     }
 
     unsigned& srcMachine = std::get<0>(prevMove);
@@ -78,21 +128,7 @@ void SACapacityScheduler::schedule(CapacitySchedule & schedule, JobSP job)
   auto revertSolution = [&](CapacitySchedule& solution) {
     unsigned& srcMachine = std::get<1>(prevMove);
     unsigned& dstMachine = std::get<0>(prevMove);
-    unsigned& srcMachineOffset = std::get<3>(prevMove);
-    unsigned& dstMachineOffset = std::get<2>(prevMove);
-    if (swap)
-      utility::algorithm::deterministic_swap(solution.schedule,
-                                             srcMachine,
-                                             dstMachine,
-                                             srcMachineOffset,
-                                             dstMachineOffset);
-    else
-      utility::algorithm::deterministic_move(solution.schedule,
-                                             srcMachine,
-                                             dstMachine,
-                                             srcMachineOffset,
-                                             dstMachineOffset);
-
+    revertMove(solution);
     unsigned& oldSrcMachine = std::get<0>(prevMove);
     unsigned& oldDstMachine = std::get<1>(prevMove);
     if (srcMachine != dstMachine)
