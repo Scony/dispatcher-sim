@@ -13,13 +13,14 @@ std::vector<Assignation> CapacitySchedule::dispatch(long long from, long long un
 {
   std::vector<Assignation> assignations;
 
-  for (unsigned machine = 0; machine < machines->size(); machine++)
+  for (unsigned machineId = 0; machineId < machines->size(); machineId++)
   {
+    const auto machineCapacity = machines->getMachine(machineId)->capacity;
     using Timestamp = long long;
     using Capacity = long long;
     boost::icl::interval_map<Timestamp, Capacity> intervalCapacityUsages;
 
-    for (auto it = ongoings[machine].begin(); it != ongoings[machine].end();)
+    for (auto it = ongoings[machineId].begin(); it != ongoings[machineId].end();)
     {
       auto& beginTimestamp = it->first;
       auto& operation = it->second;
@@ -30,14 +31,14 @@ std::vector<Assignation> CapacitySchedule::dispatch(long long from, long long un
 
       if (endTimestamp <= until)
       {
-        assignations.emplace_back(endTimestamp, operation, machine);
-        it = ongoings[machine].erase(it);
+        assignations.emplace_back(endTimestamp, operation, machineId);
+        it = ongoings[machineId].erase(it);
       }
       else
         it++;
     }
 
-    for (auto it = schedule[machine].begin(); it != schedule[machine].end();)
+    for (auto it = schedule[machineId].begin(); it != schedule[machineId].end();)
     {
       auto& operation = *it;
       auto beginTimestamp = from;
@@ -46,7 +47,7 @@ std::vector<Assignation> CapacitySchedule::dispatch(long long from, long long un
       {
         const auto& interval = it->first;
         const auto& capacityUsed = it->second;
-        if (capacityUsed + operation->capacityReq <= machines->getMachine(machine)->capacity)
+        if (capacityUsed + operation->capacityReq <= machineCapacity)
         {
           if (beginTimestamp + operation->duration <= interval.upper())
             break;
@@ -65,10 +66,10 @@ std::vector<Assignation> CapacitySchedule::dispatch(long long from, long long un
       if (beginTimestamp < until)
       {
         if (endTimestamp <= until)
-          assignations.emplace_back(endTimestamp, operation, machine);
+          assignations.emplace_back(endTimestamp, operation, machineId);
         else
-          ongoings[machine].emplace_back(beginTimestamp, operation);
-        it = schedule[machine].erase(it);
+          ongoings[machineId].emplace_back(beginTimestamp, operation);
+        it = schedule[machineId].erase(it);
       }
       else
         it++;
@@ -83,13 +84,14 @@ std::vector<Assignation> CapacitySchedule::simulateDispatch(long long from,
 {
   std::vector<Assignation> assignations;
 
-  for (unsigned machine = 0; machine < machines->size(); machine++)
+  for (unsigned machineId = 0; machineId < machines->size(); machineId++)
   {
+    const auto machineCapacity = machines->getMachine(machineId)->capacity;
     using Timestamp = long long;
     using Capacity = long long;
     boost::icl::interval_map<Timestamp, Capacity> intervalCapacityUsages;
 
-    for (auto it = ongoings[machine].begin(); it != ongoings[machine].end(); it++)
+    for (auto it = ongoings[machineId].begin(); it != ongoings[machineId].end(); it++)
     {
       auto& beginTimestamp = it->first;
       auto& operation = it->second;
@@ -99,7 +101,7 @@ std::vector<Assignation> CapacitySchedule::simulateDispatch(long long from,
       intervalCapacityUsages += std::make_pair(interval, operation->capacityReq);
     }
 
-    for (auto it = schedule[machine].begin(); it != schedule[machine].end(); it++)
+    for (auto it = schedule[machineId].begin(); it != schedule[machineId].end(); it++)
     {
       auto& operation = *it;
       auto beginTimestamp = from;
@@ -108,7 +110,7 @@ std::vector<Assignation> CapacitySchedule::simulateDispatch(long long from,
       {
         const auto& interval = it->first;
         const auto& capacityUsed = it->second;
-        if (capacityUsed + operation->capacityReq <= machines->getMachine(machine)->capacity)
+        if (capacityUsed + operation->capacityReq <= machineCapacity)
         {
           if (beginTimestamp + estimator->estimate(operation) <= interval.upper())
             break;
@@ -123,7 +125,7 @@ std::vector<Assignation> CapacitySchedule::simulateDispatch(long long from,
       auto interval = boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp,
                                                                            endTimestamp);
       intervalCapacityUsages += std::make_pair(interval, operation->capacityReq);
-      assignations.emplace_back(endTimestamp, operation, machine);
+      assignations.emplace_back(endTimestamp, operation, machineId);
     }
   }
 
@@ -131,16 +133,17 @@ std::vector<Assignation> CapacitySchedule::simulateDispatch(long long from,
 }
 
 CapacitySchedule::MachineCache CapacitySchedule::simulateDispatchMachine(long long from,
-                                                                         MachineID machine,
+                                                                         MachineID machineId,
                                                                          IEstimatorSP estimator) const
 {
+  const auto machineCapacity = machines->getMachine(machineId)->capacity;
   MachineCache cache;
 
   using Timestamp = long long;
   using Capacity = long long;
   boost::icl::interval_map<Timestamp, Capacity> intervalCapacityUsages;
 
-  for (auto it = ongoings[machine].begin(); it != ongoings[machine].end(); it++)
+  for (auto it = ongoings[machineId].begin(); it != ongoings[machineId].end(); it++)
   {
     auto& beginTimestamp = it->first;
     auto& operation = it->second;
@@ -150,7 +153,7 @@ CapacitySchedule::MachineCache CapacitySchedule::simulateDispatchMachine(long lo
     intervalCapacityUsages += std::make_pair(interval, operation->capacityReq);
   }
 
-  for (auto it = schedule[machine].begin(); it != schedule[machine].end(); it++)
+  for (auto it = schedule[machineId].begin(); it != schedule[machineId].end(); it++)
   {
     auto& operation = *it;
     auto beginTimestamp = from;
@@ -159,7 +162,7 @@ CapacitySchedule::MachineCache CapacitySchedule::simulateDispatchMachine(long lo
     {
       const auto& interval = it->first;
       const auto& capacityUsed = it->second;
-      if (capacityUsed + operation->capacityReq <= machines->getMachine(machine)->capacity)
+      if (capacityUsed + operation->capacityReq <= machineCapacity)
       {
         if (beginTimestamp + estimator->estimate(operation) <= interval.upper())
           break;
