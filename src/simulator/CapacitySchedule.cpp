@@ -129,3 +129,39 @@ std::vector<Assignation> CapacitySchedule::simulateDispatch(long long from,
 
   return assignations;
 }
+
+CapacitySchedule::MachineCache CapacitySchedule::simulateDispatchMachine(long long from,
+                                                                         MachineID machine,
+                                                                         IEstimatorSP estimator) const
+{
+  return {};
+}
+
+long long CapacitySchedule::calculateFlowFromCache(const Cache& machineCaches,
+                                                   std::shared_ptr<Input> input)
+{
+  std::unordered_map<JobID, JobFinish> finalJobFinishes;
+
+  for (const auto& machineCache : machineCaches)
+    for (const auto& kv2 : machineCache)
+    {
+      const auto& jobId = kv2.first;
+      const auto& jobFinish = kv2.second;
+      auto it = finalJobFinishes.find(jobId);
+      if (it == finalJobFinishes.end())
+        finalJobFinishes.emplace(jobId, jobFinish);
+      else
+        it->second = std::max(it->second, jobFinish);
+    }
+
+  long long totalFlow = 0;
+  for (const auto& kv : finalJobFinishes)
+  {
+    const auto& jobId = kv.first;
+    const auto& jobFinish = kv.second;
+    long long jobFlow = jobFinish - input->getJob(jobId)->arrivalTimestamp;
+    totalFlow += jobFlow;
+  }
+
+  return totalFlow;
+}

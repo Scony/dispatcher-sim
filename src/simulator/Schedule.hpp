@@ -19,7 +19,7 @@ struct Schedule
   using JobFinish = long long;
   using MachineCache = std::unordered_map<JobID, JobFinish>;
   MachineCache simulateDispatchMachine(long long from, MachineID machine, IEstimatorSP estimator) const;
-  using Cache = std::vector<Schedule::MachineCache>;
+  using Cache = std::vector<MachineCache>;
   static long long calculateFlowFromCache(const Cache& machineCaches, std::shared_ptr<Input> input);
 
   using BeginTimestamp = long long;
