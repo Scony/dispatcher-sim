@@ -17,6 +17,7 @@
 #include "RandomCapacityScheduler.hpp"
 #include "FIFOCapacityScheduler.hpp"
 #include "SJCapacityScheduler.hpp"
+#include "SJLOCapacityScheduler.hpp"
 #include "SACapacityScheduler.hpp"
 
 template <class TSchedule>
@@ -79,6 +80,10 @@ std::shared_ptr<Scheduler<CapacitySchedule> > SchedulerFactory<CapacitySchedule>
     scheduler = std::make_shared<SJCapacityScheduler>(mInput,
                                                       mMachines,
                                                       mEstimator);
+  if (mArguments.primaryAlgorithm == "sjlo")
+    scheduler = std::make_shared<SJLOCapacityScheduler>(mInput,
+                                                        mMachines,
+                                                        mEstimator);
   if (mArguments.primaryAlgorithm == "sa")
     scheduler = std::make_shared<SACapacityScheduler>(mInput,
                                                       mMachines,

@@ -88,6 +88,7 @@ def test_algorithm_representation_v1_combinations(simulator_path, algorithm, rep
     ('random', 'schedule'),
     ('fifo', 'schedule'),
     ('sj', 'schedule'),
+    ('sjlo', 'schedule'),
     ('sa', 'schedule'),
 ])
 def test_algorithm_representation_v2_combinations(simulator_path, algorithm, representation):
