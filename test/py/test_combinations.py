@@ -26,6 +26,7 @@ from helpers import execute_process
     ('dvr', 'queue'),
     ('random', 'schedule'),
     ('sa', 'schedule'),
+    ('sj', 'schedule'),
     ('sjlo', 'schedule'),
 ])
 def test_algorithm_representation_v1_combinations(simulator_path, algorithm, representation):

@@ -11,6 +11,7 @@
 #include "Schedule.hpp"
 #include "RandomScheduler.hpp"
 #include "SAScheduler.hpp"
+#include "SJScheduler.hpp"
 #include "SJLOScheduler.hpp"
 
 #include "CapacitySchedule.hpp"
@@ -56,6 +57,10 @@ std::shared_ptr<Scheduler<Schedule> > SchedulerFactory<Schedule>::create()
                                               mMachines,
                                               mEstimator,
                                               mArguments.saIterations);
+  if (mArguments.primaryAlgorithm == "sj")
+    scheduler = std::make_shared<SJScheduler>(mInput,
+                                              mMachines,
+                                              mEstimator);
   if (mArguments.primaryAlgorithm == "sjlo")
     scheduler = std::make_shared<SJLOScheduler>(mInput,
                                                 mMachines,

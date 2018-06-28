@@ -19,6 +19,8 @@ void schedule::algorithm::fifo(Schedule & schedule, JobSP job)
 
 void schedule::algorithm::shortestJob(Schedule & schedule, JobSP job, IEstimatorSP estimator)
 {
+  const unsigned machinesNum = schedule.schedule.size();
+
   fifo(schedule, job);
 
   using JobWeight = long long;
@@ -32,10 +34,42 @@ void schedule::algorithm::shortestJob(Schedule & schedule, JobSP job, IEstimator
       jobWeights[operation->parentId] += estimator->estimate(operation);
     }
 
+  std::vector<OperationSP> operations;
   for (auto& vec : schedule.schedule)
-    std::sort(vec.begin(), vec.end(), [&](OperationSP& a, OperationSP& b) {
-        return jobWeights[a->parentId] < jobWeights[b->parentId];  // ASC
-      });
+  {
+    operations.insert(operations.end(), vec.begin(), vec.end());
+    vec.clear();
+  }
+  std::stable_sort(operations.begin(), operations.end(), [&](OperationSP a, OperationSP b) {
+      return jobWeights[a->parentId] > jobWeights[b->parentId];  // SJ
+    });
+
+  using ReadyTime = long long;
+  using MachineID = unsigned;
+  using Pair = std::pair<ReadyTime, MachineID>;
+  std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair> > leastBusyMachines;
+  for (unsigned machine = 0; machine < machinesNum; machine++)
+  {
+    if (schedule.ongoings.find(machine) == schedule.ongoings.end())
+      leastBusyMachines.push({0, machine});
+    else
+    {
+      long long ongoingFinish = schedule.ongoings[machine].first +
+          estimator->estimate(schedule.ongoings[machine].second);
+      leastBusyMachines.push({ongoingFinish - job->arrivalTimestamp, machine});
+    }
+  }
+
+  while (operations.size() > 0)
+  {
+    ReadyTime leastBusyMachineReadyTime = leastBusyMachines.top().first;
+    MachineID leastBusyMachine = leastBusyMachines.top().second;
+    leastBusyMachines.pop();
+    schedule.schedule[leastBusyMachine].push_back(operations.back());
+    leastBusyMachines.push({leastBusyMachineReadyTime + estimator->estimate(operations.back()),
+            leastBusyMachine});
+    operations.pop_back();
+  }
 }
 
 void schedule::algorithm::shortestJobLongestOperation(Schedule & schedule,
