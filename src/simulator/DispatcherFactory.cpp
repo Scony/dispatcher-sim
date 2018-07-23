@@ -19,9 +19,10 @@
 #include "SJSADispatcher.hpp"
 #include "SADispatcher.hpp"
 #include "VRDispatcher.hpp"
-
 #include "SJDispatcher.hpp"
 #include "SJRANDDispatcher.hpp"
+#include "SJMDDispatcher.hpp"
+#include "SJMDRDispatcher.hpp"
 
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
@@ -96,6 +97,10 @@ std::shared_ptr<Dispatcher> DispatcherFactory::create()
     dispatcher = std::make_shared<SJDispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "sjrand")
     dispatcher = std::make_shared<SJRANDDispatcher>(mInput, mCloud, mEstimator);
+  if (mArguments.primaryAlgorithm == "sjmd")
+    dispatcher = std::make_shared<SJMDDispatcher>(mInput, mCloud, mEstimator);
+  if (mArguments.primaryAlgorithm == "sjmdr")
+    dispatcher = std::make_shared<SJMDRDispatcher>(mInput, mCloud, mEstimator);
 
   assert(dispatcher != nullptr);
 
