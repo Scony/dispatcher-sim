@@ -172,6 +172,7 @@ int main(int argc, char ** argv)
   }
   else if (arguments.representation == "schedule")
   {
+    assert(false);
     if (arguments.instanceVersion == 1)
     {
       createSchedulerAndRunSimulation<Schedule>(input,

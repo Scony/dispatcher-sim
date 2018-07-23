@@ -24,10 +24,10 @@ from helpers import execute_process
     ('sa', 'queue'),
     ('rvr', 'queue'),
     ('dvr', 'queue'),
-    ('random', 'schedule'),
-    ('sa', 'schedule'),
-    ('sj', 'schedule'),
-    ('sjlo', 'schedule'),
+    # ('random', 'schedule'),
+    # ('sa', 'schedule'),
+    # ('sj', 'schedule'),
+    # ('sjlo', 'schedule'),
 ])
 def test_algorithm_representation_v1_combinations(simulator_path, algorithm, representation):
     input = b"""
@@ -86,11 +86,11 @@ def test_algorithm_representation_v1_combinations(simulator_path, algorithm, rep
     ('sa', 'queue'),
     # ('rvr', 'queue'),           # crashing
     # ('dvr', 'queue'),           # crashing
-    ('random', 'schedule'),
-    ('fifo', 'schedule'),
-    ('sj', 'schedule'),
-    ('sjlo', 'schedule'),
-    ('sa', 'schedule'),
+    # ('random', 'schedule'),
+    # ('fifo', 'schedule'),
+    # ('sj', 'schedule'),
+    # ('sjlo', 'schedule'),
+    # ('sa', 'schedule'),
 ])
 def test_algorithm_representation_v2_combinations(simulator_path, algorithm, representation):
     input = b"""
