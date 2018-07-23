@@ -1,19 +1,21 @@
 #include <cassert>
 #include <algorithm>
 
-#include "SJLODispatcher.hpp"
+#include "SJDispatcher.hpp"
 
-void SJLODispatcher::dispatch(JobSP job)
+void SJDispatcher::dispatch(JobSP job)
 {
-  // append new operations to map
   mJobOperations[job->id] = job->operations;
-  std::sort(mJobOperations[job->id].begin(),
-	    mJobOperations[job->id].end(),
-	    [&](OperationSP a, OperationSP b) {
-	      return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
-	    });
+  reorderJobOperations(mJobOperations[job->id]);
+  updateJobWeights();
+}
 
-  // update weights of jobs
+void SJDispatcher::reorderJobOperations(std::vector<OperationSP>& operations)
+{
+}
+
+void SJDispatcher::updateJobWeights()
+{
   mJobsInOrder.clear();
   for (const auto& kv : mJobOperations)
   {
@@ -29,7 +31,8 @@ void SJLODispatcher::dispatch(JobSP job)
   std::sort(mJobsInOrder.begin(), mJobsInOrder.end(), std::greater<std::pair<long long, long long> >());
 }
 
-OperationSP SJLODispatcher::peek()
+
+OperationSP SJDispatcher::peek()
 {
   assert(size() > 0);
 
@@ -38,7 +41,7 @@ OperationSP SJLODispatcher::peek()
   return mJobOperations[jobToPopFrom].back();
 }
 
-OperationSP SJLODispatcher::pop()
+OperationSP SJDispatcher::pop()
 {
   assert(size() > 0);
 
@@ -56,7 +59,7 @@ OperationSP SJLODispatcher::pop()
   return operation;
 }
 
-size_t SJLODispatcher::size()
+size_t SJDispatcher::size()
 {
   size_t totalSize = 0;
   for (const auto& kv : mJobOperations)

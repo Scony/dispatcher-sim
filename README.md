@@ -48,6 +48,8 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 | max | RR Job, Max Operation |
 | min | RR Job, Min Operation |
 | fifo | FIFO Job, As-is Operation |
+| sj | Shortest Job |
+| sjrand | Shortest Job, Random Operation |
 | sjlo | Shortest Job, Longest Operation |
 | sjso | Shortest Job, Shortest Operation |
 | ljso | Longest Job, Shortest Operation |

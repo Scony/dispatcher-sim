@@ -5,7 +5,7 @@
 
 #include "Dispatcher.hpp"
 
-class SJLODispatcher : public Dispatcher
+class SJDispatcher : public Dispatcher
 {
  public:
   using Dispatcher::Dispatcher;
@@ -17,6 +17,9 @@ class SJLODispatcher : public Dispatcher
   virtual void dispatch(JobSP job) override;
 
  protected:
+  virtual void reorderJobOperations(std::vector<OperationSP>&);
+  void updateJobWeights();
+  
   std::map<long long, std::vector<OperationSP> > mJobOperations;
   std::vector<std::pair<long long, long long> > mJobsInOrder;
 };

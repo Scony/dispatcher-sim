@@ -20,6 +20,9 @@
 #include "SADispatcher.hpp"
 #include "VRDispatcher.hpp"
 
+#include "SJDispatcher.hpp"
+#include "SJRANDDispatcher.hpp"
+
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
 				     std::shared_ptr<ICloud> cloud,
@@ -89,6 +92,10 @@ std::shared_ptr<Dispatcher> DispatcherFactory::create()
     dispatcher = std::make_shared<VRDispatcher>(mInput, mCloud, mEstimator, false);
   if (mArguments.primaryAlgorithm == "dvr")
     dispatcher = std::make_shared<VRDispatcher>(mInput, mCloud, mEstimator, true);
+  if (mArguments.primaryAlgorithm == "sj")
+    dispatcher = std::make_shared<SJDispatcher>(mInput, mCloud, mEstimator);
+  if (mArguments.primaryAlgorithm == "sjrand")
+    dispatcher = std::make_shared<SJRANDDispatcher>(mInput, mCloud, mEstimator);
 
   assert(dispatcher != nullptr);
 
