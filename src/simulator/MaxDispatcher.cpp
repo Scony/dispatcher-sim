@@ -13,14 +13,17 @@ MaxDispatcher::MaxDispatcher(std::shared_ptr<Input> input,
 {
 }
 
-void MaxDispatcher::dispatch(JobSP job)
+void MaxDispatcher::dispatch(std::vector<JobSP> jobs)
 {
-  mJobOperations[job->id] = job->operations;
-  std::sort(mJobOperations[job->id].begin(),
-	    mJobOperations[job->id].end(),
-	    [&](OperationSP a, OperationSP b) {
-	      return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
-	    });
+  for (const auto& job : jobs)
+  {
+    mJobOperations[job->id] = job->operations;
+    std::sort(mJobOperations[job->id].begin(),
+              mJobOperations[job->id].end(),
+              [&](OperationSP a, OperationSP b) {
+                return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
+              });
+  }
 }
 
 OperationSP MaxDispatcher::peek()

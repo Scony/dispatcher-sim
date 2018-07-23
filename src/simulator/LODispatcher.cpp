@@ -7,10 +7,11 @@ LODispatcher::LODispatcher(std::shared_ptr<Input> input,
 {
 }
 
-void LODispatcher::dispatch(JobSP job)
+void LODispatcher::dispatch(std::vector<JobSP> jobs)
 {
-  for (const auto& operation : job->operations)
-    mOperations.push(operation);
+  for (const auto& job : jobs)
+    for (const auto& operation : job->operations)
+      mOperations.push(operation);
 }
 
 OperationSP LODispatcher::peek()

@@ -9,12 +9,15 @@ MinDispatcher::MinDispatcher(std::shared_ptr<Input> input,
 {
 }
 
-void MinDispatcher::dispatch(JobSP job)
+void MinDispatcher::dispatch(std::vector<JobSP> jobs)
 {
-  mJobOperations[job->id] = job->operations;
-  std::sort(mJobOperations[job->id].begin(),
-	    mJobOperations[job->id].end(),
-	    [&](OperationSP a, OperationSP b) {
-	      return mEstimator->estimate(a) > mEstimator->estimate(b); // DESC
-	    });
+  for (const auto& job : jobs)
+  {
+    mJobOperations[job->id] = job->operations;
+    std::sort(mJobOperations[job->id].begin(),
+              mJobOperations[job->id].end(),
+              [&](OperationSP a, OperationSP b) {
+                return mEstimator->estimate(a) > mEstimator->estimate(b); // DESC
+              });
+  }
 }

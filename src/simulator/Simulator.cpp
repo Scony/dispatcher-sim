@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <climits>
+#include <iostream>
 
 #include "Simulator.hpp"
 
@@ -22,10 +23,16 @@ void Simulator::run()
 {
   while (mQueue.size() > 0)
   {
-    auto newestJob = mQueue.back();
-    mDispatcher->advance(newestJob->arrivalTimestamp);
-    mDispatcher->dispatch(newestJob);
-    mQueue.pop_back();
+    auto arrivalTimestamp = mQueue.back()->arrivalTimestamp;
+    mDispatcher->advance(arrivalTimestamp);
+    std::vector<JobSP> jobsToDispatch;
+    while (mQueue.size() > 0 && mQueue.back()->arrivalTimestamp == arrivalTimestamp)
+    {
+      jobsToDispatch.push_back(mQueue.back());
+      mQueue.pop_back();
+    }
+    std::cerr << "dispatching..." << std::endl;
+    mDispatcher->dispatch(jobsToDispatch);
   }
 
   mDispatcher->advance(LLONG_MAX);

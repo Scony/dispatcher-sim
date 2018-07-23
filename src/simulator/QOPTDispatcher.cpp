@@ -42,9 +42,9 @@ QOPTDispatcher::QOPTDispatcher(std::shared_ptr<Input> input,
   mQueue = bestPermutation;
 }
 
-void QOPTDispatcher::dispatch(JobSP job)
+void QOPTDispatcher::dispatch(std::vector<JobSP> jobs)
 {
-  mTime = job->arrivalTimestamp;
+  mTime = jobs[0]->arrivalTimestamp;
 }
 
 OperationSP QOPTDispatcher::peek()

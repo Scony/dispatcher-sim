@@ -12,5 +12,5 @@ class LJSODispatcher : public SJLODispatcher
 		 std::shared_ptr<ICloud> cloud,
 		 std::shared_ptr<IEstimator> estimator);
 
-  virtual void dispatch(JobSP job) override;
+  virtual void dispatch(std::vector<JobSP>) override;
 };

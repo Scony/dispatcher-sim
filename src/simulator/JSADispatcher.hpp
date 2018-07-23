@@ -20,7 +20,7 @@ class JSADispatcher : public Dispatcher
   OperationSP pop() override;
   size_t size() override;
 
-  virtual void dispatch(std::shared_ptr<Job> job) override;
+  virtual void dispatch(std::vector<JobSP>) override;
 
  protected:
   const std::string mOperationLevelAlgorithm;

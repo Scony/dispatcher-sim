@@ -12,28 +12,31 @@ SJSADispatcher::SJSADispatcher(std::shared_ptr<Input> input,
 {
 }
 
-void SJSADispatcher::dispatch(std::shared_ptr<Job> job)
+void SJSADispatcher::dispatch(std::vector<JobSP> jobs)
 {
-  mJobOperations[job->id] = job->operations;
+  for (const auto& job : jobs)
+  {
+    mJobOperations[job->id] = job->operations;
 
-  if (mOperationLevelAlgorithm == "random")
-    std::random_shuffle(mJobOperations[job->id].begin(), mJobOperations[job->id].end());
-  else if (mOperationLevelAlgorithm == "max")
-    std::sort(mJobOperations[job->id].begin(),
-	      mJobOperations[job->id].end(),
-	      [&](OperationSP a, OperationSP b) {
-		return a->duration < b->duration; // ASC
-	      });
-  else if (mOperationLevelAlgorithm == "min")
-    std::sort(mJobOperations[job->id].begin(),
-	      mJobOperations[job->id].end(),
-	      [&](OperationSP a, OperationSP b) {
-		return a->duration > b->duration; // DESC
-	      });
-  else
-    assert(false);
+    if (mOperationLevelAlgorithm == "random")
+      std::random_shuffle(mJobOperations[job->id].begin(), mJobOperations[job->id].end());
+    else if (mOperationLevelAlgorithm == "max")
+      std::sort(mJobOperations[job->id].begin(),
+                mJobOperations[job->id].end(),
+                [&](OperationSP a, OperationSP b) {
+                  return a->duration < b->duration; // ASC
+                });
+    else if (mOperationLevelAlgorithm == "min")
+      std::sort(mJobOperations[job->id].begin(),
+                mJobOperations[job->id].end(),
+                [&](OperationSP a, OperationSP b) {
+                  return a->duration > b->duration; // DESC
+                });
+    else
+      assert(false);
 
-  mCurrentSolution.insert(mCurrentSolution.begin(), job->id);
+    mCurrentSolution.insert(mCurrentSolution.begin(), job->id);
+  }
 
   std::vector<std::pair<long long, long long> > mWeightsOfJobs;
   for (const auto& jobId : mCurrentSolution)

@@ -12,15 +12,18 @@ SJLODispatcher::SJLODispatcher(std::shared_ptr<Input> input,
 {
 }
 
-void SJLODispatcher::dispatch(JobSP job)
+void SJLODispatcher::dispatch(std::vector<JobSP> jobs)
 {
   // append new operations to map
-  mJobOperations[job->id] = job->operations;
-  std::sort(mJobOperations[job->id].begin(),
-	    mJobOperations[job->id].end(),
-	    [&](OperationSP a, OperationSP b) {
-	      return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
-	    });
+  for (const auto& job : jobs)
+  {
+    mJobOperations[job->id] = job->operations;
+    std::sort(mJobOperations[job->id].begin(),
+              mJobOperations[job->id].end(),
+              [&](OperationSP a, OperationSP b) {
+                return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
+              });
+  }
 
   // update weights of jobs
   mJobsInOrder.clear();

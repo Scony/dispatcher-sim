@@ -39,7 +39,7 @@ class LODispatcher : public Dispatcher
   OperationSP pop() override;
   size_t size() override;
 
-  virtual void dispatch(JobSP job) override;
+  virtual void dispatch(std::vector<JobSP>) override;
 
  protected:
   std::priority_queue<OperationSP, std::vector<OperationSP>, LOCmp> mOperations;

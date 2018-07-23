@@ -14,7 +14,7 @@ class Dispatcher : public IQueue
 	     std::shared_ptr<ICloud> cloud,
 	     std::shared_ptr<IEstimator> estimator);
 
-  virtual void dispatch(std::shared_ptr<Job> job) = 0;
+  virtual void dispatch(std::vector<JobSP>) = 0;
   virtual void advance(long long toTimestamp);
 
  protected:

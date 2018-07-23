@@ -17,7 +17,7 @@ class VRDispatcher : public Dispatcher
   OperationSP pop() override;
   size_t size() override;
 
-  void dispatch(std::shared_ptr<Job> job) override;
+  void dispatch(std::vector<JobSP>) override;
 
  private:
   const bool mDeterministic;

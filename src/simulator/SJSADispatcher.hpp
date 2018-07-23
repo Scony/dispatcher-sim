@@ -11,5 +11,5 @@ class SJSADispatcher : public SASADispatcher
 		 std::string operationLevelAlgorithm,
 		 unsigned iterations);
 
-  virtual void dispatch(std::shared_ptr<Job> job) override;
+  virtual void dispatch(std::vector<JobSP>) override;
 };

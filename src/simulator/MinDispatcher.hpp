@@ -9,5 +9,5 @@ class MinDispatcher : public MaxDispatcher
 		std::shared_ptr<ICloud> cloud,
 		std::shared_ptr<IEstimator> estimator);
 
-  void dispatch(JobSP job) override;
+  void dispatch(std::vector<JobSP>) override;
 };

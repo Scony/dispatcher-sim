@@ -13,9 +13,9 @@ SASADispatcher::SASADispatcher(std::shared_ptr<Input> input,
 {
 }
 
-void SASADispatcher::dispatch(std::shared_ptr<Job> job)
+void SASADispatcher::dispatch(std::vector<JobSP> jobs)
 {
-  JSADispatcher::dispatch(job);	// job SA here
+  JSADispatcher::dispatch(jobs);  // job SA here
   operationLevelSA();
 }
 

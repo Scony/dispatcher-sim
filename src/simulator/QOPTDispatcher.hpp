@@ -14,7 +14,7 @@ class QOPTDispatcher : public Dispatcher
   virtual OperationSP pop() override;
   virtual size_t size() override;
 
-  virtual void dispatch(JobSP job) override;
+  virtual void dispatch(std::vector<JobSP>) override;
 
  protected:
   std::vector<OperationSP> mQueue;

@@ -10,7 +10,7 @@ class SADispatcher : public RandomDispatcher
 	       std::shared_ptr<IEstimator> estimator,
 	       unsigned iterations);
 
-  virtual void dispatch(JobSP job) override;
+  virtual void dispatch(std::vector<JobSP>) override;
 
  protected:
   unsigned mIterations;

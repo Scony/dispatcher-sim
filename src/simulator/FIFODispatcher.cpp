@@ -10,9 +10,10 @@ FIFODispatcher::FIFODispatcher(std::shared_ptr<Input> input,
 {
 }
 
-void FIFODispatcher::dispatch(JobSP job)
+void FIFODispatcher::dispatch(std::vector<JobSP> jobs)
 {
-  mOperations.insert(mOperations.end(), job->operations.begin(), job->operations.end());
+  for (const auto& job : jobs)
+    mOperations.insert(mOperations.end(), job->operations.begin(), job->operations.end());
 }
 
 OperationSP FIFODispatcher::peek()

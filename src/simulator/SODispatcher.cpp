@@ -7,10 +7,11 @@ SODispatcher::SODispatcher(std::shared_ptr<Input> input,
 {
 }
 
-void SODispatcher::dispatch(JobSP job)
+void SODispatcher::dispatch(std::vector<JobSP> jobs)
 {
-  for (const auto& operation : job->operations)
-    mOperations.push(operation);
+  for (const auto& job : jobs)
+    for (const auto& operation : job->operations)
+      mOperations.push(operation);
 }
 
 OperationSP SODispatcher::peek()

@@ -13,9 +13,10 @@ SADispatcher::SADispatcher(std::shared_ptr<Input> input,
 {
 }
 
-void SADispatcher::dispatch(JobSP job)
+void SADispatcher::dispatch(std::vector<JobSP> jobs)
 {
-  mQueue.insert(mQueue.end(), job->operations.begin(), job->operations.end());
+  for (const auto& job : jobs)
+    mQueue.insert(mQueue.end(), job->operations.begin(), job->operations.end());
 
   auto costFunction = [&](const std::vector<OperationSP>& solution)
       {

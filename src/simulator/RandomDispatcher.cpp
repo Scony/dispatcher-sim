@@ -11,9 +11,10 @@ RandomDispatcher::RandomDispatcher(std::shared_ptr<Input> input,
 {
 }
 
-void RandomDispatcher::dispatch(JobSP job)
+void RandomDispatcher::dispatch(std::vector<JobSP> jobs)
 {
-  mQueue.insert(mQueue.end(), job->operations.begin(), job->operations.end());
+  for (const auto& job : jobs)
+    mQueue.insert(mQueue.end(), job->operations.begin(), job->operations.end());
   std::random_shuffle(mQueue.begin(), mQueue.end());
 }
 

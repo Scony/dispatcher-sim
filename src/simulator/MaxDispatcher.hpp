@@ -15,7 +15,7 @@ class MaxDispatcher : public Dispatcher
   OperationSP pop() override;
   size_t size() override;
 
-  virtual void dispatch(JobSP job) override;
+  virtual void dispatch(std::vector<JobSP>) override;
 
  protected:
   std::map<long long, std::vector<OperationSP> > mJobOperations;
