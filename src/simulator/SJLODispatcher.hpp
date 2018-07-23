@@ -1,22 +1,20 @@
 #pragma once
 
-#include <map>
-#include <vector>
+#include <algorithm>
 
-#include "Dispatcher.hpp"
+#include "SJDispatcher.hpp"
 
-class SJLODispatcher : public Dispatcher
+class SJLODispatcher : public SJDispatcher
 {
  public:
-  using Dispatcher::Dispatcher;
+  using SJDispatcher::SJDispatcher;
 
-  OperationSP peek() override;
-  OperationSP pop() override;
-  size_t size() override;
-
-  virtual void dispatch(JobSP job) override;
-
- protected:
-  std::map<long long, std::vector<OperationSP> > mJobOperations;
-  std::vector<std::pair<long long, long long> > mJobsInOrder;
+  void reorderJobOperations(std::vector<OperationSP>& operations)
+  {
+    std::sort(operations.begin(),
+              operations.end(),
+              [&](OperationSP a, OperationSP b) {
+                return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
+              });
+  }
 };

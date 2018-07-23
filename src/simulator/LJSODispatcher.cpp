@@ -3,13 +3,6 @@
 
 #include "LJSODispatcher.hpp"
 
-LJSODispatcher::LJSODispatcher(std::shared_ptr<Input> input,
-			       std::shared_ptr<ICloud> cloud,
-			       std::shared_ptr<IEstimator> estimator) :
-    SJLODispatcher(input, cloud, estimator)
-{
-}
-
 void LJSODispatcher::dispatch(JobSP job)
 {
   // append new operations to map

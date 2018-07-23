@@ -3,14 +3,12 @@
 #include <map>
 #include <vector>
 
-#include "SJLODispatcher.hpp"
+#include "SJDispatcher.hpp"
 
-class LJSODispatcher : public SJLODispatcher
+class LJSODispatcher : public SJDispatcher
 {
  public:
-  LJSODispatcher(std::shared_ptr<Input> input,
-		 std::shared_ptr<ICloud> cloud,
-		 std::shared_ptr<IEstimator> estimator);
+  using SJDispatcher::SJDispatcher;
 
   virtual void dispatch(JobSP job) override;
 };

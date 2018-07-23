@@ -1,16 +1,20 @@
 #pragma once
 
-#include <map>
-#include <vector>
+#include <algorithm>
 
-#include "SJLODispatcher.hpp"
+#include "SJDispatcher.hpp"
 
-class SJSODispatcher : public SJLODispatcher
+class SJSODispatcher : public SJDispatcher
 {
  public:
-  SJSODispatcher(std::shared_ptr<Input> input,
-		 std::shared_ptr<ICloud> cloud,
-		 std::shared_ptr<IEstimator> estimator);
+  using SJDispatcher::SJDispatcher;
 
-  virtual void dispatch(JobSP job) override;
+  void reorderJobOperations(std::vector<OperationSP>& operations)
+  {
+    std::sort(operations.begin(),
+              operations.end(),
+              [&](OperationSP a, OperationSP b) {
+                return mEstimator->estimate(a) > mEstimator->estimate(b); // DESC
+              });
+  }
 };
