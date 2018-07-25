@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
+#include <numeric>
 
 #include "Input.hpp"
 #include "InputV2.hpp"
@@ -240,6 +241,20 @@ int main(int argc, char ** argv)
       const auto& stretch = kv.first;
       std::cout << std::fixed << stretch << std::endl;
     }
+  }
+  else if (arguments.outputType == "cmax")
+  {
+    auto max = std::accumulate(
+        solution.begin(),
+        solution.end(),
+        -1,
+        [](const long long& max, const Assignation& tuple) {
+          auto& finishTimestamp = std::get<0>(tuple);
+          if (finishTimestamp > max)
+            return finishTimestamp;
+          return max;
+        });
+    std::cout << max << std::endl;
   }
   else if (arguments.outputType == "nothing" or arguments.outputType == "debug")
   {
