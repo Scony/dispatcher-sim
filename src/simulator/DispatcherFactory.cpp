@@ -23,6 +23,8 @@
 #include "SJRANDDispatcher.hpp"
 #include "SJMDDispatcher.hpp"
 #include "SJMDRDispatcher.hpp"
+#include "SJAVGDispatcher.hpp"
+#include "SJAVGRDispatcher.hpp"
 
 
 DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
@@ -101,6 +103,10 @@ std::shared_ptr<Dispatcher> DispatcherFactory::create()
     dispatcher = std::make_shared<SJMDDispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "sjmdr")
     dispatcher = std::make_shared<SJMDRDispatcher>(mInput, mCloud, mEstimator);
+  if (mArguments.primaryAlgorithm == "sjavg")
+    dispatcher = std::make_shared<SJAVGDispatcher>(mInput, mCloud, mEstimator);
+  if (mArguments.primaryAlgorithm == "sjavgr")
+    dispatcher = std::make_shared<SJAVGRDispatcher>(mInput, mCloud, mEstimator);
 
   assert(dispatcher != nullptr);
 

@@ -28,6 +28,8 @@ from helpers import execute_process
     ('sjsa', 'queue'),
     ('sjmd', 'queue'),
     ('sjmdr', 'queue'),
+    ('sjavg', 'queue'),
+    ('sjavgr', 'queue'),
     ('random', 'schedule'),
     ('sa', 'schedule'),
     ('sj', 'schedule'),
@@ -92,6 +94,8 @@ def test_algorithm_representation_v1_combinations(simulator_path, algorithm, rep
     ('sjsa', 'queue'),
     ('sjmd', 'queue'),
     ('sjmdr', 'queue'),
+    ('sjavg', 'queue'),
+    ('sjavgr', 'queue'),
     # ('rvr', 'queue'),           # crashing
     # ('dvr', 'queue'),           # crashing
     ('random', 'schedule'),

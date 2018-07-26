@@ -52,6 +52,8 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 | sjrand | Shortest Job, Random Operation |
 | sjmd | Shortest Job, Median Operation |
 | sjmdr | Shortest Job, Median Operation (reversed) |
+| sjavg | Shortest Job, Average Operation |
+| sjavgr | Shortest Job, Average Operation (reversed) |
 | sjlo | Shortest Job, Longest Operation |
 | sjso | Shortest Job, Shortest Operation |
 | ljso | Longest Job, Shortest Operation |
