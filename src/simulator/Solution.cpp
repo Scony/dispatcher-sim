@@ -61,29 +61,16 @@ Solution::JobStretchVec Solution::calculateJobStretchVec(const SolutionVec& solu
 
 long long Solution::evalTotalFlow(const SolutionVec& solution)
 {
-  std::unordered_map<long long, long long> jobFlows;
-
-  for (const auto& tuple : solution)
-  {
-    const auto& endTimestamp = std::get<0>(tuple);
-    const auto& operation = std::get<1>(tuple);
-
-    auto iterator = jobFlows.find(operation->parentId);
-    if (iterator == jobFlows.end())
-    {
-      auto tmp = jobFlows.emplace(operation->parentId, 0);
-      iterator = tmp.first;
-    }
-    auto& jobFlow = iterator->second;
-
-    jobFlow = std::max(jobFlow, endTimestamp - operation->arrival);
-  }
-
-  long long totalFlow = 0;
-  for (auto const& kv : jobFlows)
-    totalFlow += kv.second;
-
-  return totalFlow;
+  return std::accumulate(
+      solution.begin(),
+      solution.end(),
+      -1,
+      [](const long long& max, const Assignation& tuple) {
+        auto& finishTimestamp = std::get<0>(tuple);
+        if (finishTimestamp > max)
+          return finishTimestamp;
+        return max;
+      });
 }
 
 bool Solution::validateOperationEnds(const SolutionVec& solution)
