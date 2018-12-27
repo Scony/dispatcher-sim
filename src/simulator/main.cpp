@@ -12,7 +12,6 @@
 #include "DispatcherFactory.hpp"
 #include "SchedulerFactory.hpp"
 #include "Solution.hpp"
-#include "Arguments.hpp"
 #include "Machines.hpp"
 #include "Scheduler.hpp"
 #include "Schedule.hpp"
