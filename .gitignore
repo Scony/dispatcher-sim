@@ -9,3 +9,5 @@ results
 results*
 *.png
 *.csv
+.pytest_cache
+bin

@@ -34,7 +34,7 @@ cat instances_v1/692_10.txt | ./bin/simulator fifo -m 20 -e no | ./bin/stat-desc
 
 To plot Gantt chart type in following command:
 ```
-cat instances_v1/692_10.txt | ./bin/simulator fifo -m 20 -e no -o opfins | python ./bin/gantt.py instances_v1/692_10.txt
+cat instances_v1/692_10.txt | ./bin/simulator fifo -m 20 -e no -o opfins | python ./scripts/gantt.py instances_v1/692_10.txt
 ```
 note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linux package
 

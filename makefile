@@ -23,7 +23,6 @@ hamulator:
 
 clean:
 	find -name '*~' | xargs rm -f
-	find bin/ -executable -type f ! -name '*.sh' | xargs rm -f
-	rm -rf build
+	rm -rf build bin
 
 .PHONY: clean ut build benchmarks uat tests hamulator
