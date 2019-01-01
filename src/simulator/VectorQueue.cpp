@@ -1,9 +1,6 @@
 #include "VectorQueue.hpp"
 
-VectorQueue::VectorQueue(std::vector<OperationSP>& operations) :
-    mOperations(operations)
-{
-}
+VectorQueue::VectorQueue(std::vector<OperationSP>& operations) : mOperations(operations) {}
 
 OperationSP VectorQueue::peek()
 {

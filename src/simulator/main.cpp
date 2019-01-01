@@ -1,22 +1,22 @@
+#include <cassert>
 #include <iostream>
 #include <vector>
-#include <cassert>
 
-#include "Input.hpp"
-#include "InputV2.hpp"
-#include "ICloud.hpp"
+#include "BatchSimulator.hpp"
+#include "CapacitySchedule.hpp"
 #include "Cloud.hpp"
 #include "CloudV2.hpp"
-#include "Simulator.hpp"
-#include "EstimatorFactory.hpp"
 #include "DispatcherFactory.hpp"
-#include "SchedulerFactory.hpp"
-#include "Solution.hpp"
+#include "EstimatorFactory.hpp"
+#include "ICloud.hpp"
+#include "Input.hpp"
+#include "InputV2.hpp"
 #include "Machines.hpp"
-#include "Scheduler.hpp"
 #include "Schedule.hpp"
-#include "CapacitySchedule.hpp"
-#include "BatchSimulator.hpp"
+#include "Scheduler.hpp"
+#include "SchedulerFactory.hpp"
+#include "Simulator.hpp"
+#include "Solution.hpp"
 #include "TimedScope.hpp"
 
 std::shared_ptr<Input> createInput(const Arguments& arguments)
@@ -55,7 +55,8 @@ std::shared_ptr<ICloud> createCloud(const Arguments& arguments, std::shared_ptr<
   switch (arguments.instanceVersion)
   {
     case 2:
-      cloud = std::make_shared<CloudV2>(machines->fetch(), arguments.setupTime);;
+      cloud = std::make_shared<CloudV2>(machines->fetch(), arguments.setupTime);
+      ;
       break;
     case 1:
     default:
@@ -65,14 +66,15 @@ std::shared_ptr<ICloud> createCloud(const Arguments& arguments, std::shared_ptr<
 }
 
 template <class TSchedule>
-void createSchedulerAndRunSimulation(std::shared_ptr<Input> input,
-                                     std::shared_ptr<Machines> machines,
-                                     std::shared_ptr<IEstimator> estimator,
-                                     const Arguments& arguments,
-                                     std::shared_ptr<Solution> solutionGatherer)
+void createSchedulerAndRunSimulation(
+    std::shared_ptr<Input> input,
+    std::shared_ptr<Machines> machines,
+    std::shared_ptr<IEstimator> estimator,
+    const Arguments& arguments,
+    std::shared_ptr<Solution> solutionGatherer)
 {
   auto schedulerFactory =
-      std::make_shared<SchedulerFactory<TSchedule> >(input, machines, estimator, arguments);
+      std::make_shared<SchedulerFactory<TSchedule>>(input, machines, estimator, arguments);
   auto scheduler = schedulerFactory->create();
   BatchSimulator<TSchedule> simulator(input, machines, scheduler);
   simulator.subscribe(estimator);
@@ -83,7 +85,7 @@ void createSchedulerAndRunSimulation(std::shared_ptr<Input> input,
   }
 }
 
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
   srand(time(0));
   std::ios_base::sync_with_stdio(0);
@@ -131,12 +133,13 @@ int main(int argc, char ** argv)
         std::cin >> operationName;
         std::cin >> operationResult;
         std::cin >> operationDuration;
-        auto operation = std::make_shared<Operation>(operationId,
-                                                     jobId,
-                                                     operationName,
-                                                     operationResult,
-                                                     jobArrivalTimestamp,
-                                                     operationDuration);
+        auto operation = std::make_shared<Operation>(
+            operationId,
+            jobId,
+            operationName,
+            operationResult,
+            jobArrivalTimestamp,
+            operationDuration);
         estimator->handleNotification(std::make_tuple(0, operation, 0));
       }
     }
@@ -160,7 +163,8 @@ int main(int argc, char ** argv)
     cloud->subscribe(solutionGatherer);
     cloud->subscribe(estimator);
 
-    auto dispatcherFactory = std::make_shared<DispatcherFactory>(input, cloud, estimator, arguments);
+    auto dispatcherFactory =
+        std::make_shared<DispatcherFactory>(input, cloud, estimator, arguments);
     auto dispatcher = dispatcherFactory->create();
 
     Simulator simulator(input, dispatcher);
@@ -173,18 +177,13 @@ int main(int argc, char ** argv)
   {
     if (arguments.instanceVersion == 1)
     {
-      createSchedulerAndRunSimulation<Schedule>(input,
-                                                machines,
-                                                estimator,
-                                                arguments,
-                                                solutionGatherer);
-    } else
+      createSchedulerAndRunSimulation<Schedule>(
+          input, machines, estimator, arguments, solutionGatherer);
+    }
+    else
     {
-      createSchedulerAndRunSimulation<CapacitySchedule>(input,
-                                                        machines,
-                                                        estimator,
-                                                        arguments,
-                                                        solutionGatherer);
+      createSchedulerAndRunSimulation<CapacitySchedule>(
+          input, machines, estimator, arguments, solutionGatherer);
     }
   }
   else
@@ -198,13 +197,10 @@ int main(int argc, char ** argv)
   if (arguments.outputType == "debug")
   {
     for (const auto& tuple : solution)
-      std::cout << "#" << std::get<1>(tuple)->id << "[" << std::get<1>(tuple)->capacityReq
-                << "] ("
+      std::cout << "#" << std::get<1>(tuple)->id << "[" << std::get<1>(tuple)->capacityReq << "] ("
                 << (std::get<0>(tuple) - std::get<1>(tuple)->duration) << " ; "
-                << std::get<0>(tuple) << ") @"
-                << std::get<2>(tuple) << "["
-                << machines->getMachine(std::get<2>(tuple))->capacity << "]"
-                << std::endl;
+                << std::get<0>(tuple) << ") @" << std::get<2>(tuple) << "["
+                << machines->getMachine(std::get<2>(tuple))->capacity << "]" << std::endl;
   }
 
   {
@@ -226,9 +222,8 @@ int main(int argc, char ** argv)
   else if (arguments.outputType == "opfins")
   {
     for (const auto& tuple : solution)
-      std::cout << std::get<0>(tuple) << " "
-                << std::get<1>(tuple)->id << " "
-                << std::get<2>(tuple) << std::endl;
+      std::cout << std::get<0>(tuple) << " " << std::get<1>(tuple)->id << " " << std::get<2>(tuple)
+                << std::endl;
   }
   else if (arguments.outputType == "jtstretches")
   {

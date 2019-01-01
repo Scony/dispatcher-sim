@@ -7,9 +7,9 @@
 class ELOCmp
 {
  public:
-  ELOCmp(const bool& revparam = false) : mReverse(revparam) {};
+  ELOCmp(const bool& revparam = false) : mReverse(revparam){};
 
-  bool operator() (const OperationSP& lhs, const OperationSP& rhs) const
+  bool operator()(const OperationSP& lhs, const OperationSP& rhs) const
   {
     if (mReverse)
       return lt(lhs, rhs);
@@ -31,9 +31,10 @@ class ELOCmp
 class ELODispatcher : public Dispatcher
 {
  public:
-  ELODispatcher(std::shared_ptr<Input> input,
-                std::shared_ptr<ICloud> cloud,
-                std::shared_ptr<IEstimator> estimator);
+  ELODispatcher(
+      std::shared_ptr<Input> input,
+      std::shared_ptr<ICloud> cloud,
+      std::shared_ptr<IEstimator> estimator);
 
   OperationSP peek() override;
   OperationSP pop() override;

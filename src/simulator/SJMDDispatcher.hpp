@@ -12,11 +12,10 @@ class SJMDDispatcher : public SJDispatcher
   virtual void reorderJobOperations(std::vector<OperationSP>& operations) override
   {
     auto operationsInOrder = operations;
-    std::sort(operationsInOrder.begin(),
-              operationsInOrder.end(),
-              [&](OperationSP a, OperationSP b) {
-                return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
-              });
+    std::sort(
+        operationsInOrder.begin(), operationsInOrder.end(), [&](OperationSP a, OperationSP b) {
+          return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
+        });
 
     operations.clear();
     while (!operationsInOrder.empty())

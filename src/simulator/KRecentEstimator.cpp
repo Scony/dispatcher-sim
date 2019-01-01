@@ -2,10 +2,7 @@
 
 #include "KRecentEstimator.hpp"
 
-KRecentEstimator::KRecentEstimator(unsigned k) :
-    mK(k)
-{
-}
+KRecentEstimator::KRecentEstimator(unsigned k) : mK(k) {}
 
 void KRecentEstimator::handleNotification(const Assignation& notification)
 {
@@ -23,7 +20,7 @@ void KRecentEstimator::handleNotification(const Assignation& notification)
   if (operationDurations[finishedOperation->name].size() > mK)
   {
     operationDurationSums[finishedOperation->name] -=
-	operationDurations[finishedOperation->name].front();
+        operationDurations[finishedOperation->name].front();
     operationDurations[finishedOperation->name].pop_front();
   }
 }
@@ -33,8 +30,8 @@ long long KRecentEstimator::estimate(OperationSP operation)
   double estimatedDuration = mDefaultEstimate;
 
   if (operationDurations.find(operation->name) != operationDurations.end()) // not new operation
-    estimatedDuration = (double)operationDurationSums[operation->name]
-	/ operationDurations[operation->name].size();
+    estimatedDuration =
+        (double)operationDurationSums[operation->name] / operationDurations[operation->name].size();
 
   return (int)ceil(estimatedDuration);
 }

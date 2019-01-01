@@ -1,5 +1,5 @@
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 
 #include "SJDispatcher.hpp"
 
@@ -10,9 +10,7 @@ void SJDispatcher::dispatch(JobSP job)
   updateJobWeights();
 }
 
-void SJDispatcher::reorderJobOperations(std::vector<OperationSP>& operations)
-{
-}
+void SJDispatcher::reorderJobOperations(std::vector<OperationSP>& operations) {}
 
 void SJDispatcher::updateJobWeights()
 {
@@ -28,9 +26,9 @@ void SJDispatcher::updateJobWeights()
 
     mJobsInOrder.push_back({jobWeight, jobId});
   }
-  std::sort(mJobsInOrder.begin(), mJobsInOrder.end(), std::greater<std::pair<long long, long long> >());
+  std::sort(
+      mJobsInOrder.begin(), mJobsInOrder.end(), std::greater<std::pair<long long, long long>>());
 }
-
 
 OperationSP SJDispatcher::peek()
 {

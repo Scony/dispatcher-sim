@@ -1,19 +1,20 @@
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 
-#include "Dispatcher.hpp"
 #include "Arguments.hpp"
+#include "Dispatcher.hpp"
 #include "IEstimator.hpp"
 
 class DispatcherFactory
 {
  public:
-  DispatcherFactory(std::shared_ptr<Input> input,
-		    std::shared_ptr<ICloud> cloud,
-                    std::shared_ptr<IEstimator> estimator,
-		    Arguments arguments);
+  DispatcherFactory(
+      std::shared_ptr<Input> input,
+      std::shared_ptr<ICloud> cloud,
+      std::shared_ptr<IEstimator> estimator,
+      Arguments arguments);
 
   std::shared_ptr<Dispatcher> create();
 

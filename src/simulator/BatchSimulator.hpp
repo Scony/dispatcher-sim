@@ -1,25 +1,24 @@
 #pragma once
 
-#include <deque>
 #include <algorithm>
 #include <climits>
+#include <deque>
 
+#include "ExecutionsSubject.hpp"
 #include "Input.hpp"
+#include "Machines.hpp"
 #include "Scheduler.hpp"
 #include "Types.hpp"
-#include "ExecutionsSubject.hpp"
-#include "Machines.hpp"
 
 template <class TSchedule>
 class BatchSimulator : public ExecutionsSubject
 {
  public:
-  BatchSimulator(std::shared_ptr<Input> input,
-                 std::shared_ptr<Machines> machines,
-                 std::shared_ptr<Scheduler<TSchedule> > scheduler) :
-      mMachines(machines),
-      mScheduler(scheduler),
-      mSchedule(mMachines)
+  BatchSimulator(
+      std::shared_ptr<Input> input,
+      std::shared_ptr<Machines> machines,
+      std::shared_ptr<Scheduler<TSchedule>> scheduler)
+      : mMachines(machines), mScheduler(scheduler), mSchedule(mMachines)
   {
     // copy input to queue
     auto jobs = input->getJobs();
@@ -28,8 +27,8 @@ class BatchSimulator : public ExecutionsSubject
 
     // sort queue by arrival time DESC
     std::sort(mQueue.begin(), mQueue.end(), [](std::shared_ptr<Job> a, std::shared_ptr<Job> b) {
-        return a->arrivalTimestamp > b->arrivalTimestamp;
-      });
+      return a->arrivalTimestamp > b->arrivalTimestamp;
+    });
   }
 
   void run()
@@ -55,7 +54,7 @@ class BatchSimulator : public ExecutionsSubject
  private:
   std::shared_ptr<Machines> mMachines;
 
-  std::shared_ptr<Scheduler<TSchedule> > mScheduler;
-  std::deque<std::shared_ptr<Job> > mQueue;
+  std::shared_ptr<Scheduler<TSchedule>> mScheduler;
+  std::deque<std::shared_ptr<Job>> mQueue;
   TSchedule mSchedule;
 };

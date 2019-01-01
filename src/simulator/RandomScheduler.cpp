@@ -1,16 +1,17 @@
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 
 #include "RandomScheduler.hpp"
 
-RandomScheduler::RandomScheduler(std::shared_ptr<Input> input,
-                                 std::shared_ptr<Machines> machines,
-                                 std::shared_ptr<IEstimator> estimator) :
-    Scheduler(input, machines, estimator)
+RandomScheduler::RandomScheduler(
+    std::shared_ptr<Input> input,
+    std::shared_ptr<Machines> machines,
+    std::shared_ptr<IEstimator> estimator)
+    : Scheduler(input, machines, estimator)
 {
 }
 
-void RandomScheduler::schedule(Schedule & schedule, JobSP job)
+void RandomScheduler::schedule(Schedule& schedule, JobSP job)
 {
   const unsigned machinesNum = schedule.schedule.size();
   assert(machinesNum > 0);

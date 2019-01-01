@@ -2,20 +2,15 @@
 
 #include "Input.hpp"
 
-Input::Input() :
-    mJobs(),
-    mJobsMap()
-{
-}
+Input::Input() : mJobs(), mJobsMap() {}
 
-Input::Input(std::vector<std::shared_ptr<Job> > jobs) :
-    mJobs(jobs)
+Input::Input(std::vector<std::shared_ptr<Job>> jobs) : mJobs(jobs)
 {
   for (const auto& job : jobs)
     mJobsMap.emplace(job->id, job);
 }
 
-std::vector<std::shared_ptr<Job> > Input::getJobs()
+std::vector<std::shared_ptr<Job>> Input::getJobs()
 {
   return mJobs;
 }
@@ -51,7 +46,7 @@ void Input::readFromStdin()
     std::cin >> jobArrivalTimestamp;
     std::cin >> jobOperationsNum;
 
-    std::vector<std::shared_ptr<Operation> > operations;
+    std::vector<std::shared_ptr<Operation>> operations;
     for (int j = 0; j < jobOperationsNum; j++)
     {
       operationsNum++;
@@ -63,12 +58,13 @@ void Input::readFromStdin()
       std::cin >> operationName;
       std::cin >> operationResult;
       std::cin >> operationDuration;
-      auto operation = std::make_shared<Operation>(operationId,
-                                                   jobId,
-                                                   operationName,
-                                                   operationResult,
-                                                   jobArrivalTimestamp,
-                                                   operationDuration);
+      auto operation = std::make_shared<Operation>(
+          operationId,
+          jobId,
+          operationName,
+          operationResult,
+          jobArrivalTimestamp,
+          operationDuration);
       operations.push_back(operation);
     }
 

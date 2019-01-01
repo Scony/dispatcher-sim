@@ -1,13 +1,13 @@
 #pragma once
 
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
+#include "IEstimator.hpp"
+#include "Input.hpp"
+#include "Machines.hpp"
 #include "Operation.hpp"
 #include "Types.hpp"
-#include "IEstimator.hpp"
-#include "Machines.hpp"
-#include "Input.hpp"
 
 struct CapacitySchedule
 {
@@ -18,12 +18,13 @@ struct CapacitySchedule
 
   using JobFinish = long long;
   using MachineCache = std::unordered_map<JobID, JobFinish>;
-  MachineCache simulateDispatchMachine(long long from, MachineID machine, IEstimatorSP estimator) const;
+  MachineCache simulateDispatchMachine(long long from, MachineID machine, IEstimatorSP estimator)
+      const;
   using Cache = std::vector<MachineCache>;
   static long long calculateFlowFromCache(const Cache& machineCaches, std::shared_ptr<Input> input);
 
   using BeginTimestamp = long long;
-  std::vector<std::vector<std::pair<BeginTimestamp, OperationSP> > > ongoings;
-  std::vector<std::vector<OperationSP> > schedule;
+  std::vector<std::vector<std::pair<BeginTimestamp, OperationSP>>> ongoings;
+  std::vector<std::vector<OperationSP>> schedule;
   std::shared_ptr<Machines> machines;
 };

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <istream>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 #include "Machine.hpp"
 

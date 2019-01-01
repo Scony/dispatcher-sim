@@ -4,7 +4,7 @@
 
 struct Arguments
 {
-  Arguments(int argc, char ** argv);
+  Arguments(int argc, char** argv);
 
   std::string primaryAlgorithm;
   unsigned machinesNum;

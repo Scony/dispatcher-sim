@@ -9,11 +9,8 @@ struct Job
   Job(long long aId,
       long long aPriority,
       long long aArrivalTimestamp,
-      std::vector<OperationSP> aOperations) :
-      id(aId),
-      priority(aPriority),
-      arrivalTimestamp(aArrivalTimestamp),
-      operations(aOperations)
+      std::vector<OperationSP> aOperations)
+      : id(aId), priority(aPriority), arrivalTimestamp(aArrivalTimestamp), operations(aOperations)
   {
   }
 

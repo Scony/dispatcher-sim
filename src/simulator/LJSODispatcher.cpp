@@ -1,5 +1,5 @@
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 
 #include "LJSODispatcher.hpp"
 
@@ -7,11 +7,12 @@ void LJSODispatcher::dispatch(JobSP job)
 {
   // append new operations to map
   mJobOperations[job->id] = job->operations;
-  std::sort(mJobOperations[job->id].begin(),
-	    mJobOperations[job->id].end(),
-	    [&](OperationSP a, OperationSP b) {
-	      return mEstimator->estimate(a) > mEstimator->estimate(b); // DESC
-	    });
+  std::sort(
+      mJobOperations[job->id].begin(),
+      mJobOperations[job->id].end(),
+      [&](OperationSP a, OperationSP b) {
+        return mEstimator->estimate(a) > mEstimator->estimate(b); // DESC
+      });
 
   // update weights of jobs
   mJobsInOrder.clear();
@@ -26,5 +27,5 @@ void LJSODispatcher::dispatch(JobSP job)
 
     mJobsInOrder.push_back({jobWeight, jobId});
   }
-  std::sort(mJobsInOrder.begin(), mJobsInOrder.end(), std::less<std::pair<long long, long long> >());
+  std::sort(mJobsInOrder.begin(), mJobsInOrder.end(), std::less<std::pair<long long, long long>>());
 }

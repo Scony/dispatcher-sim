@@ -37,5 +37,5 @@ std::vector<MachineSP> generate(unsigned machinesNum, unsigned capacity)
     machines.emplace_back(new Machine(id, capacity));
   return machines;
 }
-}
-}
+} // namespace machines
+} // namespace utility

@@ -2,17 +2,18 @@
 
 #include <memory>
 
-#include "Input.hpp"
 #include "ICloud.hpp"
-#include "IQueue.hpp"
 #include "IEstimator.hpp"
+#include "IQueue.hpp"
+#include "Input.hpp"
 
 class Dispatcher : public IQueue
 {
  public:
-  Dispatcher(std::shared_ptr<Input> input,
-	     std::shared_ptr<ICloud> cloud,
-	     std::shared_ptr<IEstimator> estimator);
+  Dispatcher(
+      std::shared_ptr<Input> input,
+      std::shared_ptr<ICloud> cloud,
+      std::shared_ptr<IEstimator> estimator);
 
   virtual void dispatch(std::shared_ptr<Job> job) = 0;
   virtual void advance(long long toTimestamp);

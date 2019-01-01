@@ -15,10 +15,7 @@ Machines::Machines(unsigned machinesNum, unsigned capacity)
   sortMachinesById();
 }
 
-Machines::Machines(const std::vector<MachineSP>& machines)
-    : mMachines(machines)
-{
-}
+Machines::Machines(const std::vector<MachineSP>& machines) : mMachines(machines) {}
 
 size_t Machines::size()
 {
@@ -37,8 +34,7 @@ MachineSP Machines::getMachine(MachineID id)
 
 void Machines::sortMachinesById()
 {
-  std::sort(mMachines.begin(), mMachines.end(), [](MachineSP a, MachineSP b) {
-      return a->id < b->id;
-    });
+  std::sort(
+      mMachines.begin(), mMachines.end(), [](MachineSP a, MachineSP b) { return a->id < b->id; });
   assert(mMachines[0]->id == 0);
 }

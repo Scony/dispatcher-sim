@@ -7,10 +7,11 @@
 namespace algorithm
 {
 template <typename Solution, typename Cost>
-Solution sa(const Solution& initialSolution,
-            std::function<Cost(const Solution&)> costFunction,
-            std::function<void(Solution&)> neighbouringSolution,
-            unsigned iterations)
+Solution sa(
+    const Solution& initialSolution,
+    std::function<Cost(const Solution&)> costFunction,
+    std::function<void(Solution&)> neighbouringSolution,
+    unsigned iterations)
 {
   Solution bestSolution = initialSolution;
   Cost bestCost = costFunction(bestSolution);
@@ -57,11 +58,12 @@ Solution sa(const Solution& initialSolution,
 }
 
 template <typename Solution, typename Cost>
-void sa_inplace(Solution& initialSolution,
-                std::function<Cost(const Solution&)> costFunction,
-                std::function<void(Solution&)> invertSolution,
-                std::function<void(Solution&)> revertSolution,
-                unsigned iterations)
+void sa_inplace(
+    Solution& initialSolution,
+    std::function<Cost(const Solution&)> costFunction,
+    std::function<void(Solution&)> invertSolution,
+    std::function<void(Solution&)> revertSolution,
+    unsigned iterations)
 {
   Solution bestSolution = initialSolution;
   Cost bestCost = costFunction(bestSolution);
@@ -103,4 +105,4 @@ void sa_inplace(Solution& initialSolution,
 
   initialSolution = bestSolution;
 }
-}
+} // namespace algorithm

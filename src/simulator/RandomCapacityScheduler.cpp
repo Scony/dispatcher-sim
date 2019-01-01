@@ -1,9 +1,9 @@
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 
 #include "RandomCapacityScheduler.hpp"
 
-void RandomCapacityScheduler::schedule(CapacitySchedule & schedule, JobSP job)
+void RandomCapacityScheduler::schedule(CapacitySchedule& schedule, JobSP job)
 {
   const unsigned machinesNum = schedule.schedule.size();
   assert(machinesNum > 0);

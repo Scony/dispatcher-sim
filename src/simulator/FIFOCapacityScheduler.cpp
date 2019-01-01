@@ -1,6 +1,6 @@
 #include "FIFOCapacityScheduler.hpp"
 
-void FIFOCapacityScheduler::schedule(CapacitySchedule & schedule, JobSP job)
+void FIFOCapacityScheduler::schedule(CapacitySchedule& schedule, JobSP job)
 {
   auto operations = job->operations;
 

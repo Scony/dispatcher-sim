@@ -3,11 +3,11 @@
 
 #include "RandomDispatcher.hpp"
 
-RandomDispatcher::RandomDispatcher(std::shared_ptr<Input> input,
-				   std::shared_ptr<ICloud> cloud,
-				   std::shared_ptr<IEstimator> estimator) :
-    Dispatcher(input, cloud, estimator),
-    mQueue()
+RandomDispatcher::RandomDispatcher(
+    std::shared_ptr<Input> input,
+    std::shared_ptr<ICloud> cloud,
+    std::shared_ptr<IEstimator> estimator)
+    : Dispatcher(input, cloud, estimator), mQueue()
 {
 }
 

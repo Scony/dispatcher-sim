@@ -2,10 +2,7 @@
 
 #include "KAverageEstimator.hpp"
 
-KAverageEstimator::KAverageEstimator(unsigned k)
-    : mK(k)
-{
-}
+KAverageEstimator::KAverageEstimator(unsigned k) : mK(k) {}
 
 void KAverageEstimator::handleNotification(const Assignation& notification)
 {

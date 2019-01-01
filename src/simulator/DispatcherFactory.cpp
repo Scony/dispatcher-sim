@@ -1,40 +1,37 @@
 #include <cassert>
 
 #include "DispatcherFactory.hpp"
-#include "RandomDispatcher.hpp"
-#include "MaxDispatcher.hpp"
-#include "MinDispatcher.hpp"
-#include "SJLODispatcher.hpp"
+#include "ELODispatcher.hpp"
 #include "FIFODispatcher.hpp"
-#include "SJSODispatcher.hpp"
+#include "JOPTDispatcher.hpp"
+#include "JSADispatcher.hpp"
 #include "LJSODispatcher.hpp"
 #include "LODispatcher.hpp"
-#include "SODispatcher.hpp"
-#include "ELODispatcher.hpp"
-#include "JSADispatcher.hpp"
+#include "MaxDispatcher.hpp"
+#include "MinDispatcher.hpp"
 #include "QOPTDispatcher.hpp"
 #include "QWORSTDispatcher.hpp"
-#include "JOPTDispatcher.hpp"
-#include "SASADispatcher.hpp"
-#include "SJSADispatcher.hpp"
+#include "RandomDispatcher.hpp"
 #include "SADispatcher.hpp"
-#include "VRDispatcher.hpp"
-#include "SJDispatcher.hpp"
-#include "SJRANDDispatcher.hpp"
-#include "SJMDDispatcher.hpp"
-#include "SJMDRDispatcher.hpp"
+#include "SASADispatcher.hpp"
 #include "SJAVGDispatcher.hpp"
 #include "SJAVGRDispatcher.hpp"
+#include "SJDispatcher.hpp"
+#include "SJLODispatcher.hpp"
+#include "SJMDDispatcher.hpp"
+#include "SJMDRDispatcher.hpp"
+#include "SJRANDDispatcher.hpp"
+#include "SJSADispatcher.hpp"
+#include "SJSODispatcher.hpp"
+#include "SODispatcher.hpp"
+#include "VRDispatcher.hpp"
 
-
-DispatcherFactory::DispatcherFactory(std::shared_ptr<Input> input,
-				     std::shared_ptr<ICloud> cloud,
-                                     std::shared_ptr<IEstimator> estimator,
-				     Arguments arguments) :
-    mInput(input),
-    mCloud(cloud),
-    mEstimator(estimator),
-    mArguments(arguments)
+DispatcherFactory::DispatcherFactory(
+    std::shared_ptr<Input> input,
+    std::shared_ptr<ICloud> cloud,
+    std::shared_ptr<IEstimator> estimator,
+    Arguments arguments)
+    : mInput(input), mCloud(cloud), mEstimator(estimator), mArguments(arguments)
 {
 }
 
@@ -63,34 +60,24 @@ std::shared_ptr<Dispatcher> DispatcherFactory::create()
   if (mArguments.primaryAlgorithm == "so")
     dispatcher = std::make_shared<SODispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "jsa")
-    dispatcher = std::make_shared<JSADispatcher>(mInput,
-                                                 mCloud,
-                                                 mEstimator,
-                                                 mArguments.operationLevelAlgorithm,
-                                                 mArguments.saIterations);
+    dispatcher = std::make_shared<JSADispatcher>(
+        mInput, mCloud, mEstimator, mArguments.operationLevelAlgorithm, mArguments.saIterations);
   if (mArguments.primaryAlgorithm == "qopt")
     dispatcher = std::make_shared<QOPTDispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "qworst")
     dispatcher = std::make_shared<QWORSTDispatcher>(mInput, mCloud, mEstimator);
   if (mArguments.primaryAlgorithm == "jopt")
-    dispatcher = std::make_shared<JOPTDispatcher>(mInput,
-                                                  mCloud,
-                                                  mEstimator,
-                                                  mArguments.operationLevelAlgorithm);
+    dispatcher = std::make_shared<JOPTDispatcher>(
+        mInput, mCloud, mEstimator, mArguments.operationLevelAlgorithm);
   if (mArguments.primaryAlgorithm == "sasa")
-    dispatcher = std::make_shared<SASADispatcher>(mInput,
-                                                  mCloud,
-                                                  mEstimator,
-                                                  mArguments.operationLevelAlgorithm,
-                                                  mArguments.saIterations);
+    dispatcher = std::make_shared<SASADispatcher>(
+        mInput, mCloud, mEstimator, mArguments.operationLevelAlgorithm, mArguments.saIterations);
   if (mArguments.primaryAlgorithm == "sjsa")
-    dispatcher = std::make_shared<SJSADispatcher>(mInput,
-                                                  mCloud,
-                                                  mEstimator,
-                                                  mArguments.operationLevelAlgorithm,
-                                                  mArguments.saIterations);
+    dispatcher = std::make_shared<SJSADispatcher>(
+        mInput, mCloud, mEstimator, mArguments.operationLevelAlgorithm, mArguments.saIterations);
   if (mArguments.primaryAlgorithm == "sa")
-    dispatcher = std::make_shared<SADispatcher>(mInput, mCloud, mEstimator, mArguments.saIterations);
+    dispatcher =
+        std::make_shared<SADispatcher>(mInput, mCloud, mEstimator, mArguments.saIterations);
   if (mArguments.primaryAlgorithm == "rvr")
     dispatcher = std::make_shared<VRDispatcher>(mInput, mCloud, mEstimator, false);
   if (mArguments.primaryAlgorithm == "dvr")

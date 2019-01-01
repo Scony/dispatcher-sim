@@ -2,8 +2,8 @@
 
 #include <deque>
 
-#include "Input.hpp"
 #include "Dispatcher.hpp"
+#include "Input.hpp"
 
 class Simulator
 {
@@ -14,5 +14,5 @@ class Simulator
 
  private:
   std::shared_ptr<Dispatcher> mDispatcher;
-  std::deque<std::shared_ptr<Job> > mQueue;
+  std::deque<std::shared_ptr<Job>> mQueue;
 };

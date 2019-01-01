@@ -1,8 +1,8 @@
-#include <map>
-#include <unordered_map>
-#include <cassert>
 #include <algorithm>
+#include <cassert>
+#include <map>
 #include <numeric>
+#include <unordered_map>
 
 #include <boost/icl/split_interval_map.hpp>
 
@@ -13,8 +13,9 @@ void Solution::handleNotification(const Assignation& notification)
   mSolutionVec.push_back(notification);
 }
 
-Solution::JobFlowVec Solution::calculateJobFlowVec(const SolutionVec& solution,
-                                                   std::vector<std::shared_ptr<Job> > jobs)
+Solution::JobFlowVec Solution::calculateJobFlowVec(
+    const SolutionVec& solution,
+    std::vector<std::shared_ptr<Job>> jobs)
 {
   std::map<long long, long long> jobEnds;
 
@@ -29,7 +30,7 @@ Solution::JobFlowVec Solution::calculateJobFlowVec(const SolutionVec& solution,
     jobEnds[operation->parentId] = std::max(jobEnds[operation->parentId], endTimestamp);
   }
 
-  std::vector<std::pair<long long, std::shared_ptr<Job> > > jobFlows;
+  std::vector<std::pair<long long, std::shared_ptr<Job>>> jobFlows;
 
   for (auto& job : jobs)
     jobFlows.push_back({jobEnds[job->id] - job->arrivalTimestamp, job});
@@ -37,8 +38,9 @@ Solution::JobFlowVec Solution::calculateJobFlowVec(const SolutionVec& solution,
   return jobFlows;
 }
 
-Solution::JobStretchVec Solution::calculateJobTStretchVec(const SolutionVec& solution,
-                                                          std::vector<JobSP> jobs)
+Solution::JobStretchVec Solution::calculateJobTStretchVec(
+    const SolutionVec& solution,
+    std::vector<JobSP> jobs)
 {
   JobStretchVec result;
 
@@ -47,20 +49,19 @@ Solution::JobStretchVec Solution::calculateJobTStretchVec(const SolutionVec& sol
   {
     const auto& flow = kv.first;
     const auto& job = kv.second;
-    double jobDuration = std::accumulate(job->operations.begin(),
-                                         job->operations.end(),
-                                         0.0d,
-                                         [](double acc, OperationSP op) {
-                                           return acc + op->duration;
-                                         });
+    double jobDuration = std::accumulate(
+        job->operations.begin(), job->operations.end(), 0.0d, [](double acc, OperationSP op) {
+          return acc + op->duration;
+        });
     result.emplace_back((double)flow / jobDuration, job);
   }
 
   return result;
 }
 
-Solution::JobStretchVec Solution::calculateJobMStretchVec(const SolutionVec& solution,
-                                                          std::vector<JobSP> jobs)
+Solution::JobStretchVec Solution::calculateJobMStretchVec(
+    const SolutionVec& solution,
+    std::vector<JobSP> jobs)
 {
   JobStretchVec result;
 
@@ -70,10 +71,7 @@ Solution::JobStretchVec Solution::calculateJobMStretchVec(const SolutionVec& sol
     const auto& flow = pair.first;
     const auto& job = pair.second;
     double maxOperationDuration = std::accumulate(
-        job->operations.begin(),
-        job->operations.end(),
-        0.0d,
-        [](double acc, OperationSP op) {
+        job->operations.begin(), job->operations.end(), 0.0d, [](double acc, OperationSP op) {
           return acc < op->duration ? op->duration : acc;
         });
     result.emplace_back((double)flow / maxOperationDuration, job);
@@ -82,9 +80,10 @@ Solution::JobStretchVec Solution::calculateJobMStretchVec(const SolutionVec& sol
   return result;
 }
 
-Solution::JobStretchVec Solution::calculateJobWStretchVec(const SolutionVec& solution,
-                                                          std::vector<JobSP> jobs,
-                                                          std::shared_ptr<Machines> machines)
+Solution::JobStretchVec Solution::calculateJobWStretchVec(
+    const SolutionVec& solution,
+    std::vector<JobSP> jobs,
+    std::shared_ptr<Machines> machines)
 {
   JobStretchVec result;
 
@@ -93,12 +92,10 @@ Solution::JobStretchVec Solution::calculateJobWStretchVec(const SolutionVec& sol
   {
     const auto& flow = pair.first;
     const auto& job = pair.second;
-    double jobDuration = std::accumulate(job->operations.begin(),
-                                         job->operations.end(),
-                                         0.0d,
-                                         [](double acc, OperationSP op) {
-                                           return acc + op->duration;
-                                         });
+    double jobDuration = std::accumulate(
+        job->operations.begin(), job->operations.end(), 0.0d, [](double acc, OperationSP op) {
+          return acc + op->duration;
+        });
     result.emplace_back((double)flow / (jobDuration / machines->size()), job);
   }
 
@@ -139,14 +136,15 @@ bool Solution::validateOperationEnds(const SolutionVec& solution)
     const auto& endTimestamp = std::get<0>(tuple);
     const auto& operation = std::get<1>(tuple);
 
-    if(endTimestamp - operation->duration < operation->arrival)
+    if (endTimestamp - operation->duration < operation->arrival)
       return false;
   }
   return true;
 }
 
-bool Solution::validateSingularOperationExecutions(const SolutionVec& solution,
-						   const std::vector<JobSP>& jobs)
+bool Solution::validateSingularOperationExecutions(
+    const SolutionVec& solution,
+    const std::vector<JobSP>& jobs)
 {
   std::map<long long, unsigned> operationExecutions;
   for (const auto& job : jobs)
@@ -166,8 +164,9 @@ bool Solution::validateSingularOperationExecutions(const SolutionVec& solution,
   return true;
 }
 
-bool Solution::validateMachineCapacityUsage(const SolutionVec& solution,
-					    const std::vector<MachineSP>& machines)
+bool Solution::validateMachineCapacityUsage(
+    const SolutionVec& solution,
+    const std::vector<MachineSP>& machines)
 {
   std::unordered_map<MachineID, MachineSP> machinesMap;
   for (auto const& machine : machines)
@@ -175,7 +174,7 @@ bool Solution::validateMachineCapacityUsage(const SolutionVec& solution,
 
   using Timestamp = long long;
   using Capacity = long long;
-  std::unordered_map<MachineID, boost::icl::interval_map<Timestamp, Capacity> > intervalTrees;
+  std::unordered_map<MachineID, boost::icl::interval_map<Timestamp, Capacity>> intervalTrees;
   for (const auto& tuple : solution)
   {
     const auto& endTimestamp = std::get<0>(tuple);
@@ -188,7 +187,8 @@ bool Solution::validateMachineCapacityUsage(const SolutionVec& solution,
       intervalTrees.emplace(machineId, boost::icl::interval_map<Timestamp, Capacity>{});
 
     auto beginTimestamp = endTimestamp - operation->duration;
-    auto interval = boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp, endTimestamp);
+    auto interval =
+        boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp, endTimestamp);
     intervalTrees[machineId] += std::make_pair(interval, operation->capacityReq);
   }
   for (auto const& machine : machines)

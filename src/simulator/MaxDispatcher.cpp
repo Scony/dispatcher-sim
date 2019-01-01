@@ -1,26 +1,26 @@
 #include <algorithm>
-#include <map>
 #include <cassert>
+#include <map>
 
 #include "MaxDispatcher.hpp"
 
-MaxDispatcher::MaxDispatcher(std::shared_ptr<Input> input,
-			     std::shared_ptr<ICloud> cloud,
-			     std::shared_ptr<IEstimator> estimator) :
-    Dispatcher(input, cloud, estimator),
-    mJobOperations(),
-    mNextJob(0)
+MaxDispatcher::MaxDispatcher(
+    std::shared_ptr<Input> input,
+    std::shared_ptr<ICloud> cloud,
+    std::shared_ptr<IEstimator> estimator)
+    : Dispatcher(input, cloud, estimator), mJobOperations(), mNextJob(0)
 {
 }
 
 void MaxDispatcher::dispatch(JobSP job)
 {
   mJobOperations[job->id] = job->operations;
-  std::sort(mJobOperations[job->id].begin(),
-	    mJobOperations[job->id].end(),
-	    [&](OperationSP a, OperationSP b) {
-	      return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
-	    });
+  std::sort(
+      mJobOperations[job->id].begin(),
+      mJobOperations[job->id].end(),
+      [&](OperationSP a, OperationSP b) {
+        return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
+      });
 }
 
 OperationSP MaxDispatcher::peek()

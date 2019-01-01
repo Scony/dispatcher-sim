@@ -14,5 +14,5 @@ class ExecutionsSubject
   virtual void notify(const Assignation& notification);
 
  private:
-  std::vector<std::shared_ptr<IExecutionsListener> > mSubscribers;
+  std::vector<std::shared_ptr<IExecutionsListener>> mSubscribers;
 };

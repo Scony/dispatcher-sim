@@ -1,17 +1,16 @@
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 
+#include "NoEstimator.hpp"
 #include "QOPTDispatcher.hpp"
 #include "Solution.hpp"
-#include "NoEstimator.hpp"
 
-QOPTDispatcher::QOPTDispatcher(std::shared_ptr<Input> input,
-			       std::shared_ptr<ICloud> cloud,
-			       std::shared_ptr<IEstimator> estimator,
-			       bool calculateSolution) :
-    Dispatcher(input, cloud, estimator),
-    mQueue(),
-    mTime(-1)
+QOPTDispatcher::QOPTDispatcher(
+    std::shared_ptr<Input> input,
+    std::shared_ptr<ICloud> cloud,
+    std::shared_ptr<IEstimator> estimator,
+    bool calculateSolution)
+    : Dispatcher(input, cloud, estimator), mQueue(), mTime(-1)
 {
   if (!calculateSolution)
     return;
@@ -23,15 +22,13 @@ QOPTDispatcher::QOPTDispatcher(std::shared_ptr<Input> input,
   std::sort(permutation.begin(), permutation.end());
 
   auto bestPermutation = permutation;
-  auto bestPermutationCost =
-      Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
-                                                         permutation));
+  auto bestPermutationCost = Solution::evalTotalFlow(
+      mCloud->simulateWithFuture(std::make_shared<NoEstimator>(), permutation));
 
   while (std::next_permutation(permutation.begin(), permutation.end()))
   {
-    auto permutationCost =
-	Solution::evalTotalFlow(mCloud->simulateWithFuture(std::make_shared<NoEstimator>(),
-							   permutation));
+    auto permutationCost = Solution::evalTotalFlow(
+        mCloud->simulateWithFuture(std::make_shared<NoEstimator>(), permutation));
     if (permutationCost < bestPermutationCost)
     {
       bestPermutation = permutation;

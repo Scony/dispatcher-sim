@@ -1,9 +1,7 @@
 #include "LazyClairvoyantEstimator.hpp"
 
-LazyClairvoyantEstimator::LazyClairvoyantEstimator() :
-    mKnownOperations(),
-    mTotalOperationsDurations(0),
-    mExecutedOperationsNum(0)
+LazyClairvoyantEstimator::LazyClairvoyantEstimator()
+    : mKnownOperations(), mTotalOperationsDurations(0), mExecutedOperationsNum(0)
 {
 }
 

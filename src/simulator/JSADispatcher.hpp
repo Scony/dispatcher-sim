@@ -9,12 +9,14 @@ class JSADispatcher : public Dispatcher
 {
  public:
   using Solution = std::vector<long long>;
+
  public:
-  JSADispatcher(std::shared_ptr<Input> input,
-		std::shared_ptr<ICloud> cloud,
-		std::shared_ptr<IEstimator> estimator,
-		std::string operationLevelAlgorithm,
-		unsigned iterations);
+  JSADispatcher(
+      std::shared_ptr<Input> input,
+      std::shared_ptr<ICloud> cloud,
+      std::shared_ptr<IEstimator> estimator,
+      std::string operationLevelAlgorithm,
+      unsigned iterations);
 
   OperationSP peek() override;
   OperationSP pop() override;
@@ -28,5 +30,5 @@ class JSADispatcher : public Dispatcher
 
  protected:
   Solution mCurrentSolution;
-  std::map<long long, std::vector<OperationSP> > mJobOperations;
+  std::map<long long, std::vector<OperationSP>> mJobOperations;
 };

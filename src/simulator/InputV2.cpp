@@ -1,5 +1,5 @@
-#include <iostream>
 #include <cassert>
+#include <iostream>
 #include <map>
 
 #include "InputV2.hpp"
@@ -14,7 +14,7 @@ void InputV2::readFromStdin()
   assert(version == 2);
 
   std::map<JobID, JobSP> jobs;
-  std::map<JobID, std::vector<OperationSP> > jobOperations;
+  std::map<JobID, std::vector<OperationSP>> jobOperations;
   unsigned jobsNum;
   std::cin >> jobsNum;
   for (unsigned i = 0; i < jobsNum; i++)
@@ -25,12 +25,11 @@ void InputV2::readFromStdin()
     std::cin >> jobId;
     std::cin >> jobPriority;
     std::cin >> jobArrivalTimestamp;
-    jobs.emplace(std::pair<JobID, JobSP>(jobId,
-                                         std::make_shared<Job>(jobId,
-                                                               jobPriority,
-                                                               jobArrivalTimestamp,
-                                                               std::vector<OperationSP>{})));
-    jobOperations.emplace(std::pair<JobID, std::vector<OperationSP> >{jobId, {}});
+    jobs.emplace(std::pair<JobID, JobSP>(
+        jobId,
+        std::make_shared<Job>(
+            jobId, jobPriority, jobArrivalTimestamp, std::vector<OperationSP>{})));
+    jobOperations.emplace(std::pair<JobID, std::vector<OperationSP>>{jobId, {}});
   }
 
   unsigned operationsNum;
@@ -49,22 +48,21 @@ void InputV2::readFromStdin()
     std::cin >> operationResult;
     std::cin >> operationDuration;
     std::cin >> operationCapacityReq;
-    jobOperations[jobId].emplace_back(new Operation(operationId,
-                                                    jobId,
-                                                    operationName,
-                                                    operationResult,
-                                                    jobs[jobId]->arrivalTimestamp,
-                                                    operationDuration,
-                                                    operationCapacityReq));
+    jobOperations[jobId].emplace_back(new Operation(
+        operationId,
+        jobId,
+        operationName,
+        operationResult,
+        jobs[jobId]->arrivalTimestamp,
+        operationDuration,
+        operationCapacityReq));
   }
 
   for (auto const& kv : jobs)
   {
     const auto& job = kv.second;
-    mJobs.emplace_back(new Job(job->id,
-                               job->priority,
-                               job->arrivalTimestamp,
-                               jobOperations[job->id]));
+    mJobs.emplace_back(
+        new Job(job->id, job->priority, job->arrivalTimestamp, jobOperations[job->id]));
     mJobsMap.emplace(job->id, job);
   }
 }

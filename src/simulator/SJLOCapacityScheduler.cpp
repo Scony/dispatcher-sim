@@ -1,9 +1,9 @@
 #include <algorithm>
 
-#include "SJLOCapacityScheduler.hpp"
 #include "FIFOCapacityScheduler.hpp"
+#include "SJLOCapacityScheduler.hpp"
 
-void SJLOCapacityScheduler::schedule(CapacitySchedule & schedule, JobSP job)
+void SJLOCapacityScheduler::schedule(CapacitySchedule& schedule, JobSP job)
 {
   FIFOCapacityScheduler fifo(mInput, mMachines, mEstimator);
   fifo.schedule(schedule, job);
@@ -21,8 +21,8 @@ void SJLOCapacityScheduler::schedule(CapacitySchedule & schedule, JobSP job)
 
   for (auto& vec : schedule.schedule)
     std::stable_sort(vec.begin(), vec.end(), [&](OperationSP a, OperationSP b) {
-        if (jobWeights[a->parentId] != jobWeights[b->parentId])
-          return jobWeights[a->parentId] < jobWeights[b->parentId];  // ASC (SJ)
-        return mEstimator->estimate(a) > mEstimator->estimate(b);  // DESC (LO)
-      });
+      if (jobWeights[a->parentId] != jobWeights[b->parentId])
+        return jobWeights[a->parentId] < jobWeights[b->parentId]; // ASC (SJ)
+      return mEstimator->estimate(a) > mEstimator->estimate(b); // DESC (LO)
+    });
 }

@@ -1,17 +1,14 @@
 #include <cassert>
 
-#include "EstimatorFactory.hpp"
-#include "NoEstimator.hpp"
-#include "LazyClairvoyantEstimator.hpp"
-#include "KRecentEstimator.hpp"
 #include "AverageEstimator.hpp"
 #include "ConstEstimator.hpp"
+#include "EstimatorFactory.hpp"
 #include "KAverageEstimator.hpp"
+#include "KRecentEstimator.hpp"
+#include "LazyClairvoyantEstimator.hpp"
+#include "NoEstimator.hpp"
 
-EstimatorFactory::EstimatorFactory(Arguments arguments) :
-    mArguments(arguments)
-{
-}
+EstimatorFactory::EstimatorFactory(Arguments arguments) : mArguments(arguments) {}
 
 IEstimatorSP EstimatorFactory::create()
 {

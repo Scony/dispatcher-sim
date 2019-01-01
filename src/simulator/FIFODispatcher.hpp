@@ -7,9 +7,10 @@
 class FIFODispatcher : public Dispatcher
 {
  public:
-  FIFODispatcher(std::shared_ptr<Input> input,
-		 std::shared_ptr<ICloud> cloud,
-		 std::shared_ptr<IEstimator> estimator);
+  FIFODispatcher(
+      std::shared_ptr<Input> input,
+      std::shared_ptr<ICloud> cloud,
+      std::shared_ptr<IEstimator> estimator);
 
   OperationSP peek() override;
   OperationSP pop() override;

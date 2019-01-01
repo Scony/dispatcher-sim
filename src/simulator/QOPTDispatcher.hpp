@@ -5,10 +5,11 @@
 class QOPTDispatcher : public Dispatcher
 {
  public:
-  QOPTDispatcher(std::shared_ptr<Input> input,
-		 std::shared_ptr<ICloud> cloud,
-		 std::shared_ptr<IEstimator> estimator,
-		 bool calculateSolution = true);
+  QOPTDispatcher(
+      std::shared_ptr<Input> input,
+      std::shared_ptr<ICloud> cloud,
+      std::shared_ptr<IEstimator> estimator,
+      bool calculateSolution = true);
 
   virtual OperationSP peek() override;
   virtual OperationSP pop() override;

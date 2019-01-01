@@ -7,9 +7,10 @@
 class MaxDispatcher : public Dispatcher
 {
  public:
-  MaxDispatcher(std::shared_ptr<Input> input,
-		std::shared_ptr<ICloud> cloud,
-		std::shared_ptr<IEstimator> estimator);
+  MaxDispatcher(
+      std::shared_ptr<Input> input,
+      std::shared_ptr<ICloud> cloud,
+      std::shared_ptr<IEstimator> estimator);
 
   OperationSP peek() override;
   OperationSP pop() override;
@@ -18,6 +19,6 @@ class MaxDispatcher : public Dispatcher
   virtual void dispatch(JobSP job) override;
 
  protected:
-  std::map<long long, std::vector<OperationSP> > mJobOperations;
+  std::map<long long, std::vector<OperationSP>> mJobOperations;
   unsigned mNextJob;
 };

@@ -3,9 +3,7 @@
 #include "CapacitySchedule.hpp"
 
 CapacitySchedule::CapacitySchedule(std::shared_ptr<Machines> machines)
-    : ongoings{machines->size()}
-    , schedule{machines->size()}
-    , machines{machines}
+    : ongoings{machines->size()}, schedule{machines->size()}, machines{machines}
 {
 }
 
@@ -59,8 +57,8 @@ std::vector<Assignation> CapacitySchedule::dispatch(long long from, long long un
       }
 
       auto endTimestamp = beginTimestamp + operation->duration;
-      auto interval = boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp,
-                                                                           endTimestamp);
+      auto interval =
+          boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp, endTimestamp);
       intervalCapacityUsages += std::make_pair(interval, operation->capacityReq);
 
       if (beginTimestamp < until)
@@ -79,8 +77,8 @@ std::vector<Assignation> CapacitySchedule::dispatch(long long from, long long un
   return assignations;
 }
 
-std::vector<Assignation> CapacitySchedule::simulateDispatch(long long from,
-                                                            IEstimatorSP estimator) const
+std::vector<Assignation> CapacitySchedule::simulateDispatch(long long from, IEstimatorSP estimator)
+    const
 {
   std::vector<Assignation> assignations;
 
@@ -122,8 +120,8 @@ std::vector<Assignation> CapacitySchedule::simulateDispatch(long long from,
       }
 
       auto endTimestamp = beginTimestamp + estimator->estimate(operation);
-      auto interval = boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp,
-                                                                           endTimestamp);
+      auto interval =
+          boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp, endTimestamp);
       intervalCapacityUsages += std::make_pair(interval, operation->capacityReq);
       assignations.emplace_back(endTimestamp, operation, machineId);
     }
@@ -132,9 +130,10 @@ std::vector<Assignation> CapacitySchedule::simulateDispatch(long long from,
   return assignations;
 }
 
-CapacitySchedule::MachineCache CapacitySchedule::simulateDispatchMachine(long long from,
-                                                                         MachineID machineId,
-                                                                         IEstimatorSP estimator) const
+CapacitySchedule::MachineCache CapacitySchedule::simulateDispatchMachine(
+    long long from,
+    MachineID machineId,
+    IEstimatorSP estimator) const
 {
   const auto machineCapacity = machines->getMachine(machineId)->capacity;
   MachineCache cache;
@@ -174,8 +173,8 @@ CapacitySchedule::MachineCache CapacitySchedule::simulateDispatchMachine(long lo
     }
 
     auto endTimestamp = beginTimestamp + estimator->estimate(operation);
-    auto interval = boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp,
-                                                                         endTimestamp);
+    auto interval =
+        boost::icl::discrete_interval<Timestamp>::right_open(beginTimestamp, endTimestamp);
     intervalCapacityUsages += std::make_pair(interval, operation->capacityReq);
     auto it2 = cache.find(operation->parentId);
     if (it2 == cache.end())
@@ -187,8 +186,9 @@ CapacitySchedule::MachineCache CapacitySchedule::simulateDispatchMachine(long lo
   return cache;
 }
 
-long long CapacitySchedule::calculateFlowFromCache(const Cache& machineCaches,
-                                                   std::shared_ptr<Input> input)
+long long CapacitySchedule::calculateFlowFromCache(
+    const Cache& machineCaches,
+    std::shared_ptr<Input> input)
 {
   std::unordered_map<JobID, JobFinish> finalJobFinishes;
 

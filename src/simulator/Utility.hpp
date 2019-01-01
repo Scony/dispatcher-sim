@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
-#include <iostream>
 #include <cassert>
+#include <iostream>
+#include <vector>
 
 #include "Machine.hpp"
 
@@ -12,7 +12,7 @@ namespace machines
 {
 std::vector<MachineSP> readFromStream(std::istream& inputStream);
 std::vector<MachineSP> generate(unsigned machinesNum, unsigned capacity);
-}
+} // namespace machines
 
 namespace algorithm
 {
@@ -23,7 +23,7 @@ using DstRowOffset = unsigned;
 
 template <class TObject>
 void deterministic_swap(
-    std::vector<std::vector<TObject> >& table,
+    std::vector<std::vector<TObject>>& table,
     SrcRow& srcRow,
     DstRow& dstRow,
     SrcRowOffset& srcRowOffset,
@@ -34,7 +34,7 @@ void deterministic_swap(
 
 template <class TObject>
 std::tuple<SrcRow, DstRow, SrcRowOffset, DstRowOffset> random_swap(
-    std::vector<std::vector<TObject> >& table)
+    std::vector<std::vector<TObject>>& table)
 {
   unsigned srcRow = rand() % table.size();
   while (table[srcRow].size() <= 0)
@@ -53,23 +53,22 @@ std::tuple<SrcRow, DstRow, SrcRowOffset, DstRowOffset> random_swap(
 
 template <class TObject>
 void deterministic_move(
-    std::vector<std::vector<TObject> >& table,
+    std::vector<std::vector<TObject>>& table,
     SrcRow& srcRow,
     DstRow& dstRow,
     SrcRowOffset& srcRowOffset,
     DstRowOffset& dstRowOffset)
 {
-  if(srcRow == dstRow)
+  if (srcRow == dstRow)
     return;
 
-  table[dstRow].insert(table[dstRow].begin() + dstRowOffset,
-                       table[srcRow][srcRowOffset]);
+  table[dstRow].insert(table[dstRow].begin() + dstRowOffset, table[srcRow][srcRowOffset]);
   table[srcRow].erase(table[srcRow].begin() + srcRowOffset);
 }
 
 template <class TObject>
 std::tuple<SrcRow, DstRow, SrcRowOffset, DstRowOffset> random_move(
-    std::vector<std::vector<TObject> >& table)
+    std::vector<std::vector<TObject>>& table)
 {
   unsigned srcRow = rand() % table.size();
   while (table[srcRow].size() <= 0)
@@ -85,5 +84,5 @@ std::tuple<SrcRow, DstRow, SrcRowOffset, DstRowOffset> random_move(
 
   return std::make_tuple(srcRow, dstRow, srcRowOffset, dstRowOffset);
 }
-}
-}
+} // namespace algorithm
+} // namespace utility

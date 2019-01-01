@@ -11,10 +11,8 @@ class SJLODispatcher : public SJDispatcher
 
   void reorderJobOperations(std::vector<OperationSP>& operations)
   {
-    std::sort(operations.begin(),
-              operations.end(),
-              [&](OperationSP a, OperationSP b) {
-                return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
-              });
+    std::sort(operations.begin(), operations.end(), [&](OperationSP a, OperationSP b) {
+      return mEstimator->estimate(a) < mEstimator->estimate(b); // ASC
+    });
   }
 };

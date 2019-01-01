@@ -4,33 +4,29 @@
 
 #include "Arguments.hpp"
 
-Arguments::Arguments(int argc, char ** argv)
+Arguments::Arguments(int argc, char** argv)
 {
   args::ArgumentParser parser("Test workload dispatcher simulator");
 
-  args::HelpFlag help(parser, "help", "Display this help and exit",
-		      {'h', "help"});
+  args::HelpFlag help(parser, "help", "Display this help and exit", {'h', "help"});
 
-  args::ValueFlag<unsigned> machinesArg(parser, "number", "Number of machines",
-					{'m', "machines"});
-  args::ValueFlag<unsigned> saIterationsArg(parser, "number", "Number of SA iterations",
-                                            {'i', "iterations"});
-  args::ValueFlag<std::string> estimationArg(parser, "method", "Estimation method",
-					     {'e', "estimation"});
-  args::ValueFlag<std::string> opAlgortihmArg(parser, "op_algorithm", "Operation-level algorithm",
-					      {'l', "operation-level-algorithm"});
-  args::ValueFlag<std::string> outputArg(parser, "type", "Output type",
-					 {'o', "output-type"});
-  args::ValueFlag<unsigned> setupTimeArg(parser, "number", "Operations setup time",
-					 {'s', "setup-time"});
-  args::ValueFlag<unsigned> instanceVersionArg(parser, "number", "Instance file version",
-                                               {'v', "version"});
-  args::ValueFlag<unsigned> kArg(parser, "number", "K-Recent's window size",
-				 {'k', "window-size"});
-  args::ValueFlag<std::string> representationArg(parser, "representation", "Internal solution representation",
-                                                 {'r', "representation"});
-  args::Flag preloadArg(parser, "preload", "Read additional instance to fill estimator",
-                        {'p', "preload"});
+  args::ValueFlag<unsigned> machinesArg(parser, "number", "Number of machines", {'m', "machines"});
+  args::ValueFlag<unsigned> saIterationsArg(
+      parser, "number", "Number of SA iterations", {'i', "iterations"});
+  args::ValueFlag<std::string> estimationArg(
+      parser, "method", "Estimation method", {'e', "estimation"});
+  args::ValueFlag<std::string> opAlgortihmArg(
+      parser, "op_algorithm", "Operation-level algorithm", {'l', "operation-level-algorithm"});
+  args::ValueFlag<std::string> outputArg(parser, "type", "Output type", {'o', "output-type"});
+  args::ValueFlag<unsigned> setupTimeArg(
+      parser, "number", "Operations setup time", {'s', "setup-time"});
+  args::ValueFlag<unsigned> instanceVersionArg(
+      parser, "number", "Instance file version", {'v', "version"});
+  args::ValueFlag<unsigned> kArg(parser, "number", "K-Recent's window size", {'k', "window-size"});
+  args::ValueFlag<std::string> representationArg(
+      parser, "representation", "Internal solution representation", {'r', "representation"});
+  args::Flag preloadArg(
+      parser, "preload", "Read additional instance to fill estimator", {'p', "preload"});
 
   args::Positional<std::string> algorithmArg(parser, "algorithm", "Primary algorithm");
 

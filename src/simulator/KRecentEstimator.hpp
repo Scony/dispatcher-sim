@@ -1,7 +1,7 @@
 #pragma once
 
-#include <unordered_map>
 #include <queue>
+#include <unordered_map>
 
 #include "IEstimator.hpp"
 
@@ -18,6 +18,6 @@ class KRecentEstimator : public IEstimator
   const long long mDefaultEstimate = 42;
   const unsigned mK;
 
-  std::unordered_map<long long, std::deque<long long> > operationDurations;
+  std::unordered_map<long long, std::deque<long long>> operationDurations;
   std::unordered_map<long long, long long> operationDurationSums;
 };

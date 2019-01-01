@@ -1,10 +1,10 @@
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 #include <queue>
 
 #include "ScheduleAlgorithms.hpp"
 
-void schedule::algorithm::fifo(Schedule & schedule, JobSP job)
+void schedule::algorithm::fifo(Schedule& schedule, JobSP job)
 {
   const unsigned machinesNum = schedule.schedule.size();
   assert(machinesNum > 0);
@@ -17,7 +17,7 @@ void schedule::algorithm::fifo(Schedule & schedule, JobSP job)
   }
 }
 
-void schedule::algorithm::shortestJob(Schedule & schedule, JobSP job, IEstimatorSP estimator)
+void schedule::algorithm::shortestJob(Schedule& schedule, JobSP job, IEstimatorSP estimator)
 {
   const unsigned machinesNum = schedule.schedule.size();
 
@@ -41,21 +41,21 @@ void schedule::algorithm::shortestJob(Schedule & schedule, JobSP job, IEstimator
     vec.clear();
   }
   std::stable_sort(operations.begin(), operations.end(), [&](OperationSP a, OperationSP b) {
-      return jobWeights[a->parentId] > jobWeights[b->parentId];  // SJ
-    });
+    return jobWeights[a->parentId] > jobWeights[b->parentId]; // SJ
+  });
 
   using ReadyTime = long long;
   using MachineID = unsigned;
   using Pair = std::pair<ReadyTime, MachineID>;
-  std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair> > leastBusyMachines;
+  std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair>> leastBusyMachines;
   for (unsigned machine = 0; machine < machinesNum; machine++)
   {
     if (schedule.ongoings.find(machine) == schedule.ongoings.end())
       leastBusyMachines.push({0, machine});
     else
     {
-      long long ongoingFinish = schedule.ongoings[machine].first +
-          estimator->estimate(schedule.ongoings[machine].second);
+      long long ongoingFinish =
+          schedule.ongoings[machine].first + estimator->estimate(schedule.ongoings[machine].second);
       leastBusyMachines.push({ongoingFinish - job->arrivalTimestamp, machine});
     }
   }
@@ -66,15 +66,16 @@ void schedule::algorithm::shortestJob(Schedule & schedule, JobSP job, IEstimator
     MachineID leastBusyMachine = leastBusyMachines.top().second;
     leastBusyMachines.pop();
     schedule.schedule[leastBusyMachine].push_back(operations.back());
-    leastBusyMachines.push({leastBusyMachineReadyTime + estimator->estimate(operations.back()),
-            leastBusyMachine});
+    leastBusyMachines.push(
+        {leastBusyMachineReadyTime + estimator->estimate(operations.back()), leastBusyMachine});
     operations.pop_back();
   }
 }
 
-void schedule::algorithm::shortestJobLongestOperation(Schedule & schedule,
-                                                      JobSP job,
-                                                      IEstimatorSP estimator)
+void schedule::algorithm::shortestJobLongestOperation(
+    Schedule& schedule,
+    JobSP job,
+    IEstimatorSP estimator)
 {
   const unsigned machinesNum = schedule.schedule.size();
 
@@ -98,24 +99,24 @@ void schedule::algorithm::shortestJobLongestOperation(Schedule & schedule,
     vec.clear();
   }
   std::sort(operations.begin(), operations.end(), [&](OperationSP& a, OperationSP& b) {
-      if (a->parentId != b->parentId)
-        return jobWeights[a->parentId] > jobWeights[b->parentId];  // SJ
-      else
-        return estimator->estimate(a) < estimator->estimate(b);  // LO
-    });
+    if (a->parentId != b->parentId)
+      return jobWeights[a->parentId] > jobWeights[b->parentId]; // SJ
+    else
+      return estimator->estimate(a) < estimator->estimate(b); // LO
+  });
 
   using ReadyTime = long long;
   using MachineID = unsigned;
   using Pair = std::pair<ReadyTime, MachineID>;
-  std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair> > leastBusyMachines;
+  std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair>> leastBusyMachines;
   for (unsigned machine = 0; machine < machinesNum; machine++)
   {
     if (schedule.ongoings.find(machine) == schedule.ongoings.end())
       leastBusyMachines.push({0, machine});
     else
     {
-      long long ongoingFinish = schedule.ongoings[machine].first +
-          estimator->estimate(schedule.ongoings[machine].second);
+      long long ongoingFinish =
+          schedule.ongoings[machine].first + estimator->estimate(schedule.ongoings[machine].second);
       leastBusyMachines.push({ongoingFinish - job->arrivalTimestamp, machine});
     }
   }
@@ -126,8 +127,8 @@ void schedule::algorithm::shortestJobLongestOperation(Schedule & schedule,
     MachineID leastBusyMachine = leastBusyMachines.top().second;
     leastBusyMachines.pop();
     schedule.schedule[leastBusyMachine].push_back(operations.back());
-    leastBusyMachines.push({leastBusyMachineReadyTime + estimator->estimate(operations.back()),
-            leastBusyMachine});
+    leastBusyMachines.push(
+        {leastBusyMachineReadyTime + estimator->estimate(operations.back()), leastBusyMachine});
     operations.pop_back();
   }
 }

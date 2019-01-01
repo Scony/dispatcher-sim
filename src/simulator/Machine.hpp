@@ -6,12 +6,7 @@
 
 struct Machine
 {
-  Machine(MachineID aId,
-	  long long aCapacity):
-      id(aId),
-      capacity(aCapacity)
-  {
-  }
+  Machine(MachineID aId, long long aCapacity) : id(aId), capacity(aCapacity) {}
 
   const MachineID id;
   const long long capacity;

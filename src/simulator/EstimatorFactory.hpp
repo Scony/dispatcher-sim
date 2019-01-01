@@ -1,7 +1,7 @@
 #pragma once
 
-#include "IEstimator.hpp"
 #include "Arguments.hpp"
+#include "IEstimator.hpp"
 
 class EstimatorFactory
 {

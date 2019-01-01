@@ -9,6 +9,7 @@ class AverageEstimator : public IEstimator
   void handleNotification(const Assignation& notification) override;
 
   long long estimate(OperationSP operation) override;
+
  private:
   long long mTotalOperationsDuration = 0;
   long long mExecutedOperationsNum = 0;

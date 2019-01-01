@@ -7,9 +7,9 @@
 class SOCmp
 {
  public:
-  SOCmp(const bool& revparam = false) : mReverse(revparam) {};
+  SOCmp(const bool& revparam = false) : mReverse(revparam){};
 
-  bool operator() (const OperationSP& lhs, const OperationSP& rhs) const
+  bool operator()(const OperationSP& lhs, const OperationSP& rhs) const
   {
     if (mReverse)
       return lt(lhs, rhs);
@@ -31,9 +31,10 @@ class SOCmp
 class SODispatcher : public Dispatcher
 {
  public:
-  SODispatcher(std::shared_ptr<Input> input,
-	       std::shared_ptr<ICloud> cloud,
-	       std::shared_ptr<IEstimator> estimator);
+  SODispatcher(
+      std::shared_ptr<Input> input,
+      std::shared_ptr<ICloud> cloud,
+      std::shared_ptr<IEstimator> estimator);
 
   OperationSP peek() override;
   OperationSP pop() override;

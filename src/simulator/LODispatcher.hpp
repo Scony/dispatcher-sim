@@ -7,9 +7,9 @@
 class LOCmp
 {
  public:
-  LOCmp(const bool& revparam = false) : mReverse(revparam) {};
+  LOCmp(const bool& revparam = false) : mReverse(revparam){};
 
-  bool operator() (const OperationSP& lhs, const OperationSP& rhs) const
+  bool operator()(const OperationSP& lhs, const OperationSP& rhs) const
   {
     if (mReverse)
       return lt(lhs, rhs);
@@ -31,9 +31,10 @@ class LOCmp
 class LODispatcher : public Dispatcher
 {
  public:
-  LODispatcher(std::shared_ptr<Input> input,
-	       std::shared_ptr<ICloud> cloud,
-	       std::shared_ptr<IEstimator> estimator);
+  LODispatcher(
+      std::shared_ptr<Input> input,
+      std::shared_ptr<ICloud> cloud,
+      std::shared_ptr<IEstimator> estimator);
 
   OperationSP peek() override;
   OperationSP pop() override;

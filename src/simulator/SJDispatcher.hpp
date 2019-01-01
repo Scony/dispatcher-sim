@@ -19,7 +19,7 @@ class SJDispatcher : public Dispatcher
  protected:
   virtual void reorderJobOperations(std::vector<OperationSP>&);
   void updateJobWeights();
-  
-  std::map<long long, std::vector<OperationSP> > mJobOperations;
-  std::vector<std::pair<long long, long long> > mJobsInOrder;
+
+  std::map<long long, std::vector<OperationSP>> mJobOperations;
+  std::vector<std::pair<long long, long long>> mJobsInOrder;
 };

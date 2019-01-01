@@ -4,20 +4,21 @@
 
 struct Operation
 {
-  Operation(long long aId,
-	    long long aParentId,
-	    long long aName,
-	    long long aResult,
-	    long long aArrival,
-	    long long aDuration,
-	    long long aCapacityReq = 1) :
-      id(aId),
-      parentId(aParentId),
-      name(aName),
-      result(aResult),
-      arrival(aArrival),
-      duration(aDuration),
-      capacityReq(aCapacityReq)
+  Operation(
+      long long aId,
+      long long aParentId,
+      long long aName,
+      long long aResult,
+      long long aArrival,
+      long long aDuration,
+      long long aCapacityReq = 1)
+      : id(aId)
+      , parentId(aParentId)
+      , name(aName)
+      , result(aResult)
+      , arrival(aArrival)
+      , duration(aDuration)
+      , capacityReq(aCapacityReq)
   {
   }
 

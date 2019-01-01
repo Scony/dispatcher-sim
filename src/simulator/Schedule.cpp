@@ -1,9 +1,6 @@
 #include "Schedule.hpp"
 
-Schedule::Schedule(std::shared_ptr<Machines> machines)
-    : schedule{machines->size()}
-{
-}
+Schedule::Schedule(std::shared_ptr<Machines> machines) : schedule{machines->size()} {}
 
 std::vector<Assignation> Schedule::dispatch(long long from, long long until)
 {
@@ -14,8 +11,7 @@ std::vector<Assignation> Schedule::dispatch(long long from, long long until)
     long long prevFinishTime = from;
     if (ongoings.find(machine) != ongoings.end())
     {
-      long long finishTime = ongoings[machine].first +
-          ongoings[machine].second->duration;
+      long long finishTime = ongoings[machine].first + ongoings[machine].second->duration;
       if (finishTime <= until)
       {
         prevFinishTime = finishTime;
@@ -38,8 +34,7 @@ std::vector<Assignation> Schedule::dispatch(long long from, long long until)
       }
       else
       {
-        ongoings.emplace(machine,
-                         std::pair<BeginTimestamp, OperationSP>(prevFinishTime, *it));
+        ongoings.emplace(machine, std::pair<BeginTimestamp, OperationSP>(prevFinishTime, *it));
         schedule[machine].erase(it);
         break;
       }
@@ -58,8 +53,8 @@ std::vector<Assignation> Schedule::simulateDispatch(long long from, IEstimatorSP
     long long prevFinishTime = from;
     if (ongoings.find(machine) != ongoings.end())
     {
-      long long finishTime = ongoings.at(machine).first +
-          estimator->estimate(ongoings.at(machine).second);
+      long long finishTime =
+          ongoings.at(machine).first + estimator->estimate(ongoings.at(machine).second);
       prevFinishTime = finishTime;
       assignations.emplace_back(finishTime, ongoings.at(machine).second, machine);
     }
@@ -74,17 +69,18 @@ std::vector<Assignation> Schedule::simulateDispatch(long long from, IEstimatorSP
   return assignations;
 }
 
-Schedule::MachineCache Schedule::simulateDispatchMachine(long long from,
-                                                         MachineID machine,
-                                                         IEstimatorSP estimator) const
+Schedule::MachineCache Schedule::simulateDispatchMachine(
+    long long from,
+    MachineID machine,
+    IEstimatorSP estimator) const
 {
   MachineCache cache;
 
   long long prevFinishTime = from;
   if (ongoings.find(machine) != ongoings.end())
   {
-    long long finishTime = ongoings.at(machine).first +
-        estimator->estimate(ongoings.at(machine).second);
+    long long finishTime =
+        ongoings.at(machine).first + estimator->estimate(ongoings.at(machine).second);
     prevFinishTime = finishTime;
     auto& operation = ongoings.at(machine).second;
     auto it = cache.find(operation->parentId);
