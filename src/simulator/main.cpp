@@ -230,9 +230,27 @@ int main(int argc, char ** argv)
                 << std::get<1>(tuple)->id << " "
                 << std::get<2>(tuple) << std::endl;
   }
-  else if (arguments.outputType == "jstretches")
+  else if (arguments.outputType == "jtstretches")
   {
-    auto stretchVec = Solution::calculateJobStretchVec(solution, jobs);
+    auto stretchVec = Solution::calculateJobTStretchVec(solution, jobs);
+    for (const auto& kv : stretchVec)
+    {
+      const auto& stretch = kv.first;
+      std::cout << std::fixed << stretch << std::endl;
+    }
+  }
+  else if (arguments.outputType == "jmstretches")
+  {
+    auto stretchVec = Solution::calculateJobMStretchVec(solution, jobs);
+    for (const auto& kv : stretchVec)
+    {
+      const auto& stretch = kv.first;
+      std::cout << std::fixed << stretch << std::endl;
+    }
+  }
+  else if (arguments.outputType == "jwstretches")
+  {
+    auto stretchVec = Solution::calculateJobWStretchVec(solution, jobs, machines);
     for (const auto& kv : stretchVec)
     {
       const auto& stretch = kv.first;

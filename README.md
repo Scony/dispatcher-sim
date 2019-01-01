@@ -94,7 +94,9 @@ note that you will need matplotlib (`sudo pip install matplotlib`) and `tk` linu
 | Value | Format |
 |---|---|
 | jflows | Flows of consecutive Jobs |
-| jstretches | Stretches of consecutive Jobs |
+| jtstretches | t-Stretches of consecutive Jobs |
+| jmstretches | m-Stretches of consecutive Jobs |
+| jwstretches | w-Stretches of consecutive Jobs |
 | opfins | Triples `[finish timestamp] [operation id] [machine id]` |
 
 ## Instance format

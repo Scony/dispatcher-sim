@@ -37,8 +37,8 @@ Solution::JobFlowVec Solution::calculateJobFlowVec(const SolutionVec& solution,
   return jobFlows;
 }
 
-Solution::JobStretchVec Solution::calculateJobStretchVec(const SolutionVec& solution,
-                                                         std::vector<JobSP> jobs)
+Solution::JobStretchVec Solution::calculateJobTStretchVec(const SolutionVec& solution,
+                                                          std::vector<JobSP> jobs)
 {
   JobStretchVec result;
 
@@ -54,6 +54,52 @@ Solution::JobStretchVec Solution::calculateJobStretchVec(const SolutionVec& solu
                                            return acc + op->duration;
                                          });
     result.emplace_back((double)flow / jobDuration, job);
+  }
+
+  return result;
+}
+
+Solution::JobStretchVec Solution::calculateJobMStretchVec(const SolutionVec& solution,
+                                                          std::vector<JobSP> jobs)
+{
+  JobStretchVec result;
+
+  auto flowVec = Solution::calculateJobFlowVec(solution, jobs);
+  for (const auto& pair : flowVec)
+  {
+    const auto& flow = pair.first;
+    const auto& job = pair.second;
+    double maxOperationDuration = std::accumulate(
+        job->operations.begin(),
+        job->operations.end(),
+        0.0d,
+        [](double acc, OperationSP op) {
+          return acc < op->duration ? op->duration : acc;
+        });
+    result.emplace_back((double)flow / maxOperationDuration, job);
+  }
+
+  return result;
+}
+
+Solution::JobStretchVec Solution::calculateJobWStretchVec(const SolutionVec& solution,
+                                                          std::vector<JobSP> jobs,
+                                                          std::shared_ptr<Machines> machines)
+{
+  JobStretchVec result;
+
+  auto flowVec = Solution::calculateJobFlowVec(solution, jobs);
+  for (const auto& pair : flowVec)
+  {
+    const auto& flow = pair.first;
+    const auto& job = pair.second;
+    double jobDuration = std::accumulate(job->operations.begin(),
+                                         job->operations.end(),
+                                         0.0d,
+                                         [](double acc, OperationSP op) {
+                                           return acc + op->duration;
+                                         });
+    result.emplace_back((double)flow / (jobDuration / machines->size()), job);
   }
 
   return result;
