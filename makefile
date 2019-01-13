@@ -21,6 +21,9 @@ build:
 hamulator:
 	$(MAKE) -C hamulator
 
+hamulator-profiling:
+	$(MAKE) -C hamulator profiling
+
 clean:
 	find -name '*~' | xargs rm -f
 	rm -rf build bin
